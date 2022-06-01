@@ -4,6 +4,9 @@ import time
 from urllib.error import HTTPError
 from urllib.request import urlretrieve
 
+from alignment.sequence import Sequence
+from alignment.sequencealigner import SimpleScoring, GlobalSequenceAligner
+from alignment.vocabulary import Vocabulary
 from tqdm import tqdm
 
 
@@ -44,6 +47,26 @@ def download_urls_in_thread(url_and_index_list):
     with concurrent.futures.ThreadPoolExecutor(max_workers=50) as executor:
         for tile, i in tqdm(executor.map(download, url_and_index_list), total=len(url_and_index_list)):
             yield tile, i
+
+
+def _get_alignment_sore_and_percent(seq1, seq2, match_score=2, mismatch_score=-1, gap_score=-1):
+    a = Sequence(seq1)
+    b = Sequence(seq2)
+
+    v = Vocabulary()
+    aEncoded = v.encodeSequence(a)
+    bEncoded = v.encodeSequence(b)
+
+    scoring = SimpleScoring(match_score, mismatch_score)
+    aligner = GlobalSequenceAligner(scoring, gap_score)
+    score = aligner.align(aEncoded, bEncoded, backtrace=False)
+
+    return score
+
+
+def get_normalized_score(seq1, seq2):
+    score = _get_alignment_sore_and_percent(seq1, seq2)
+    return score / (len(seq2) + len(seq1))
 
 
 if __name__ == '__main__':

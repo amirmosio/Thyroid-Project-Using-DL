@@ -17,6 +17,39 @@ class StainType(enum.Enum):
     UNKNOWN = 1, "UNKNOWN"
 
 
+class ThyroidType(enum.Enum):
+    UNKNOWN = -1, "UNKNOWN"
+    NORMAL = 0, "NORMAL"
+    PAPILLARY_CARCINOMA = 1, "PAPILLARY_CARCINOMA"
+    GRAVES_DISEASE = 2, "GRAVES_DISEASE"
+    NODULAR_GOITER = 3, "NODULAR_GOITER"
+    HASHIMOTO_THYROIDITIS = 4, "HASHIMOTO_THYROIDITIS"
+    FOLLICULAR_CARCINOMA = 5, "FOLLICULAR_CARCINOMA"
+    FOLLICULAR_ADENOMA = 6, "FOLLICULAR_ADENOMA"
+    COLLOID_GOITER = 7, "COLLOID_GOITER"
+
+    @staticmethod
+    def get_thyroid_type_from_diagnosis_label(label: str):
+        label = label.lower()
+        if "normal" in label:
+            return ThyroidType.NORMAL
+        elif "grave" in label:
+            return ThyroidType.GRAVES_DISEASE
+        elif "nodular" in label and "goiter" in label:
+            return ThyroidType.NODULAR_GOITER
+        elif "hashimoto" in label:
+            return ThyroidType.HASHIMOTO_THYROIDITIS
+        elif "follicular" in label:
+            if "adenoma" in label:
+                return ThyroidType.FOLLICULAR_ADENOMA
+            else:
+                return ThyroidType.FOLLICULAR_CARCINOMA
+        elif "colloid" in label and "goiter" in label:
+            return ThyroidType.COLLOID_GOITER
+        else:
+            return ThyroidType.UNKNOWN
+
+
 class WebStainImage:
     save_path = "data/"
 
@@ -39,7 +72,7 @@ class WebStainImage:
 
     @property
     def image_class_label(self):
-        return self.image_web_label
+        return ThyroidType.get_thyroid_type_from_diagnosis_label(self.image_web_label)
 
     def get_slide_view_url(self):
         raise NotImplemented("get_slide_view_url")
