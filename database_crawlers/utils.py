@@ -4,9 +4,6 @@ import time
 from urllib.error import HTTPError
 from urllib.request import urlretrieve
 
-from alignment.sequence import Sequence
-from alignment.sequencealigner import SimpleScoring, GlobalSequenceAligner
-from alignment.vocabulary import Vocabulary
 from tqdm import tqdm
 
 
@@ -50,6 +47,9 @@ def download_urls_in_thread(url_and_index_list):
 
 
 def _get_alignment_sore_and_percent(seq1, seq2, match_score=2, mismatch_score=-1, gap_score=-1):
+    from alignment.sequence import Sequence
+    from alignment.sequencealigner import SimpleScoring, GlobalSequenceAligner
+    from alignment.vocabulary import Vocabulary
     a = Sequence(seq1)
     b = Sequence(seq2)
 
