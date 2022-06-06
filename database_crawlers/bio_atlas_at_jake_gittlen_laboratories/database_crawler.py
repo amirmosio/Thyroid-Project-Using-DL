@@ -21,6 +21,9 @@ class BioAtlasAtJakeGittlenLaboratoriesImage(WebStainWSIOneDIndex):
     def _get_file_path_name(self):
         return self.save_path + self.image_id
 
+    def find_best_zoom(self):
+        return 0
+
 
 class BioAtlasThyroidSlideProvider:
     page_link = "https://bio-atlas.psu.edu/human/search.php?q=Thyroid&organism%5B%5D=5&age_fr=&age_fr_units=1&age_to=&age_to_units=1&sex%5B%5D=all&thumbnails=on&rpp=30&as_sfid=AAAAAAW0RrspdnblpiFwz8osoAdvS8nafd1J9LG_ARQ-IF_NZ3aI2EXCMDBeqE_iD5rUo1QLg454tS63DMSgATSzgrksb4rMi-GWPl3O9f3JKlqGn8oXoqbOYok3__yZx69ewzg%3D&as_fid=6900aeb3e4cc9f39ef9738a2f11c2cefb8c3f37c#results"
@@ -54,4 +57,3 @@ if __name__ == '__main__':
     for slide in bio_atlas_provider.get_web_stain_samples():
         print(slide.image_id, slide.image_web_label, slide.get_slide_view_url())
         slide.crawl_image_save_jpeg_and_json()
-        break

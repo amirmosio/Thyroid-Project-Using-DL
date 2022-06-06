@@ -13,7 +13,7 @@ FourierTransform = foo.FourierTransform
 image_list = ["bio_tile (1).jpeg", "bio_tile (2).jpeg", "bio_tile (3).jpeg", "bio_tile (4).jpeg", "bio_tile (4).jpeg"]
 amplitude_dir = "amplitude_dir"
 fourier_transform = FourierTransform(image_list, amplitude_dir, beta=0, rebuild=False)
-source_image = Image.open("tile.jpeg")  # image form source domain
+source_image = Image.open("tile2.jpeg")  # image form source domain
 source_image_in_target_style = fourier_transform(source_image)
 
 source_image_in_target_style.save("out_fda.jpeg")

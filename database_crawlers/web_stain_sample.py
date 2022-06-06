@@ -109,7 +109,7 @@ class WebStainWSI(WebStainImage):
         raise NotImplemented("generate tile urls")
 
     def find_best_zoom(self):
-        return 4
+        return 0
 
     def _find_first_tile_width(self):
         image_content = fetch_tile_content(self._get_tile_url(self.find_best_zoom(), partition=0, i=0, j=0))
