@@ -1,11 +1,17 @@
+import ssl
 import time
 from urllib.parse import urlparse
 from urllib.request import urlopen
-import ssl
+
 import certifi
 from bs4 import BeautifulSoup
 
 from database_crawlers.web_stain_sample import StainType, WebStainWSIOneDIndex
+
+orig_sslsocket_init = ssl.SSLSocket.__init__
+ssl.SSLSocket.__init__ = lambda *args, cert_reqs=ssl.CERT_NONE, **kwargs: orig_sslsocket_init(*args,
+                                                                                              cert_reqs=ssl.CERT_NONE,
+                                                                                              **kwargs)
 
 
 class BioAtlasAtJakeGittlenLaboratoriesImage(WebStainWSIOneDIndex):
@@ -36,7 +42,7 @@ class BioAtlasThyroidSlideProvider:
     def get_web_stain_samples(cls):
         print(cls.page_link)
         try:
-            html_text = urlopen(cls.page_link, context=ssl.create_default_context(cafile=certifi.where())).read()
+            html_text = urlopen(cls.page_link).read()
             soup = BeautifulSoup(html_text, 'html.parser')
             search_results = soup.find_all("div", {"class": "shadow-box search-result-item search-result-slide"})
             for result_item in search_results:
