@@ -173,8 +173,6 @@ class WebStainWSIOneDIndex(WebStainWSI):
                     if res == -1:
                         break
                     img = cv2.imdecode(np.frombuffer(res[0], np.uint8), -1)
-                    print(img.shape)
-                    print("\n")
                     if len(img.shape) == 2:
                         img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
                     yield img
@@ -193,14 +191,10 @@ class WebStainWSIOneDIndex(WebStainWSI):
                     column_tiles = index + 1
                     row_tiles = (self.last_partition + 1) // column_tiles
             shape = (first_image_height * row_tiles, first_image_width * column_tiles, 3)
-            try:
-                tif.write(generator(), subfiletype=1, tile=(first_image_height, first_image_width), shape=shape,
-                          dtype=np.uint8,
-                          compression='JPEG',  # TODO
-                          photometric='rgb')
-            except Exception as e:
-                print((first_image_height, first_image_width))
-                print(shape)
+            tif.write(generator(), subfiletype=1, tile=(first_image_height, first_image_width), shape=shape,
+                      dtype=np.uint8,
+                      compression='JPEG',  # TODO
+                      photometric='rgb')
 
         """
         Save json file
