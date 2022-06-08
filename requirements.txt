@@ -10,7 +10,6 @@ fasteners==0.17.3
 idna==2.8
 imagecodecs==2022.2.22
 keras==2.9.0
-libtiff==0.4.2
 numcodecs==0.9.1
 numpy==1.22.3
 opencv-python==4.5.5.64
