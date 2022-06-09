@@ -32,16 +32,17 @@ def show_Papsociety_sample_view():
     cv2.imshow(f"Papsociety - {image_frag.shape}", image_frag)
 
 
-def show_test():
+def show_test(name, ):
     # show_tif_image('data/CAMELYON16/tumor_084.tif', "CAMELYON16", key=7)
-    show_tif_image('data/test/1.tiff', "test", key=0, w_from=10000, h_from=30000, size=1000)
+    show_tif_image('data/test/1272.tiff', name, key=0, w_from=1300, h_from=0, size=1000)
 
 
 if __name__ == '__main__':
-    show_CAMELYON16_sample_view()
+    # show_CAMELYON16_sample_view()
     # show_CAMELYON17_sample_view()
     # show_Papsociety_sample_view()
-    show_test()
+    show_tif_image('data/test/1272.tiff', "1", key=0, w_from=1000, h_from=100, size=1000)
+    show_tif_image('data/test/1272.tiff', "2", key=0, w_from=1000, h_from=1000, size=1000)
     while True:
         if cv2.waitKey(1) == ord('q'):
             break
