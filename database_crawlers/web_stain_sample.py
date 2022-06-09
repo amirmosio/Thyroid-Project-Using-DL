@@ -72,7 +72,7 @@ class WebStainImage:
 
     @property
     def image_class_label(self):
-        return ThyroidType.get_thyroid_type_from_diagnosis_label(self.image_web_label)
+        return ThyroidType.get_thyroid_type_from_diagnosis_label(self.image_web_label).value[1]
 
     def get_slide_view_url(self):
         raise NotImplemented("get_slide_view_url")
@@ -172,7 +172,12 @@ class WebStainWSIOneDIndex(WebStainWSI):
                     res = next(content_fetcher, -1)
                     if res == -1:
                         break
-                    yield cv2.imdecode(np.frombuffer(res[0], np.uint8), -1)
+                    img = cv2.imdecode(np.frombuffer(res[0], np.uint8), -1)
+                    print(img.shape)
+                    print("\n")
+                    if len(img.shape) == 2:
+                        img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
+                    yield img
 
         first_image_width, first_image_height = self._find_first_tile_width()
         first_temp_rows = []
@@ -188,10 +193,14 @@ class WebStainWSIOneDIndex(WebStainWSI):
                     column_tiles = index + 1
                     row_tiles = (self.last_partition + 1) // column_tiles
             shape = (first_image_height * row_tiles, first_image_width * column_tiles, 3)
-            tif.write(generator(), subfiletype=1, tile=(first_image_height, first_image_width), shape=shape,
-                      dtype=np.uint8,
-                      compression='JPEG',  # TODO
-                      photometric='rgb')
+            try:
+                tif.write(generator(), subfiletype=1, tile=(first_image_height, first_image_width), shape=shape,
+                          dtype=np.uint8,
+                          compression='JPEG',  # TODO
+                          photometric='rgb')
+            except Exception as e:
+                print((first_image_height, first_image_width))
+                print(shape)
 
         """
         Save json file
