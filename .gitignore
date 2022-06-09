@@ -1,6 +1,9 @@
 # Custom
+*.tiff
+*.tif
 .idea
-**/data/
+*.jpeg
+*.jpg
 classification_stuff/Transfer-Learning-Library
 # Byte-compiled / optimized / DLL files
 __pycache__/
