@@ -46,6 +46,8 @@ class ThyroidType(enum.Enum):
                 return ThyroidType.FOLLICULAR_CARCINOMA
         elif "colloid" in label and "goiter" in label:
             return ThyroidType.COLLOID_GOITER
+        elif "papillary" in label:
+            return ThyroidType.PAPILLARY_CARCINOMA
         else:
             return ThyroidType.UNKNOWN
 
