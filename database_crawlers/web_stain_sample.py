@@ -33,6 +33,8 @@ class ThyroidType(enum.Enum):
         label = label.lower()
         if "normal" in label:
             return ThyroidType.NORMAL
+        elif "papillary" in label:
+            return ThyroidType.PAPILLARY_CARCINOMA
         elif "grave" in label:
             return ThyroidType.GRAVES_DISEASE
         elif "nodular" in label and "goiter" in label:
@@ -46,8 +48,6 @@ class ThyroidType(enum.Enum):
                 return ThyroidType.FOLLICULAR_CARCINOMA
         elif "colloid" in label and "goiter" in label:
             return ThyroidType.COLLOID_GOITER
-        elif "papillary" in label:
-            return ThyroidType.PAPILLARY_CARCINOMA
         else:
             return ThyroidType.UNKNOWN
 
@@ -71,6 +71,16 @@ class WebStainImage:
                 "report": self.report,
                 "stain_type": self.stain_type.value[1],
                 "is_wsi": self.is_wsi}
+
+    @staticmethod
+    def sorted_json_keys():
+        return ["database_name",
+                "image_id",
+                "image_web_label",
+                "image_class_label",
+                "report",
+                "stain_type",
+                "is_wsi"]
 
     @property
     def image_class_label(self):

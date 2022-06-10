@@ -4,6 +4,7 @@ import time
 from urllib.error import HTTPError
 from urllib.request import urlretrieve
 
+from torch.utils.data import IterableDataset
 from tqdm import tqdm
 
 
@@ -67,6 +68,14 @@ def _get_alignment_sore_and_percent(seq1, seq2, match_score=2, mismatch_score=-1
 def get_normalized_score(seq1, seq2):
     score = _get_alignment_sore_and_percent(seq1, seq2)
     return score / (len(seq2) + len(seq1))
+
+
+class DatasetWithGenerator(IterableDataset):
+    def __init__(self, generator):
+        self.generator = generator
+
+    def __iter__(self):
+        return self.generator
 
 
 if __name__ == '__main__':

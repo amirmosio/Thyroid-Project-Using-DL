@@ -1,9 +1,5 @@
-import torch
 import torchvision
-from torch import nn, optim
-
-from classification_stuff.config import n_epoch, learning_rate, available_device, n_print
-from classification_stuff.data_loader import DataLoaderUtil
+from torch import nn
 
 
 class ThyroidClassificationModel(nn.Module):

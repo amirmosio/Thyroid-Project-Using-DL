@@ -1,0 +1,5 @@
+database_name,image_id,image_web_label,image_class_label,report,stain_type,is_wsi
+StanfordTissueMicroArray,C-TA-127-02.65.cd81/2_127_9_7_65_1469_69.jpg,thyroid  normal  normal ,NORMAL,,UNKNOWN,False
+StanfordTissueMicroArray,C-TA-167-04.96.cfl2/4_167_9_1_96_1358_9.jpg,thyroid  normal  normal ,NORMAL,,UNKNOWN,False
+StanfordTissueMicroArray,C-TA-41-03.134.nmbasISH/3_41_11_5_134_1159_4175a409ee63c281315853b6057c1e759a6a5addb46e3ed96c1e5af376b4a4cd.jpg,lymph node thyroid malignant  carcinoma papillary,PAPILLARY_CARCINOMA,,UNKNOWN,False
+StanfordTissueMicroArray,C-TA-41-04.134.nmbasISH/4_41_9_5_134_1159_2a2e5aafe8daed622e0780212c950bfa27142da696a920f6f9e5f026a268269f.jpg,thyroid  malignant  carcinoma papillary,PAPILLARY_CARCINOMA,,UNKNOWN,False
