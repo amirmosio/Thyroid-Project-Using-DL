@@ -1,2 +1,2 @@
 export PYTHONPATH="${PYTHONPATH}:./";
-python database_crawler.py;
+python image_patcher.py;
