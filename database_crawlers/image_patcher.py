@@ -54,7 +54,7 @@ class ImageAndSlidePatcher:
 
     @classmethod
     def _get_file_name_from_path(cls, file_path):
-        return os_path.split(file_path)[-1].split(".")[0]
+        return ".".join(os_path.split(file_path)[-1].split(".")[:-1])
 
     @classmethod
     def _get_number_of_initial_frags(cls, zarr_object, frag_size=512, frag_overlap=0.1):
@@ -134,7 +134,8 @@ class ImageAndSlidePatcher:
             for json_path, image_path in cls._get_json_and_image_address_of_directory(data_dir):
                 print("image path: ", image_path)
                 file_name = cls._get_file_name_from_path(image_path)
-                slide_patch_dir = os.path.join(patch_dir, file_name)
+                slide_id = str(hash(file_name))
+                slide_patch_dir = os.path.join(patch_dir, slide_id)
                 if os.path.isdir(slide_patch_dir):
                     """
                     it has already been patched
@@ -142,6 +143,7 @@ class ImageAndSlidePatcher:
                     continue
 
                 web_details = cls._json_key_loader(json_path)
+                web_details["image_id"] = slide_id
                 web_label = web_details["image_web_label"]
                 thyroid_type = ThyroidType.get_thyroid_type_from_diagnosis_label(web_label)
                 web_details["image_class_label"] = thyroid_type.value[1]
@@ -159,9 +161,10 @@ class ImageAndSlidePatcher:
                 filters = [ThyroidFragmentFilters.empty_frag_with_laplacian_threshold]
                 fragment_id = 0
                 for fragment in cls._filter_frag_from_generator(generator, filters):
-                    fragment_file_path = os.path.join(slide_patch_dir, f"{file_name}-{fragment_id}.jpeg")
+                    fragment_file_path = os.path.join(slide_patch_dir, f"{slide_id}-{fragment_id}.jpeg")
                     cv2.imwrite(fragment_file_path, fragment)
                     fragment_id += 1
+                print(fragment_id)
             csv_file.close()
 
 

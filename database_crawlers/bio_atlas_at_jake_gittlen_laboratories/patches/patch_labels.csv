@@ -1,3 +1,3 @@
 database_name,image_id,image_web_label,image_class_label,report,stain_type,is_wsi
-BioAtlasThyroidSlideProvider,1170,": Hashimoto thyroiditis, papillary carcinoma",PAPILLARY_CARCINOMA,,H&E,True
+BioAtlasThyroidSlideProvider,1170,": Hashimoto thyroiditis papillary carcinoma",PAPILLARY_CARCINOMA,,H&E,True
 BioAtlasThyroidSlideProvider,1672,: Papillary thyroid carcinoma,PAPILLARY_CARCINOMA,,H&E,True
