@@ -1,7 +1,10 @@
 import os
 
+import albumentations as A
 import numpy as np
+import torch
 from PIL import Image
+from albumentations.pytorch import ToTensorV2
 from torch.utils.data import Dataset
 
 
@@ -28,7 +31,15 @@ class ThyroidDataset(Dataset):
         path, target = self.samples[index]
         image = Image.open(path)
         image = image.convert('RGB')
+        image = np.array(image)
         if self.transform is not None:
-            image = self.transform(image=np.array(image))['image']
+            image = self.transform(image=image)['image']
+        else:
+            transform = A.Compose([
+                A.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
+                ToTensorV2()
+            ])
+
+            image = transform(image=image)['image']
 
         return image, target

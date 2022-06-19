@@ -1,42 +1,25 @@
-import csv
-import glob
 import os
-import random
 
+import matplotlib.pyplot as plt
 import torch
 import torchvision
 from torch import nn, optim
 from torch.utils.data import DataLoader
+from tqdm import tqdm
 
 from classification_stuff.config import Config
-from database_crawlers.web_stain_sample import ThyroidType
+from fragment_splitter import CustomFragmentLoader
 from thyroid_dataset import ThyroidDataset
+from thyroid_ml_model import ThyroidClassificationModel
 from transformation import get_transformation
 
 
-class ThyroidClassificationModel(nn.Module):
-    def __init__(self):
-        super().__init__()
-        self.res_net_101 = torchvision.models.resnet101(pretrained=True, progress=True)
-        self.classifier = nn.Sequential(
-            nn.Linear(1000, 500),
-            nn.ReLU(),
-            nn.Linear(500, 100),
-            nn.ReLU(),
-            nn.Linear(100, 2),
-            nn.Softmax(dim=-1)
-        )
-
-    def forward(self, x):
-        res_net_output = self.res_net_101(x)
-        return self.classifier(res_net_output)
-
-
-def validate(model, data):
+def validate(model, data_loader):
     total = 0
     correct = 0
-    for i, (images, labels) in enumerate(data):
-        images = torch.var(images.cuda())
+    for images, labels in data_loader:
+        images = images.to(Config.available_device)
+        labels = labels.to(Config.available_device)
         x = model(images)
         value, pred = torch.max(x, 1)
         pred = pred.data.cpu()
@@ -45,105 +28,110 @@ def validate(model, data):
     return correct * 100. / total
 
 
-class CustomFragmentLoader:
-    def __init__(self):
-        self._database_slide_dict = {}
-        self._load_csv_files_to_dict()
+def train_model(base_model, model_name, sort_batch=False, augmentation="min"):
+    config_name = f"{model_name} - {augmentation}"
 
-    def _load_csv_files_to_dict(self):
-        databases_directory = "../../../database_crawlers/"
-        list_dir = [os.path.join(databases_directory, o, "patches") for o in os.listdir(databases_directory)
-                    if os.path.isdir(os.path.join(databases_directory, o, "patches"))]
-        for db_dir in list_dir:
-            csv_dir = os.path.join(db_dir, "patch_labels.csv")
-            with open(csv_dir, "r") as csv_file:
-                csv_reader = csv.reader(csv_file)
-                header = next(csv_reader, None)
-                for row in csv_reader:
-                    if row:
-                        database_id = row[0]
-                        image_id = row[1]
-                        slide_frag_folder_name = [o for o in os.listdir(db_dir) if image_id.startswith(o)][0]
-                        slide_path = os.path.join(db_dir, slide_frag_folder_name)
-                        image_paths = glob.glob(os.path.join(slide_path, "*.jpeg"))
-                        if image_paths:
-                            d = self._database_slide_dict.get(database_id, {})
-                            d[image_id] = [image_paths] + [row[3]]
-                            self._database_slide_dict[database_id] = d
+    logger = set_config_for_logger(config_name)
+    logger.info(f"training config: {config_name}")
 
-    def load_image_path_and_labels_and_split(self, test_percent=25, val_percent=10):
-        thyroid_desired_classes = [ThyroidType.NORMAL, ThyroidType.PAPILLARY_CARCINOMA]
-        image_paths_by_slide = [(len(v[0]), v[0], v[1]) for slide_frags in self._database_slide_dict.values() for v in
-                                slide_frags.values()]
-        image_paths_by_slide.sort()
-        class_slides_dict = {}
-        for item in image_paths_by_slide:
-            class_slides_dict[item[2]] = class_slides_dict.get(item[2], []) + [item]
-
-        # split test and none test because they must not share same slide id fragment
-
-        for thyroid_class, slide_frags in class_slides_dict.items():
-            image_slide_set = set(list(range(len(image_paths_by_slide))))
-            total_counts = sum([item[0] for item in slide_frags])
-            test_counts = total_counts * test_percent // 100
-            class_test_images = []
-            i = 0
-            for i, slide_frags_item in enumerate(slide_frags):
-                if len(class_test_images) + slide_frags_item[0] <= test_counts:
-                    class_test_images += slide_frags_item[1]
-                else:
-                    break
-            class_non_test_images = [image_path for item in slide_frags[i:] for image_path in item[1]]
-            class_slides_dict[thyroid_class] = [class_non_test_images, class_test_images]
-
-        min_class_count = min([len(split_images[0]) for split_images in class_slides_dict.values()])
-        val_count = min_class_count * val_percent // (100 - test_percent)
-        train_images, val_images, test_images = [], [], []
-        for thyroid_class, slide_frags in class_slides_dict.items():
-            test_images += [(image_path, thyroid_class) for image_path in slide_frags[1]]
-            non_test_idx = random.choices(list(range(len(slide_frags[0]))), k=min_class_count)
-            val_idx = random.choices(list(range(len(slide_frags[0]))), k=val_count)
-            for idx in non_test_idx:
-                if idx in val_idx:
-                    val_images += [(slide_frags[0][idx], thyroid_class)]
-                else:
-                    train_images += [(slide_frags[0][idx], thyroid_class)]
-        random.shuffle(train_images)
-        random.shuffle(val_images)
-        random.shuffle(test_images)
-        return train_images, val_images, test_images
-
-
-def train_model(sort_batch=False):
-    image_model = ThyroidClassificationModel()
+    image_model = ThyroidClassificationModel(base_model)
     transformation = get_transformation(augmentation="min")
     class_idx_dict = {"PAPILLARY_CARCINOMA": 0, "NORMAL": 1}
+
     train, val, test = CustomFragmentLoader().load_image_path_and_labels_and_split()
-    train_dl = ThyroidDataset(train, class_idx_dict, transform=transformation)
-    test_dl = ThyroidDataset(val, class_idx_dict)
-    val_dl = ThyroidDataset(test, class_idx_dict)
+    train_ds = ThyroidDataset(train, class_idx_dict, transform=transformation)
+    test_ds = ThyroidDataset(test, class_idx_dict)
+    val_ds = ThyroidDataset(val, class_idx_dict)
+
+    train_data_loader = DataLoader(train_ds, batch_size=Config.batch_size, shuffle=True)
+    val_data_loader = DataLoader(val_ds, batch_size=Config.batch_size, shuffle=True)
+    test_data_loader = DataLoader(test_ds, batch_size=Config.batch_size, shuffle=True)
+
     cec = nn.CrossEntropyLoss()
     optimizer = optim.Adam(image_model.parameters(), lr=Config.learning_rate)
-    acc_history = []
-    train_data_loader = DataLoader(train_dl, batch_size=Config.batch_size)
+    val_acc_history = []
+    test_acc_history = []
+
+    i = -1
     for e in range(Config.n_epoch):
-        i = -1
-        for images, labels in train_data_loader:
+        for images, labels in tqdm(train_data_loader, colour="#0000ff"):
+            image_model.train()
             i += 1
-            print(i)
             images = images.to(Config.available_device)
             labels = labels.to(Config.available_device)
             optimizer.zero_grad()
             pred = image_model(images)
+            # pred label: torch.max(pred, 1)[1], labels
             loss = cec(pred, labels)
             loss.backward()
             optimizer.step()
             if (i + 1) % Config.n_print == 0:
-                accuracy = float(validate(image_model, val_dl))
-                print('Epoch :', e + 1, 'Batch :', i + 1, 'Loss :', float(loss.data), 'Accuracy :', accuracy, '%')
-                acc_history.append(accuracy)
-        return acc_history
+                image_model.eval()
+                accuracy = float(validate(image_model, val_data_loader))
+                logger.info(f'Val: Epoch: {e + 1} Batch: {i + 1} Loss:{float(loss.data)} Accuracy:{accuracy} %')
+                val_acc_history.append(accuracy)
+        image_model.eval()
+        accuracy = float(validate(image_model, test_data_loader))
+        logger.info('\nTest: Epoch :', e + 1, 'Accuracy :', accuracy, '%\n')
+        test_acc_history.append(accuracy)
+
+        plot_and_save_model_per_epoch(e, image_model, val_acc_history, test_acc_history, config_name)
+
+
+def set_config_for_logger(config_label):
+    import logging
+    trains_state_dir = "./train_state"
+    if not os.path.isdir(trains_state_dir):
+        os.mkdir(trains_state_dir)
+    config_train_dir = os.path.join(trains_state_dir, config_label)
+    if not os.path.isdir(config_train_dir):
+        os.mkdir(config_train_dir)
+    log_file = os.path.join(config_train_dir, "console.log")
+    logger = logging.getLogger(config_label)
+    logger.setLevel(logging.DEBUG)
+    fh = logging.FileHandler(log_file)
+    formatter = logging.Formatter('%(asctime)s|%(levelname)s|%(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+    fh.setFormatter(formatter)
+    fh.setLevel(logging.DEBUG)
+    logger.addHandler(fh)
+    return logger
+
+
+def plot_and_save_model_per_epoch(epoch, model, val_acc_list, test_acc_list, config_label):
+    trains_state_dir = "./train_state"
+    if not os.path.isdir(trains_state_dir):
+        os.mkdir(trains_state_dir)
+    config_train_dir = os.path.join(trains_state_dir, config_label)
+    if not os.path.isdir(config_train_dir):
+        os.mkdir(config_train_dir)
+
+    fig_save_path = os.path.join(config_train_dir, "validation_loss.jpeg")
+    plt.plot(range(len(val_acc_list)), val_acc_list, label="val")
+    plt.savefig(fig_save_path)
+
+    plt.clf()
+
+    fig_save_path = os.path.join(config_train_dir, "test_loss.jpeg")
+    plt.plot(range(len(test_acc_list)), test_acc_list, label="test")
+    plt.savefig(fig_save_path)
+
+    save_state_dir = os.path.join(config_train_dir, f"epoch-{epoch}")
+    if not os.path.isdir(save_state_dir):
+        os.mkdir(save_state_dir)
+    model_save_path = os.path.join(save_state_dir, "model.state")
+    model.save_model(model_save_path)
 
 
 if __name__ == '__main__':
-    train_model()
+    for model_name, model in [
+        ("resnet50", torchvision.models.resnet50(pretrained=True, progress=True)),
+        ("resnet152", torchvision.models.resnet152(pretrained=True, progress=True)),
+        ("inception_v3", torchvision.models.inception_v3(pretrained=True, progress=True)),
+        ("vgg19", torchvision.models.vgg19(pretrained=True, progress=True)),
+        ("densenet121", torchvision.models.densenet121(pretrained=True, progress=True)),
+    ]:
+        for aug in ["fda",
+                    "std",
+                    "mixup"
+                    ]:
+            train_model(model, model_name, augmentation=aug)
