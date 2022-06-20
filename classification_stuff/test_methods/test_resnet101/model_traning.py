@@ -71,7 +71,7 @@ def train_model(base_model, model_name, sort_batch=False, augmentation="min"):
                 val_acc_history.append(accuracy)
         image_model.eval()
         accuracy = float(validate(image_model, test_data_loader))
-        logger.info('\nTest: Epoch :', e + 1, 'Accuracy :', accuracy, '%\n')
+        logger.info(f'Test: Epoch:{e + 1} Accuracy: {accuracy}%')
         test_acc_history.append(accuracy)
 
         plot_and_save_model_per_epoch(e, image_model, val_acc_history, test_acc_history, config_name)
