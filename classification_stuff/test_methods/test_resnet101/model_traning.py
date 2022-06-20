@@ -32,49 +32,51 @@ def train_model(base_model, model_name, sort_batch=False, augmentation="min"):
 
     logger = set_config_for_logger(config_name)
     logger.info(f"training config: {config_name}")
+    try:
+        image_model = ThyroidClassificationModel(base_model).to(Config.available_device)
+        transformation = get_transformation(augmentation="min")
+        class_idx_dict = {"PAPILLARY_CARCINOMA": 0, "NORMAL": 1}
 
-    image_model = ThyroidClassificationModel(base_model).to(Config.available_device)
-    transformation = get_transformation(augmentation="min")
-    class_idx_dict = {"PAPILLARY_CARCINOMA": 0, "NORMAL": 1}
+        train, val, test = CustomFragmentLoader().load_image_path_and_labels_and_split()
+        train_ds = ThyroidDataset(train, class_idx_dict, transform=transformation)
+        test_ds = ThyroidDataset(test, class_idx_dict)
+        val_ds = ThyroidDataset(val, class_idx_dict)
 
-    train, val, test = CustomFragmentLoader().load_image_path_and_labels_and_split()
-    train_ds = ThyroidDataset(train, class_idx_dict, transform=transformation)
-    test_ds = ThyroidDataset(test, class_idx_dict)
-    val_ds = ThyroidDataset(val, class_idx_dict)
+        train_data_loader = DataLoader(train_ds, batch_size=Config.batch_size, shuffle=True)
+        val_data_loader = DataLoader(val_ds, batch_size=Config.eval_batch_size, shuffle=True)
+        test_data_loader = DataLoader(test_ds, batch_size=Config.eval_batch_size, shuffle=True)
 
-    train_data_loader = DataLoader(train_ds, batch_size=Config.batch_size, shuffle=True)
-    val_data_loader = DataLoader(val_ds, batch_size=Config.eval_batch_size, shuffle=True)
-    test_data_loader = DataLoader(test_ds, batch_size=Config.eval_batch_size, shuffle=True)
+        cec = nn.CrossEntropyLoss()
+        optimizer = optim.Adam(image_model.parameters(), lr=Config.learning_rate)
+        val_acc_history = []
+        test_acc_history = []
 
-    cec = nn.CrossEntropyLoss()
-    optimizer = optim.Adam(image_model.parameters(), lr=Config.learning_rate)
-    val_acc_history = []
-    test_acc_history = []
+        i = -1
+        for e in range(Config.n_epoch):
+            for images, labels in tqdm(train_data_loader, colour="#0000ff"):
+                image_model.train()
+                i += 1
+                images = images.to(Config.available_device)
+                labels = labels.to(Config.available_device)
+                optimizer.zero_grad()
+                pred = image_model(images)
+                # pred label: torch.max(pred, 1)[1], labels
+                loss = cec(pred, labels)
+                loss.backward()
+                optimizer.step()
+                if (i + 1) % Config.n_print == 0:
+                    image_model.eval()
+                    accuracy = float(validate(image_model, val_data_loader))
+                    logger.info(f'Val: Epoch: {e + 1} Batch: {i + 1} Loss:{float(loss.data)} Accuracy:{accuracy} %')
+                    val_acc_history.append(accuracy)
+            image_model.eval()
+            accuracy = float(validate(image_model, test_data_loader))
+            logger.info(f'Test: Epoch:{e + 1} Accuracy: {accuracy}%')
+            test_acc_history.append(accuracy)
 
-    i = -1
-    for e in range(Config.n_epoch):
-        for images, labels in tqdm(train_data_loader, colour="#0000ff"):
-            image_model.train()
-            i += 1
-            images = images.to(Config.available_device)
-            labels = labels.to(Config.available_device)
-            optimizer.zero_grad()
-            pred = image_model(images)
-            # pred label: torch.max(pred, 1)[1], labels
-            loss = cec(pred, labels)
-            loss.backward()
-            optimizer.step()
-            if (i + 1) % Config.n_print == 0:
-                image_model.eval()
-                accuracy = float(validate(image_model, val_data_loader))
-                logger.info(f'Val: Epoch: {e + 1} Batch: {i + 1} Loss:{float(loss.data)} Accuracy:{accuracy} %')
-                val_acc_history.append(accuracy)
-        image_model.eval()
-        accuracy = float(validate(image_model, test_data_loader))
-        logger.info(f'Test: Epoch:{e + 1} Accuracy: {accuracy}%')
-        test_acc_history.append(accuracy)
-
-        plot_and_save_model_per_epoch(e, image_model, val_acc_history, test_acc_history, config_name)
+            plot_and_save_model_per_epoch(e, image_model, val_acc_history, test_acc_history, config_name)
+    except Exception as e:
+        logger.info(str(e))
 
 
 def set_config_for_logger(config_label):
