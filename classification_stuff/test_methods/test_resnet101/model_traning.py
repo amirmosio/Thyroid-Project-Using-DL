@@ -44,8 +44,8 @@ def train_model(base_model, model_name, sort_batch=False, augmentation="min"):
     val_ds = ThyroidDataset(val, class_idx_dict)
 
     train_data_loader = DataLoader(train_ds, batch_size=Config.batch_size, shuffle=True)
-    val_data_loader = DataLoader(val_ds, batch_size=Config.batch_size, shuffle=True)
-    test_data_loader = DataLoader(test_ds, batch_size=Config.batch_size, shuffle=True)
+    val_data_loader = DataLoader(val_ds, batch_size=Config.eval_batch_size, shuffle=True)
+    test_data_loader = DataLoader(test_ds, batch_size=Config.eval_batch_size, shuffle=True)
 
     cec = nn.CrossEntropyLoss()
     optimizer = optim.Adam(image_model.parameters(), lr=Config.learning_rate)
