@@ -1,5 +1,6 @@
 # Custom
 *.csv
+*.json
 *.state
 *.tiff
 *.tif
