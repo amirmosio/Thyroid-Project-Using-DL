@@ -22,7 +22,6 @@ def validate(model, data_loader):
         labels = labels.to(Config.available_device)
         x = model(images)
         value, pred = torch.max(x, 1)
-        pred = pred.data.cpu()
         total += x.size(0)
         correct += torch.sum(pred == labels)
     return correct * 100. / total
