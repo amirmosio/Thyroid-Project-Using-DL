@@ -16,7 +16,7 @@ from database_crawlers.web_stain_sample import ThyroidType, WebStainImage
 
 class ThyroidFragmentFilters:
     @staticmethod
-    def empty_frag_with_laplacian_threshold(image_nd_array, threshold=1000):
+    def empty_frag_with_laplacian_threshold(image_nd_array, threshold=800):
         gray = cv2.cvtColor(image_nd_array, cv2.COLOR_BGR2GRAY)
         gray = cv2.GaussianBlur(gray, (3, 3), 0)
 
