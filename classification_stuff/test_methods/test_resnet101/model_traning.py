@@ -34,7 +34,7 @@ def train_model(base_model, model_name, sort_batch=False, augmentation="min"):
     logger = set_config_for_logger(config_name)
     logger.info(f"training config: {config_name}")
 
-    image_model = ThyroidClassificationModel(base_model)
+    image_model = ThyroidClassificationModel(base_model).to(Config.available_device)
     transformation = get_transformation(augmentation="min")
     class_idx_dict = {"PAPILLARY_CARCINOMA": 0, "NORMAL": 1}
 
