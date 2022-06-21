@@ -1,11 +1,14 @@
 # Custom
 *.csv
+*.json
 *.state
 *.tiff
 *.tif
 .idea
 *.jpeg
 *.jpg
+**/data/
+**/patches/
 classification_stuff/Transfer-Learning-Library
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -4,7 +4,7 @@ import torch
 
 
 class Config:
-    DEBUG = True
+    DEBUG = False
 
     batch_size = 32
     learning_rate = 0.01

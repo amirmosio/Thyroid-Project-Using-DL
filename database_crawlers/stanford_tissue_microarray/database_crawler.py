@@ -5,10 +5,10 @@ from urllib.request import urlretrieve
 import requests
 from bs4 import BeautifulSoup
 
-from database_crawlers.web_stain_sample import WebStainSample, StainType
+from database_crawlers.web_stain_sample import WebStainImage, StainType
 
 
-class StanfordTissueMicroArrayStainSample(WebStainSample):
+class StanfordTissueMicroArrayStainSample(WebStainImage):
 
     def __init__(self, database_name, image_id, image_web_label, report, stain_type, is_wsi):
         super().__init__(database_name, image_id, image_web_label, report, stain_type, is_wsi)
