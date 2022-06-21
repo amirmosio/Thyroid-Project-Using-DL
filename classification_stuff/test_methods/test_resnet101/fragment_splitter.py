@@ -54,12 +54,12 @@ class CustomFragmentLoader:
             class_non_test_images = [image_path for item in slide_frags[i:] for image_path in item[1]]
             class_slides_dict[thyroid_class] = [class_non_test_images, class_test_images]
 
-        min_class_count = min([len(split_images[0]) for split_images in class_slides_dict.values()])
-        val_count = min_class_count * val_percent // (100 - test_percent)
         train_images, val_images, test_images = [], [], []
         for thyroid_class, slide_frags in class_slides_dict.items():
             test_images += [(image_path, thyroid_class) for image_path in slide_frags[1]]
-            non_test_idx = random.sample(list(range(len(slide_frags[0]))), k=min_class_count, )
+
+            non_test_idx = list(range(len(slide_frags[0])))
+            val_count = len(slide_frags[0]) * val_percent // (100 - test_percent)
             val_idx = random.sample(non_test_idx, k=val_count)
             for idx in non_test_idx:
                 if idx in val_idx:
