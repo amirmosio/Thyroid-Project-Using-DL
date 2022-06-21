@@ -54,7 +54,7 @@ def train_model(base_model, model_name, sort_batch=False, augmentation="min"):
         val_data_loader = DataLoader(val_ds, batch_size=Config.eval_batch_size, shuffle=True)
         test_data_loader = DataLoader(test_ds, batch_size=Config.eval_batch_size, shuffle=True)
 
-        cec = nn.CrossEntropyLoss(weight=torch.tensor(train_ds.class_weights))
+        cec = nn.CrossEntropyLoss(weight=torch.tensor(train_ds.class_weights).to(Config.available_device))
         optimizer = optim.Adam(image_model.parameters(), lr=Config.learning_rate)
         val_acc_history = []
         test_acc_history = []
