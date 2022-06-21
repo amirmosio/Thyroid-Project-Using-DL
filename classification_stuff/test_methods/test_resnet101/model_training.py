@@ -60,6 +60,8 @@ def train_model(base_model, model_name, sort_batch=False, augmentation="min"):
         test_acc_history = []
 
         i = -1
+        val_acc = 0
+        test_acc = 0
         for e in range(Config.n_epoch):
             for images, labels in tqdm(train_data_loader, colour="#0000ff"):
                 image_model.train()
@@ -74,16 +76,17 @@ def train_model(base_model, model_name, sort_batch=False, augmentation="min"):
                 optimizer.step()
                 if (i + 1) % Config.n_print == 0:
                     image_model.eval()
-                    accuracy, c_acc = validate(image_model, val_data_loader)
-                    accuracy = float(accuracy)
-                    logger.info(f'Val: E, B: {e + 1}, {i + 1} Loss:{float(loss.data)} Accuracy:{accuracy}%, {c_acc}')
-                    val_acc_history.append(accuracy)
+                    val_acc, val_c_acc = validate(image_model, val_data_loader)
+                    val_acc = float(val_acc)
+                    logger.info(f'Val: E, B: {e + 1}, {i + 1} Loss:{float(loss.data)} Accuracy:{val_acc}%, {val_c_acc}')
+
+                    val_acc_history.append(val_acc)
+                    test_acc_history.append(test_acc)
 
             image_model.eval()
-            accuracy, c_acc = validate(image_model, test_data_loader)
-            accuracy = float(accuracy)
-            logger.info(f'Test: Epoch:{e + 1} Accuracy: {accuracy}, {c_acc}%')
-            test_acc_history.append(accuracy)
+            test_acc, test_c_acc = validate(image_model, test_data_loader)
+            test_acc = float(test_acc)
+            logger.info(f'Test: Epoch:{e + 1} Accuracy: {test_acc}, {test_c_acc}%')
 
             plot_and_save_model_per_epoch(e, image_model, val_acc_history, test_acc_history, config_name)
     except Exception as e:
@@ -118,14 +121,10 @@ def plot_and_save_model_per_epoch(epoch, model, val_acc_list, test_acc_list, con
     if not os.path.isdir(config_train_dir):
         os.mkdir(config_train_dir)
 
-    fig_save_path = os.path.join(config_train_dir, "validation_loss.jpeg")
+    fig_save_path = os.path.join(config_train_dir, "val_test_acc.jpeg")
     plt.plot(range(len(val_acc_list)), val_acc_list, label="val")
-    plt.savefig(fig_save_path)
-
-    plt.clf()
-
-    fig_save_path = os.path.join(config_train_dir, "test_loss.jpeg")
     plt.plot(range(len(test_acc_list)), test_acc_list, label="test")
+    plt.legend(loc="lower right")
     plt.savefig(fig_save_path)
 
     save_state_dir = os.path.join(config_train_dir, f"epoch-{epoch}")
@@ -137,12 +136,11 @@ def plot_and_save_model_per_epoch(epoch, model, val_acc_list, test_acc_list, con
 
 if __name__ == '__main__':
     for model_name, model in [
-        ("resnet18", torchvision.models.resnet18(pretrained=True, progress=True)),
-        # ("resnet50", torchvision.models.resnet50(pretrained=True, progress=True)),
-        # ("resnet152", torchvision.models.resnet152(pretrained=True, progress=True)),
-        # ("inception_v3", torchvision.models.inception_v3(pretrained=True, progress=True)),
-        # ("vgg19", torchvision.models.vgg19(pretrained=True, progress=True)),
-        # ("densenet121", torchvision.models.densenet121(pretrained=True, progress=True)),
+        ("resnet50", torchvision.models.resnet50(pretrained=True, progress=True)),
+        ("resnet152", torchvision.models.resnet152(pretrained=True, progress=True)),
+        ("inception_v3", torchvision.models.inception_v3(pretrained=True, progress=True)),
+        ("vgg19", torchvision.models.vgg19(pretrained=True, progress=True)),
+        ("densenet121", torchvision.models.densenet121(pretrained=True, progress=True)),
     ]:
         for aug in ["fda",
                     "std",
