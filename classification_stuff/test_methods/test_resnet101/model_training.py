@@ -136,11 +136,11 @@ def plot_and_save_model_per_epoch(epoch, model, val_acc_list, test_acc_list, con
 
 if __name__ == '__main__':
     for model_name, model in [
-        ("resnet50", torchvision.models.resnet50(pretrained=True, progress=True)),
         ("resnet152", torchvision.models.resnet152(pretrained=True, progress=True)),
-        ("inception_v3", torchvision.models.inception_v3(pretrained=True, progress=True)),
-        ("vgg19", torchvision.models.vgg19(pretrained=True, progress=True)),
         ("densenet121", torchvision.models.densenet121(pretrained=True, progress=True)),
+        ("inception_v3", torchvision.models.inception_v3(pretrained=True, progress=True)),
+        ("resnet50", torchvision.models.resnet50(pretrained=True, progress=True)),
+        ("vgg19", torchvision.models.vgg19(pretrained=True, progress=True)),
     ]:
         for aug in ["fda",
                     "std",
