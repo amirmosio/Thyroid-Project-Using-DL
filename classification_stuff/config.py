@@ -7,6 +7,7 @@ class Config:
     DEBUG = False
 
     batch_size = 32
+    eval_batch_size = 4
     learning_rate = 0.01
     n_epoch = 40
     n_print = 9
