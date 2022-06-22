@@ -3,6 +3,8 @@ import glob
 import os
 import random
 
+from classification_stuff.config import Config
+
 
 class CustomFragmentLoader:
     def __init__(self):
@@ -70,5 +72,6 @@ class CustomFragmentLoader:
 
 
 if __name__ == '__main__':
-    train, val, test = CustomFragmentLoader().load_image_path_and_labels_and_split()
+    train, val, test = CustomFragmentLoader().load_image_path_and_labels_and_split(val_percent=Config.val_percent,
+                                                                                   test_percent=Config.test_percent)
     print(f"train: {len(train)}, val: {len(val)}, test: {len(test)}")
