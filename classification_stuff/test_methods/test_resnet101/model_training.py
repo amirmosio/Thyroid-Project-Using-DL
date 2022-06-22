@@ -15,16 +15,23 @@ from transformation import get_transformation
 
 
 def validate(model, data_loader):
-    total = 0
-    correct = 0
+    class_set = sorted(data_loader.dataset.class_to_idx_dict.values())
+    class_total_count = {}
+    class_correct_count = {}
+
+    e = 0.00001
     for images, labels in data_loader:
         images = images.to(Config.available_device)
         labels = labels.to(Config.available_device)
         x = model(images)
-        value, pred = torch.max(x, 1)
-        total += x.size(0)
-        correct += torch.sum(pred == labels)
-    return correct * 100. / total
+        values, preds = torch.max(x, 1)
+        for c in class_set:
+            class_correct_count[c] = class_correct_count.get(c, 0) + ((preds == labels) * (labels == c)).sum()
+            class_total_count[c] = class_total_count.get(c, 0) + (labels == c).sum()
+    class_accuracies = [class_correct_count[c] / (class_total_count[c] + e) for c in class_set]
+    acc = sum(class_accuracies)
+    acc /= len(class_set)
+    return acc * 100, class_accuracies
 
 
 def train_model(base_model, model_name, sort_batch=False, augmentation="min"):
@@ -37,7 +44,8 @@ def train_model(base_model, model_name, sort_batch=False, augmentation="min"):
         transformation = get_transformation(augmentation="min")
         class_idx_dict = {"PAPILLARY_CARCINOMA": 0, "NORMAL": 1}
 
-        train, val, test = CustomFragmentLoader().load_image_path_and_labels_and_split()
+        train, val, test = CustomFragmentLoader().load_image_path_and_labels_and_split(test_percent=Config.test_percent,
+                                                                                       val_percent=Config.val_percent)
         train_ds = ThyroidDataset(train, class_idx_dict, transform=transformation)
         test_ds = ThyroidDataset(test, class_idx_dict)
         val_ds = ThyroidDataset(val, class_idx_dict)
@@ -46,12 +54,14 @@ def train_model(base_model, model_name, sort_batch=False, augmentation="min"):
         val_data_loader = DataLoader(val_ds, batch_size=Config.eval_batch_size, shuffle=True)
         test_data_loader = DataLoader(test_ds, batch_size=Config.eval_batch_size, shuffle=True)
 
-        cec = nn.CrossEntropyLoss()
+        cec = nn.CrossEntropyLoss(weight=torch.tensor(train_ds.class_weights))
         optimizer = optim.Adam(image_model.parameters(), lr=Config.learning_rate)
         val_acc_history = []
         test_acc_history = []
 
         i = -1
+        val_acc = 0
+        test_acc = 0
         for e in range(Config.n_epoch):
             for images, labels in tqdm(train_data_loader, colour="#0000ff"):
                 image_model.train()
@@ -66,16 +76,21 @@ def train_model(base_model, model_name, sort_batch=False, augmentation="min"):
                 optimizer.step()
                 if (i + 1) % Config.n_print == 0:
                     image_model.eval()
-                    accuracy = float(validate(image_model, val_data_loader))
-                    logger.info(f'Val: Epoch: {e + 1} Batch: {i + 1} Loss:{float(loss.data)} Accuracy:{accuracy} %')
-                    val_acc_history.append(accuracy)
+                    val_acc, val_c_acc = validate(image_model, val_data_loader)
+                    val_acc = float(val_acc)
+                    logger.info(f'Val: E, B: {e + 1}, {i + 1} Loss:{float(loss.data)} Accuracy:{val_acc}%, {val_c_acc}')
+
+                    val_acc_history.append(val_acc)
+                    test_acc_history.append(test_acc)
+
             image_model.eval()
-            accuracy = float(validate(image_model, test_data_loader))
-            logger.info(f'Test: Epoch:{e + 1} Accuracy: {accuracy}%')
-            test_acc_history.append(accuracy)
+            test_acc, test_c_acc = validate(image_model, test_data_loader)
+            test_acc = float(test_acc)
+            logger.info(f'Test: Epoch:{e + 1} Accuracy: {test_acc}, {test_c_acc}%')
 
             plot_and_save_model_per_epoch(e, image_model, val_acc_history, test_acc_history, config_name)
     except Exception as e:
+        print(e)
         logger.info(str(e))
 
 
@@ -106,14 +121,10 @@ def plot_and_save_model_per_epoch(epoch, model, val_acc_list, test_acc_list, con
     if not os.path.isdir(config_train_dir):
         os.mkdir(config_train_dir)
 
-    fig_save_path = os.path.join(config_train_dir, "validation_loss.jpeg")
+    fig_save_path = os.path.join(config_train_dir, "val_test_acc.jpeg")
     plt.plot(range(len(val_acc_list)), val_acc_list, label="val")
-    plt.savefig(fig_save_path)
-
-    plt.clf()
-
-    fig_save_path = os.path.join(config_train_dir, "test_loss.jpeg")
     plt.plot(range(len(test_acc_list)), test_acc_list, label="test")
+    plt.legend(loc="lower right")
     plt.savefig(fig_save_path)
 
     save_state_dir = os.path.join(config_train_dir, f"epoch-{epoch}")
