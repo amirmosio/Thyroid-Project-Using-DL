@@ -37,12 +37,14 @@ def show_test(name, ):
     show_tif_image('data/test/1272.tiff', name, key=0, w_from=1300, h_from=0, size=1000)
 
 
+
 if __name__ == '__main__':
     # show_CAMELYON16_sample_view()
     # show_CAMELYON17_sample_view()
     # show_Papsociety_sample_view()
     show_tif_image('data/test/1272.tiff', "1", key=0, w_from=1000, h_from=100, size=1000)
     show_tif_image('data/test/1272.tiff', "2", key=0, w_from=1000, h_from=1000, size=1000)
+
     while True:
         if cv2.waitKey(1) == ord('q'):
             break

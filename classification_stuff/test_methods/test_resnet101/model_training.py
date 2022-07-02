@@ -13,7 +13,6 @@ from thyroid_dataset import ThyroidDataset
 from thyroid_ml_model import ThyroidClassificationModel
 from transformation import get_transformation
 
-
 @torch.no_grad()
 def validate(model, data_loader):
     class_set = sorted(data_loader.dataset.class_to_idx_dict.values())

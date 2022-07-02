@@ -2,6 +2,7 @@
 *.svs
 *.xml
 *.csv
+*.xcf
 *.json
 *.state
 *.tiff

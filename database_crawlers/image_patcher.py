@@ -16,7 +16,7 @@ from database_crawlers.web_stain_sample import ThyroidType, WebStainImage
 
 class ThyroidFragmentFilters:
     @staticmethod
-    def empty_frag_with_laplacian_threshold(image_nd_array, threshold=800):
+    def empty_frag_with_laplacian_threshold(image_nd_array, threshold=500):
         gray = cv2.cvtColor(image_nd_array, cv2.COLOR_BGR2GRAY)
         gray = cv2.GaussianBlur(gray, (3, 3), 0)
 
@@ -31,7 +31,7 @@ class ThyroidFragmentFilters:
 class ImageAndSlidePatcher:
     @classmethod
     def _zarr_loader(cls, tiff_address, key=0):
-        image_zarr = tifffile.imread(tiff_address, aszarr=True, key=key)
+        image_zarr = tifffile.imread(tiff_address, aszarr=True, key=key, )
         zarr = ZarrObject.open(image_zarr, mode='r')
         return zarr
 
@@ -74,28 +74,29 @@ class ImageAndSlidePatcher:
         step_size = int(frag_size * (1 - frag_overlap))
         overlap_size = frag_size - step_size
         w_range = list(range(0, ceil((zarr_shape[0] - overlap_size) / step_size) * step_size, step_size))
-        random.shuffle(w_range)
+
         h_range = list(range(0, ceil((zarr_shape[1] - overlap_size) / step_size) * step_size, step_size))
-        random.shuffle(h_range)
+
+        if shuffle:
+            random.shuffle(w_range)
+            random.shuffle(h_range)
         for w in w_range:
             for h in h_range:
                 end_w, end_h = min(zarr_shape[0], w + frag_size), min(zarr_shape[1], h + frag_size)
                 start_w, start_h = end_w - frag_size, end_h - frag_size
-                yield image_object[start_w:end_w, start_h: end_h]
+                yield image_object[start_w:end_w, start_h: end_h], (start_w, start_h)
 
     @classmethod
-    def _filter_frag_from_generator(cls, frag_generator, filter_func_list):
-        while True:
-            next_test_item = next(frag_generator, None)
-            if next_test_item is not None:
-                condition = True
-                for function in filter_func_list:
-                    condition &= function(next_test_item)
-                if condition:
-                    # show_and_wait(frag)
-                    yield next_test_item
-            else:
-                break
+    def _filter_frag_from_generator(cls, frag_generator, filter_func_list, return_all_with_condition=False):
+        for next_test_item, frag_pos in frag_generator:
+            condition = True
+            for function in filter_func_list:
+                condition &= function(next_test_item)
+            if return_all_with_condition:
+                yield next_test_item, frag_pos, condition
+            elif condition:
+                # show_and_wait(frag)
+                yield next_test_item, frag_pos
 
     @classmethod
     def _get_json_and_image_address_of_directory(cls, directory_path):
@@ -160,7 +161,7 @@ class ImageAndSlidePatcher:
                     os.mkdir(slide_patch_dir)
                 filters = [ThyroidFragmentFilters.empty_frag_with_laplacian_threshold]
                 fragment_id = 0
-                for fragment in cls._filter_frag_from_generator(generator, filters):
+                for fragment, frag_pos in cls._filter_frag_from_generator(generator, filters):
                     fragment_file_path = os.path.join(slide_patch_dir, f"{slide_id}-{fragment_id}.jpeg")
                     cv2.imwrite(fragment_file_path, fragment)
                     fragment_id += 1
