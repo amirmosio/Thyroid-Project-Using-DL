@@ -7,13 +7,14 @@ from classification_stuff.config import Config
 
 
 class CustomFragmentLoader:
-    def __init__(self):
+    def __init__(self, datasets_folder_name):
+        self._datasets_folder_name = datasets_folder_name
         self._database_slide_dict = {}
         self._load_csv_files_to_dict()
 
     def _load_csv_files_to_dict(self):
         databases_directory = "../../../database_crawlers/"
-        list_dir = [os.path.join(databases_directory, o, "patches") for o in os.listdir(databases_directory)
+        list_dir = [os.path.join(databases_directory, o, "patches") for o in self._datasets_folder_name
                     if os.path.isdir(os.path.join(databases_directory, o, "patches"))]
         for db_dir in list_dir:
             csv_dir = os.path.join(db_dir, "patch_labels.csv")
@@ -35,7 +36,8 @@ class CustomFragmentLoader:
     def load_image_path_and_labels_and_split(self, test_percent=25, val_percent=10):
         image_paths_by_slide = [(len(v[0]), v[0], v[1]) for slide_frags in self._database_slide_dict.values() for v in
                                 slide_frags.values()]
-        image_paths_by_slide.sort()
+        random.shuffle(image_paths_by_slide)
+        # image_paths_by_slide.sort()
         class_slides_dict = {}
         for item in image_paths_by_slide:
             class_slides_dict[item[2]] = class_slides_dict.get(item[2], []) + [item]
@@ -72,6 +74,8 @@ class CustomFragmentLoader:
 
 
 if __name__ == '__main__':
-    train, val, test = CustomFragmentLoader().load_image_path_and_labels_and_split(val_percent=Config.val_percent,
-                                                                                   test_percent=Config.test_percent)
+    datasets_folder = ["stanford_tissue_microarray", "papsociaty"]
+    train, val, test = CustomFragmentLoader(datasets_folder).load_image_path_and_labels_and_split(
+        val_percent=Config.val_percent,
+        test_percent=Config.test_percent)
     print(f"train: {len(train)}, val: {len(val)}, test: {len(test)}")

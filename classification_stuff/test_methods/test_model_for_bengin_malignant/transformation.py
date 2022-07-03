@@ -9,7 +9,7 @@ def get_transformation(augmentation='min', crop_size=256, base_data_loader=None)
         trans = A.Compose([
             (lambda x: A.RandomCrop(x, x, p=1) if x > 0 else A.RandomCrop(x, x, p=0))(crop_size),
             A.Flip(),
-            A.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
+            A.Normalize(),
             ToTensorV2()
         ])
     elif augmentation == "std":
@@ -23,7 +23,7 @@ def get_transformation(augmentation='min', crop_size=256, base_data_loader=None)
                     p=0.5),
             A.Blur(p=0.25),
             A.GaussNoise(p=0.25),
-            A.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
+            A.Normalize(),
             ToTensorV2()
         ])
     elif augmentation == "fda":
@@ -39,7 +39,7 @@ def get_transformation(augmentation='min', crop_size=256, base_data_loader=None)
                     p=0.5),
             A.Blur(p=0.25),
             A.GaussNoise(p=0.25),
-            A.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
+            A.Normalize(),
             ToTensorV2()
         ])
     elif augmentation == "mixup":
@@ -49,14 +49,14 @@ def get_transformation(augmentation='min', crop_size=256, base_data_loader=None)
             A.Rotate(p=0.5),
             (lambda x: A.RandomCrop(x, x, p=1) if x > 0 else A.RandomCrop(x, x, p=0))(crop_size),
             Mixup(mixups=mixups, p=1, beta_limit=(0.5),
-                  mixup_normalization=A.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225))),
+                  mixup_normalization=A.Normalize()),
             A.OneOf([A.CLAHE(p=0.33),
                      A.RandomContrast(p=0.33),
                      A.RandomBrightnessContrast(p=0.33)],
                     p=0.5),
             A.Blur(p=0.25),
             A.GaussNoise(p=0.25),
-            A.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
+            A.Normalize(),
             ToTensorV2()
         ])
 

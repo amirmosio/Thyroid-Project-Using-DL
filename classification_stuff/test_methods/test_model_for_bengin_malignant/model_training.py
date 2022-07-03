@@ -13,6 +13,7 @@ from thyroid_dataset import ThyroidDataset
 from thyroid_ml_model import ThyroidClassificationModel
 from transformation import get_transformation
 
+
 @torch.no_grad()
 def validate(model, data_loader):
     class_set = sorted(data_loader.dataset.class_to_idx_dict.values())
@@ -35,17 +36,20 @@ def validate(model, data_loader):
 
 
 def train_model(base_model, model_name, sort_batch=False, augmentation="min"):
-    config_name = f"{model_name} - {augmentation}"
+    class_idx_dict = {"BENIGN": 0, "MALIGNANT": 1}
+    datasets_folder = ["stanford_tissue_microarray", "papsociaty"]
+
+    config_name = f"{model_name}-{augmentation}-{','.join(class_idx_dict.keys())}-{','.join(datasets_folder)}"
 
     logger = set_config_for_logger(config_name)
     logger.info(f"training config: {config_name}")
     try:
         image_model = ThyroidClassificationModel(base_model).to(Config.available_device)
         transformation = get_transformation(augmentation="min")
-        class_idx_dict = {"PAPILLARY_CARCINOMA": 0, "NORMAL": 1}
 
-        train, val, test = CustomFragmentLoader().load_image_path_and_labels_and_split(test_percent=Config.test_percent,
-                                                                                       val_percent=Config.val_percent)
+        train, val, test = CustomFragmentLoader(datasets_folder).load_image_path_and_labels_and_split(
+            test_percent=Config.test_percent,
+            val_percent=Config.val_percent)
         train_ds = ThyroidDataset(train, class_idx_dict, transform=transformation)
         test_ds = ThyroidDataset(test, class_idx_dict)
         val_ds = ThyroidDataset(val, class_idx_dict)
@@ -78,7 +82,7 @@ def train_model(base_model, model_name, sort_batch=False, augmentation="min"):
                     image_model.eval()
                     val_acc, val_c_acc = validate(image_model, val_data_loader)
                     val_acc = float(val_acc)
-                    logger.info(f'Val: E, B: {e + 1}, {i + 1} Loss:{float(loss.data)} Accuracy:{val_acc}%, {val_c_acc}')
+                    logger.info(f'Val|E:{e + 1}, B:{i + 1} Loss:{float(loss.data)} Accuracy:{val_acc}%, {val_c_acc}')
 
                     val_acc_history.append(val_acc)
                     test_acc_history.append(test_acc)
@@ -86,7 +90,7 @@ def train_model(base_model, model_name, sort_batch=False, augmentation="min"):
             image_model.eval()
             test_acc, test_c_acc = validate(image_model, test_data_loader)
             test_acc = float(test_acc)
-            logger.info(f'Test: Epoch:{e + 1} Accuracy: {test_acc}, {test_c_acc}%')
+            logger.info(f'Test|Epoch:{e + 1}, Accuracy: {test_acc}, {test_c_acc}%')
 
             plot_and_save_model_per_epoch(e, image_model, val_acc_history, test_acc_history, config_name)
     except Exception as e:
@@ -126,6 +130,7 @@ def plot_and_save_model_per_epoch(epoch, model, val_acc_list, test_acc_list, con
     plt.plot(range(len(test_acc_list)), test_acc_list, label="test")
     plt.legend(loc="lower right")
     plt.savefig(fig_save_path)
+    plt.clf()
 
     save_state_dir = os.path.join(config_train_dir, f"epoch-{epoch}")
     if not os.path.isdir(save_state_dir):
@@ -136,11 +141,10 @@ def plot_and_save_model_per_epoch(epoch, model, val_acc_list, test_acc_list, con
 
 if __name__ == '__main__':
     for model_name, model in [
-        ("resnet152", torchvision.models.resnet152(pretrained=True, progress=True)),
-        ("densenet121", torchvision.models.densenet121(pretrained=True, progress=True)),
-        ("inception_v3", torchvision.models.inception_v3(pretrained=True, progress=True)),
-        ("resnet50", torchvision.models.resnet50(pretrained=True, progress=True)),
-        ("vgg19", torchvision.models.vgg19(pretrained=True, progress=True)),
+        ("resnet18", torchvision.models.resnet18(pretrained=True, progress=True)),
+        # ("resnet34", torchvision.models.resnet34(pretrained=True, progress=True)),
+        # ("inception_v3", torchvision.models.inception_v3(pretrained=True, progress=True)),
+        # ("vgg19", torchvision.models.vgg19(pretrained=True, progress=True)),
     ]:
         for aug in ["fda",
                     "std",
