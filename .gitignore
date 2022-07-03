@@ -3,6 +3,7 @@
 *.xml
 *.csv
 *.xcf
+*.zip
 *.json
 *.state
 *.tiff

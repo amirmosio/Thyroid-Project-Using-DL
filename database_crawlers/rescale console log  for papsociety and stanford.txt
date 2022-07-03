@@ -1,0 +1,1319 @@
+"E:\Documentwork\sharif\CE Project\future\Thyroid Project\Thyroid-Project-Using-DL\venv\Scripts\python.exe" "C:\Program Files\JetBrains\PyCharm 2019.2.3\helpers\pydev\pydevd.py" --multiproc --qt-support=auto --client 127.0.0.1 --port 55011 --file "E:/Documentwork/sharif/CE Project/future/Thyroid Project/Thyroid-Project-Using-DL/database_crawlers/image_patcher.py"
+pydev debugger: process 2464 is connecting
+
+Connected to pydev debugger (build 192.6817.19)
+database path:  ./stanford_tissue_microarray
+image path:  ./stanford_tissue_microarray\data\C-TA-127-02.146.cd137_2_127_10_7_146_1608_70.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+14
+image path:  ./stanford_tissue_microarray\data\C-TA-127-02.146.cd137_2_127_10_8_146_1608_71.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+16
+image path:  ./stanford_tissue_microarray\data\C-TA-127-02.146.cd137_2_127_8_7_146_1608_68.jpeg
+image path:  ./stanford_tissue_microarray\data\C-TA-127-02.146.cd137_2_127_9_7_146_1608_69.jpeg
+image path:  ./stanford_tissue_microarray\data\C-TA-127-02.34.vickz_2_127_10_7_34_1315_2789aad7cff9b3ef3d6b42a85ad5a68c06f1456a7a893dc481c5b893610b3077.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): sdfgsdfg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.9
+16
+image path:  ./stanford_tissue_microarray\data\C-TA-127-02.34.vickz_2_127_10_8_34_1315_625e023d1229244398dc7dbebf311586288c951668941047adef3ce86ff1e8ab.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+16
+image path:  ./stanford_tissue_microarray\data\C-TA-127-02.34.vickz_2_127_8_7_34_1315_8541bc3a029025c03e41d8d059b7b40d38d9edcddd7d3aa36731f49fb3e3dcf3.jpeg
+image path:  ./stanford_tissue_microarray\data\C-TA-127-02.34.vickz_2_127_9_7_34_1315_f8ec0b8c498f8ca1ba9a31872582b36766e422c3cccabaf4dc7fdb9f142e66fa.jpeg
+image path:  ./stanford_tissue_microarray\data\C-TA-127-02.62.lmo2_2_127_10_7_62_1330_f1f2c5e47cc498165ab13c642d181fdde6b11a579d6f2dc2e794e1ab5bb4acea.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.9
+16
+image path:  ./stanford_tissue_microarray\data\C-TA-127-02.62.lmo2_2_127_10_8_62_1330_b203be9965411a25d36e65f37db9954dfc60808bd0a0b98252990a519ec8609a.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+16
+image path:  ./stanford_tissue_microarray\data\C-TA-127-02.62.lmo2_2_127_8_7_62_1330_82f08fbdc72d4310781d81c960100aefe1b5bfdbc67f5001045b7636f609eb1f.jpeg
+image path:  ./stanford_tissue_microarray\data\C-TA-127-02.62.lmo2_2_127_9_7_62_1330_62cc8862d7f466c9594b37ba05b0179f7a5aa4e680357af2ed958cf5eb33350b.jpeg
+image path:  ./stanford_tissue_microarray\data\C-TA-127-02.65.cd81_2_127_10_7_65_1469_70.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.9
+14
+image path:  ./stanford_tissue_microarray\data\C-TA-127-02.65.cd81_2_127_10_8_65_1469_71.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+16
+image path:  ./stanford_tissue_microarray\data\C-TA-127-02.65.cd81_2_127_8_7_65_1469_68.jpeg
+image path:  ./stanford_tissue_microarray\data\C-TA-127-02.65.cd81_2_127_9_7_65_1469_69.jpeg
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.500.ace_1_161_2_5_500_999_15.jpeg
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.500.ace_1_161_3_5_500_999_24.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.500.ace_1_161_4_5_500_999_33.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.500.ace_1_161_5_5_500_999_41.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.51.lyve1_1_161_3_5_547.51_999_20.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.51.lyve1_1_161_4_5_547.51_999_25.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.51.lyve1_1_161_5_5_547.51_999_29.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.53.sparc_1_161_3_5_547.53_999_20.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.53.sparc_1_161_4_5_547.53_999_25.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.53.sparc_1_161_5_5_547.53_999_29.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.55.cd34_1_161_3_5_547.55_999_20.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.55.cd34_1_161_4_5_547.55_999_25.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.55.cd34_1_161_5_5_547.55_999_29.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.57.ace_1_161_3_5_547.57_999_20.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.57.ace_1_161_4_5_547.57_999_25.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.57.ace_1_161_5_5_547.57_999_29.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.59.mmp11_1_161_3_5_547.59_999_20.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat):
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.59.mmp11_1_161_4_5_547.59_999_25.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.59.mmp11_1_161_5_5_547.59_999_29.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.61.fzd7_1_161_3_5_547.61_999_20.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.61.fzd7_1_161_4_5_547.61_999_25.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.61.fzd7_1_161_5_5_547.61_999_29.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.63.cd105_1_161_3_5_547.63_999_20.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.63.cd105_1_161_4_5_547.63_999_25.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.63.cd105_1_161_5_5_547.63_999_29.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.65.col4a2_1_161_3_5_547.65_999_20.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.65.col4a2_1_161_4_5_547.65_999_25.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.65.col4a2_1_161_5_5_547.65_999_29.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.67.ctgf_1_161_3_5_547.67_999_20.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.67.ctgf_1_161_4_5_547.67_999_25.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.67.ctgf_1_161_5_5_547.67_999_29.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.69.bcat_1_161_3_5_547.69_999_20.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.69.bcat_1_161_4_5_547.69_999_25.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.69.bcat_1_161_5_5_547.69_999_29.jpeg
+1how much plus pointer fill a cell(float, i:ignore, else repeat):
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.71.dkk3_1_161_3_5_547.71_999_20.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.71.dkk3_1_161_4_5_547.71_999_25.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.71.dkk3_1_161_5_5_547.71_999_29.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.73.cd44_1_161_3_5_547.73_999_20.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.73.cd44_1_161_4_5_547.73_999_25.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.73.cd44_1_161_5_5_547.73_999_29.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.75.desmin_1_161_3_5_547.75_999_20.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.75.desmin_1_161_4_5_547.75_999_25.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.75.desmin_1_161_5_5_547.75_999_29.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.77.col1_1_161_3_5_547.77_999_20.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.77.col1_1_161_4_5_547.77_999_25.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.77.col1_1_161_5_5_547.77_999_29.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.79.sma_1_161_3_5_547.79_999_20.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.79.sma_1_161_4_5_547.79_999_25.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.79.sma_1_161_5_5_547.79_999_29.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.82.he_1_161_3_5_547.82_999_20.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.82.he_1_161_4_5_547.82_999_25.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.82.he_1_161_5_5_547.82_999_29.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat):
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+10
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.83.alcian_1_161_3_5_547.83_999_20.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.83.alcian_1_161_4_5_547.83_999_25.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.83.alcian_1_161_5_5_547.83_999_29.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+8
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.84.pas_1_161_3_5_547.84_999_20.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.84.pas_1_161_4_5_547.84_999_25.jpeg
+1how much plus pointer fill a cell(float, i:ignore, else repeat):
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.84.pas_1_161_5_5_547.84_999_29.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+6
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.85.verhoeffs_1_161_3_5_547.85_999_20.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): i
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.85.verhoeffs_1_161_4_5_547.85_999_25.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.85.verhoeffs_1_161_5_5_547.85_999_29.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+14
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.93.km100_1_161_3_5_547.93_999_20.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+15
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.93.km100_1_161_4_5_547.93_999_25.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+17
+image path:  ./stanford_tissue_microarray\data\C-TA-161-01.547.93.km100_1_161_5_5_547.93_999_29.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+27
+image path:  ./stanford_tissue_microarray\data\C-TA-167-04.102.actg2_4_167_9_1_102_1355_9.jpeg
+image path:  ./stanford_tissue_microarray\data\C-TA-167-04.151.slmap_4_167_9_1_151_1356_9.jpeg
+image path:  ./stanford_tissue_microarray\data\C-TA-167-04.21.dog1.1_4_167_9_1_21_1332_4e53c47056bfcc02248d41cd8faf877a64cead32109b0230646e4d6cfe297932.jpeg
+image path:  ./stanford_tissue_microarray\data\C-TA-167-04.44.he_4_167_9_1_44_999_b438248bcc5166d2fd36d711fa4aaf90d7d141c0981ccef846b5ddd6b212ab60.jpeg
+image path:  ./stanford_tissue_microarray\data\C-TA-167-04.67.mylk_4_167_9_1_67_1354_9.jpeg
+image path:  ./stanford_tissue_microarray\data\C-TA-167-04.93.slmap_4_167_9_1_93_1356_9.jpeg
+image path:  ./stanford_tissue_microarray\data\C-TA-167-04.95.casq2_4_167_9_1_95_1359_9.jpeg
+image path:  ./stanford_tissue_microarray\data\C-TA-167-04.96.cfl2_4_167_9_1_96_1358_9.jpeg
+image path:  ./stanford_tissue_microarray\data\C-TA-201-03.11.cd68_3_201_13_4_11_1037_0d579e1034c83c71605c406b3ce7e2d491c782053f21bef011a132035375d8ef.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.9
+15
+image path:  ./stanford_tissue_microarray\data\C-TA-201-03.155.he_3_201_13_4_155_999_276.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.1
+16
+image path:  ./stanford_tissue_microarray\data\C-TA-201-03.207.gfpt2_3_201_13_4_207_999_266.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.9
+5
+image path:  ./stanford_tissue_microarray\data\C-TA-201-03.34.csf1asISH_3_201_13_4_34_1305_69e8d314c7590f188c70d215755484ddc82ba11f3c9e72802ca3e9075d74a323.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.9
+15
+image path:  ./stanford_tissue_microarray\data\C-TA-201-03.38.cd16_3_201_13_4_38_1335_afae24ca396462157a14de0f9a2bdbf88d8d5cc57c3e3514b327028fd242af21.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.9
+13
+image path:  ./stanford_tissue_microarray\data\C-TA-201-03.39.ctsl_3_201_13_4_39_1336_271a7e26efbfcb87932e33cefe8b6fd3766f1763d54a205d2758071a89f70dd3.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.9
+15
+image path:  ./stanford_tissue_microarray\data\C-TA-201-03.56.ACTG2_3_201_13_4_56_1355_44.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.9
+15
+image path:  ./stanford_tissue_microarray\data\C-TA-201-03.57.casq2_3_201_13_4_57_1359_44.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.9
+16
+image path:  ./stanford_tissue_microarray\data\C-TA-201-03.58.cfl2_3_201_13_4_58_1538_44.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.9
+15
+image path:  ./stanford_tissue_microarray\data\C-TA-201-03.61.mylk_3_201_13_4_61_1354_44.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.95
+16
+image path:  ./stanford_tissue_microarray\data\C-TA-201-03.62.SLMAP_3_201_13_4_62_1356_44.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.9
+15
+image path:  ./stanford_tissue_microarray\data\C-TA-201-03.9.cd163_3_201_13_4_9_1147_d1461ad4534ba904ed181e2400fd26e44adfc6c037d1e625e9fc0295aea5cd90.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.9
+16
+image path:  ./stanford_tissue_microarray\data\C-TA-41-03.134.nmbasISH_3_41_11_5_134_1159_4175a409ee63c281315853b6057c1e759a6a5addb46e3ed96c1e5af376b4a4cd.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.9
+14
+image path:  ./stanford_tissue_microarray\data\C-TA-41-04.134.nmbasISH_4_41_10_4_134_1159_3367a8842abc127d682d3d00100e43e5d079cbc55aac8f2f1d3d67e83bc7de05.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.9
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-41-04.134.nmbasISH_4_41_10_5_134_1159_8e06fec70dca81899c5508cb4c66474c3f344a38895c16ed869108e314d0f943.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.95
+7
+image path:  ./stanford_tissue_microarray\data\C-TA-41-04.134.nmbasISH_4_41_11_4_134_1159_063a0650f502dbcfc04f4819afc31e69fb44dc23877daac00e190f7b38069e4f.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+16
+image path:  ./stanford_tissue_microarray\data\C-TA-41-04.134.nmbasISH_4_41_11_5_134_1159_420f6102b229df2bcb5cbff3f245051c711692de28c4b6e00dfec0b517d328c8.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.9
+14
+image path:  ./stanford_tissue_microarray\data\C-TA-41-04.134.nmbasISH_4_41_1_5_134_1159_b752dcd513c916622a0badde9213ba5308d02378ecb547b3b71f1e0a3de5fb0c.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+14
+image path:  ./stanford_tissue_microarray\data\C-TA-41-04.134.nmbasISH_4_41_2_5_134_1159_b62c77756e5f1cac4d0e2e5f0092b01192017699236e869023f0c41d0bfd517f.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+8
+image path:  ./stanford_tissue_microarray\data\C-TA-41-04.134.nmbasISH_4_41_3_5_134_1159_7dded355bef31dd2612890b6cee8b7916955a1e36431d9ffefe10155a034ea6d.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+16
+image path:  ./stanford_tissue_microarray\data\C-TA-41-04.134.nmbasISH_4_41_4_4_134_1159_fa2f584da512e723b9fb0a67735f48a060774a274abe176504f5e4fd5019889c.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.1
+7
+image path:  ./stanford_tissue_microarray\data\C-TA-41-04.134.nmbasISH_4_41_4_5_134_1159_8c26e9c3df9272229b81dbde833f4e6d1db07015ae9b8708dca93738a653ebf0.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.95
+12
+image path:  ./stanford_tissue_microarray\data\C-TA-41-04.134.nmbasISH_4_41_5_4_134_1159_6d07c74a5fc0ccd424e063fdadeeb806acd43ad5a1fcf39d0da108a9d62acec9.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+14
+image path:  ./stanford_tissue_microarray\data\C-TA-41-04.134.nmbasISH_4_41_5_5_134_1159_3443643d9099cd2ae999d9e4db90287c5f52ed21007dedcc1ebb1895adfbe7cc.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+16
+image path:  ./stanford_tissue_microarray\data\C-TA-41-04.134.nmbasISH_4_41_6_4_134_1159_af883ee830cc9662e5c192c49332df9f3a30a529b17ed0e55dfcf8f5dd1a8310.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): i
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-41-04.134.nmbasISH_4_41_6_5_134_1159_f85f34022e2be1a648021d1384abca647ce6b7b4392b909d1823b3f9add7c93f.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+16
+image path:  ./stanford_tissue_microarray\data\C-TA-41-04.134.nmbasISH_4_41_7_4_134_1159_431183098d12a31c18e24e009876bb2bce1625d1fe16b10032f81f5654ce3d93.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+16
+image path:  ./stanford_tissue_microarray\data\C-TA-41-04.134.nmbasISH_4_41_7_5_134_1159_dfbc8f075eeafee4a7b3c3f7069f47764a419921e8fc3b7b71351aef69b346a2.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): i
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-41-04.134.nmbasISH_4_41_8_4_134_1159_428b1ccd57c46ffa44903475e066eeeb4315592837cbe9dc125098d8e4b89aa3.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): i
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-41-04.134.nmbasISH_4_41_8_5_134_1159_c721fb6fd245a29efaccaf2edbc737405ba4efb211ddbe435ab538a82084288e.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): dfg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.7
+14
+image path:  ./stanford_tissue_microarray\data\C-TA-41-04.134.nmbasISH_4_41_9_4_134_1159_6c2b69ad0a521575ccb2a5e32b9c27812ef14576e00bd90c4bc35dad438a9a58.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-41-04.134.nmbasISH_4_41_9_5_134_1159_2a2e5aafe8daed622e0780212c950bfa27142da696a920f6f9e5f026a268269f.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+13
+image path:  ./stanford_tissue_microarray\data\C-TA-88-01.202.cyclind3_1_88_7_3_202_1366_29.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.9
+16
+image path:  ./stanford_tissue_microarray\data\C-TA-88-01.212.cd137_1_88_7_3_212_1608_29.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.9
+16
+image path:  ./stanford_tissue_microarray\data\C-TA-88-01.220.bcl1_1_88_7_3_220_1075_29.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.9
+16
+image path:  ./stanford_tissue_microarray\data\C-TA-88-01.223.cyclind2_1_88_7_3_223_1365_29.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.9
+16
+image path:  ./stanford_tissue_microarray\data\C-TA-88-01.300.cd81_1_88_7_3_300_1469_29.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.9
+16
+image path:  ./stanford_tissue_microarray\data\C-TA-88-01.39.vickz_1_88_7_3_39_1315_18d733089b171610fed42e077b170da44ba4021ade40be7d3a5f97de803127f9.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+16
+image path:  ./stanford_tissue_microarray\data\C-TA-88-01.41.lmo2_1_88_7_3_41_1330_7210ca57bfa703f19dc0fdd01b632ddd4bebbf0476bee76dfbc6dd083f23d602.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.9
+16
+image path:  ./stanford_tissue_microarray\data\C-TA-95-01.101.cyclind3_1_95_7_7_101_1366_115.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.5
+31
+image path:  ./stanford_tissue_microarray\data\C-TA-95-01.101.cyclind3_1_95_8_7_101_1366_116.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.5
+30
+image path:  ./stanford_tissue_microarray\data\C-TA-95-01.105.vegf_1_95_7_7_105_1172_b7d488ce5a5b048b4debdd0452b01bb835160eec070b5f30f70e198f6a718f70.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.45
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-95-01.105.vegf_1_95_8_7_105_1172_fb10a895d04e6b965219291730e77435d4230f35b0cd1bc6031f3f4f0c380951.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.45
+6
+image path:  ./stanford_tissue_microarray\data\C-TA-95-01.108.cyclind2_1_95_7_7_108_1365_115.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.45
+5
+image path:  ./stanford_tissue_microarray\data\C-TA-95-01.108.cyclind2_1_95_8_7_108_1365_116.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.45
+29
+image path:  ./stanford_tissue_microarray\data\C-TA-95-01.2.bcl6_1_95_7_7_2_1000_fe52a6164f0f0ad2748ff9441dba245e1e317690de0329220f57b8f7d2c5889e.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.7
+23
+image path:  ./stanford_tissue_microarray\data\C-TA-95-01.2.bcl6_1_95_8_7_2_1000_980ab86d3a4d67a561b87a7f71124af702622e69bd840e5670a343150d16bc30.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.9
+16
+image path:  ./stanford_tissue_microarray\data\C-TA-95-01.3.cd10_1_95_7_7_3_1001_85533b8b6fa0af5d1a5533f845a68f55ecf0d1ceb5cec08ac441985af7d0b50e.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.9
+16
+image path:  ./stanford_tissue_microarray\data\C-TA-95-01.3.cd10_1_95_8_7_3_1001_dc9039aabe9fb336c471907bc920481e34e0b65c9c04daac760de94fd4591831.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.8
+16
+image path:  ./stanford_tissue_microarray\data\C-TA-95-01.4.mum1_1_95_7_7_4_1003_8c04dce11a7c914ae7263399a1c3b3aba2a21f79de6a989fd30df8126ee44021.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.5
+2
+image path:  ./stanford_tissue_microarray\data\C-TA-95-01.4.mum1_1_95_8_7_4_1003_d9a9556acb09107c4b88ec22756b279254d687a6579b479f7bdb11b36b58130a.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.4
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-95-01.5.bcl2_1_95_7_7_5_1012_fca3ff44fe903d682176706fa9e1af13aba8f2c8f62117125e9b6448dbc39fbe.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.4
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-95-01.5.bcl2_1_95_8_7_5_1012_e26f7992be475e543dc542d77886daffec3449663ba49a0cf61a2a863b84cf16.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.4
+11
+image path:  ./stanford_tissue_microarray\data\C-TA-95-01.65.vickz_1_95_7_7_65_1315_2fffc084e7d3a333d3bf248f61829f923fa0191f57479042a62b1fb8e65f8e4d.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.45
+16
+image path:  ./stanford_tissue_microarray\data\C-TA-95-01.65.vickz_1_95_8_7_65_1315_f1d4ea4380dedb5d03becf66317f01df00811596b78d1e8a9672d71a96cb0390.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.4
+30
+image path:  ./stanford_tissue_microarray\data\C-TA-95-01.66.flt1_1_95_7_7_66_1314_85ffcaee8f59c60dd4f2973010ff3ddfc63e1d8268170286247951823b470551.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.4
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-95-01.66.flt1_1_95_8_7_66_1314_7d9d6b0714ad0a9ab1c20a62e6a5472a727b00a622ac4f42f12e5f453655f3e6.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.4
+3
+image path:  ./stanford_tissue_microarray\data\C-TA-95-01.67.flk1_1_95_7_7_67_1313_d458fde7f7c5e554b2a46feb2799f3203ba817aea49ba65d5d96f7b5290569df.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.4
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-95-01.67.flk1_1_95_8_7_67_1313_8b69912d2fc3450286a28bb5e667e1544c5d53967749412ba838cc8ef8b145a4.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.4
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-95-01.68.hgal_01_95_7_7_68_1155_2a4b878876a5b431fdaafbde4b6f5d7543a6ca1fdba0e4ddf6db830698a77c6e.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+35
+image path:  ./stanford_tissue_microarray\data\C-TA-95-01.68.hgal_01_95_8_7_68_1155_3314e28a6b8f2619719d36eb1d71d99247934336f59854fc3180b1e6061d4b2b.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.9
+40
+image path:  ./stanford_tissue_microarray\data\C-TA-95-01.77.lmo2_1_95_7_7_77_1330_701a171b1dcd0a04bf7eaefbd212a14f9c846e17b0386b8c25102b052e19793a.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.5
+7
+image path:  ./stanford_tissue_microarray\data\C-TA-95-01.77.lmo2_1_95_8_7_77_1330_169619b343e4d2c105526bfda8a22e5d743b5a7dfd4aabc606b7393234e2d5e7.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.5
+15
+image path:  ./stanford_tissue_microarray\data\C-TA-95-01.90.cd34_1_95_7_7_90_1056_ffe52df7b2e2346c3b83e925cb3958548f9813d73eb77a3f67f03ce192811e25.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.4
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-95-01.90.cd34_1_95_8_7_90_1056_33bc11f91f1bf8a3d48dab03fcb90a8d0fa9272ad4ed1a93c8b2dd14191f5eac.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.4
+0
+image path:  ./stanford_tissue_microarray\data\C-TA-95-01.97.cd81_1_95_7_7_97_1469_115.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+25
+image path:  ./stanford_tissue_microarray\data\C-TA-95-01.97.cd81_1_95_8_7_97_1469_116.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.9
+30
+image path:  ./stanford_tissue_microarray\data\C-TA-99-01.100.cd137_1_99_9_3_100_1608_31.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.9
+15
+image path:  ./stanford_tissue_microarray\data\C-TA-99-01.103.cd137l_1_99_9_3_103_1637_31.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.95
+15
+image path:  ./stanford_tissue_microarray\data\C-TA-99-01.125.cyclind2_1_99_9_3_125_1365_31.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.9
+15
+image path:  ./stanford_tissue_microarray\data\C-TA-99-01.21.cyclind3_1_99_9_3_21_1366_31.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.95
+15
+image path:  ./stanford_tissue_microarray\data\C-TA-99-01.27.vickz_1_99_9_3_27_1315_b01639566fbca710b026afa519cbde7e123fae18937521ed2414749569763e50.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.9
+16
+image path:  ./stanford_tissue_microarray\data\C-TA-99-01.28.lmo2_1_99_9_3_28_1330_19d45ea1aaa429b4d6ccb0b6ec9c6bbf079cbc784cefb6c8b895e5edd58494a9.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.9
+16
+image path:  ./stanford_tissue_microarray\data\C-TA-99-01.32.cd81_1_99_9_3_32_1469_31.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.95
+15
+image path:  ./stanford_tissue_microarray\data\C-TA-99-02.100.cd137_2_99_8_5_100_1608_52.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+16
+image path:  ./stanford_tissue_microarray\data\C-TA-99-02.103.cd137l_2_99_8_5_103_1637_52.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+16
+image path:  ./stanford_tissue_microarray\data\C-TA-99-02.125.cyclind2_2_99_8_5_125_1365_52.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+16
+image path:  ./stanford_tissue_microarray\data\C-TA-99-02.21.cyclind3_2_99_8_5_21_1366_52.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.9
+14
+image path:  ./stanford_tissue_microarray\data\C-TA-99-02.27.vickz_2_99_8_5_27_1315_e66b0ce2d2f1ba3471b5a6ce057773d87a5f5b3ba6343456f2517340ade87d3b.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+16
+image path:  ./stanford_tissue_microarray\data\C-TA-99-02.28.lmo2_2_99_8_5_28_1330_b7fd97355b6670d3146cc9c59cc20cced7e585cf5c5156e68cb2d1734d34f87b.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+16
+image path:  ./stanford_tissue_microarray\data\C-TA-99-02.32.cd81_2_99_8_5_32_1469_52.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+16
+image path:  ./stanford_tissue_microarray\data\C-TA-99-03.100.cd137_3_99_4_6_100_1608_57.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): fgsfg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.6
+19
+image path:  ./stanford_tissue_microarray\data\C-TA-99-03.103.cd137l_3_99_4_6_103_1637_57.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.95
+16
+image path:  ./stanford_tissue_microarray\data\C-TA-99-03.125.cyclind2_3_99_4_6_125_1365_57.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.95
+14
+image path:  ./stanford_tissue_microarray\data\C-TA-99-03.21.cyclind3_3_99_4_6_21_1366_57.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.9
+15
+image path:  ./stanford_tissue_microarray\data\C-TA-99-03.27.vickz_3_99_4_6_27_1315_a70e5bcfc06e960e27405be3c8d7b8d5f6bb2b6e59aa698e183488ca76c95df4.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.9
+16
+image path:  ./stanford_tissue_microarray\data\C-TA-99-03.28.lmo2_3_99_4_6_28_1330_d8bc8fa8ef2184af68152bc915aeff109270a54d429d511a446726e78cfcd5d8.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.85
+15
+image path:  ./stanford_tissue_microarray\data\C-TA-99-03.32.cd81_3_99_4_6_32_1469_57.jpeg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.85
+14
+database path:  ./papsociaty
+image path:  ./papsociaty\data\BENIGN\Amyloid_Goiter_Pitmann.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.45
+0
+image path:  ./papsociaty\data\BENIGN\BTNpap-hyperplZC04-10370x10.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.45
+0
+image path:  ./papsociaty\data\BENIGN\BTNpap-hyperplZC04-10370x4.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.1
+0
+image path:  ./papsociaty\data\BENIGN\BTNpap-hyperplZC04-10370x40.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.35
+1
+image path:  ./papsociaty\data\BENIGN\BTNpap-hyperplZC04-10370x4_0.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.1
+0
+image path:  ./papsociaty\data\BENIGN\Chronic_lymphocytic_thyroidoitis-Mixed_lymphocytes,_oncocytes,_follicular_cells-dq-medium-crothers-1.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): sdfsdf
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.95
+4
+image path:  ./papsociaty\data\BENIGN\D-20.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.9
+6
+image path:  ./papsociaty\data\BENIGN\DanColloid2.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): i
+0
+image path:  ./papsociaty\data\BENIGN\Dan_Colloid1.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): i
+0
+image path:  ./papsociaty\data\BENIGN\Dan_Colloid1_0.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): i
+0
+image path:  ./papsociaty\data\BENIGN\EE-20.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.95
+6
+image path:  ./papsociaty\data\BENIGN\F10-18_2.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.4
+0
+image path:  ./papsociaty\data\BENIGN\FF-20.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.1
+0
+image path:  ./papsociaty\data\BENIGN\FTH468BTN_sheets_follicles_.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.2
+0
+image path:  ./papsociaty\data\BENIGN\FTH468BTN_sheets_follicles_1.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.45
+0
+image path:  ./papsociaty\data\BENIGN\FTH468BTN_sheets_follicles_1_0.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.45
+0
+image path:  ./papsociaty\data\BENIGN\Flame.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 2
+1
+image path:  ./papsociaty\data\BENIGN\GD40T.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 2.1
+0
+image path:  ./papsociaty\data\BENIGN\GD40T_0.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 2.1
+0
+image path:  ./papsociaty\data\BENIGN\Grave_s_Disease,_flame_cell_cytoplasm,_DQ_hp.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): sdfw
+how much plus pointer fill a cell(float, i:ignore, else repeat): 2
+0
+image path:  ./papsociaty\data\BENIGN\Hashimotos,_follicular_cells_and_mixed_lymphoid_pop,_lp_SM__DQ.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.6
+4
+image path:  ./papsociaty\data\BENIGN\Hashimotos,_germinal_center_material,_DQ_hp_SM.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.1
+4
+image path:  ./papsociaty\data\BENIGN\Hashimotos,_intermediate_size_lymphocytes,_hp_DQ_SM.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 2.2
+1
+image path:  ./papsociaty\data\BENIGN\Hashimotos,_low_power,_DQ_SM.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.4
+28
+image path:  ./papsociaty\data\BENIGN\Hashimotos,_oncocytes,_DQ_hp_SM.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 2.6
+1
+image path:  ./papsociaty\data\BENIGN\Hashimotos,_prominant_microfollicular_pattern,_PAP_lp_SM.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.4
+8
+image path:  ./papsociaty\data\BENIGN\Hashimotos,_pure_lymphoid_population2,_DQ_lp_SM.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+6
+image path:  ./papsociaty\data\BENIGN\Hashimotos,_tingible_body_macrophage,_DQ_hp_SM.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 5
+1
+image path:  ./papsociaty\data\BENIGN\Hashimotos_thyroiditis,_oncocytic_cells_with_lymphs,_DQ_hp__SM.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 3.6
+1
+image path:  ./papsociaty\data\BENIGN\Lymph_thyroiditis,_oncocyte_with_cleft,_lymphs_in_group,_PAP_hp_SM.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 2.2
+0
+image path:  ./papsociaty\data\BENIGN\Lymph_thyroiditis,_oncocytic_sheet_from_dom_Hurthle_nodule_SM,_PAP.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+6
+image path:  ./papsociaty\data\BENIGN\Lymph_thyroiditis,_predom_Hurthle_cells_from_dom_nodule,_DQ_SM.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+6
+image path:  ./papsociaty\data\BENIGN\Lymph_thyroiditis-_microfollicle_formation_in_oncocytes_lp_DQ_SM.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 2.1
+0
+image path:  ./papsociaty\data\BENIGN\Lymphocytic_thyroiditis,_reparative_follicular_cells_with_hemosiderin_SM,_DQ_hp.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 2.6
+1
+image path:  ./papsociaty\data\BENIGN\Lymphocytic_thyroiditis-_Reactive_oncocytes_with_lymphoid_cell_to_right_hp_DQ_SM.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 2.6
+1
+image path:  ./papsociaty\data\BENIGN\Lymphocytic_thyroiditis1,_Pap,_lp_SM_.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.9
+6
+image path:  ./papsociaty\data\BENIGN\MNG,_oncocytic_change,_DQ_hp.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 3.4
+1
+image path:  ./papsociaty\data\BENIGN\MNG-_norm_foll_cells_shimmering_in_colloid,_PAP.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 2
+4
+image path:  ./papsociaty\data\BENIGN\Multinuleated__giant_cells_and_follicular_cells_in_benign_thyroid_nodule-pap-high-zhang.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.7
+0
+image path:  ./papsociaty\data\BENIGN\ReactiveCystLining.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.9
+1
+image path:  ./papsociaty\data\BENIGN\Subacute_Thyroiditis-2.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.2
+4
+image path:  ./papsociaty\data\BENIGN\Subacute_granulomatous_thyroiditis-granulomatous_reaction_with_lack_of_collioid_and_follicular_cells-pap-low-ali.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.5
+12
+image path:  ./papsociaty\data\BENIGN\TP_colloid_BC07-7651D.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): sdsg
+how much plus pointer fill a cell(float, i:ignore, else repeat): i
+0
+image path:  ./papsociaty\data\BENIGN\adenomatoid_nodule-Benign_follicular_cells_and_dense__colloid-medium-zhang.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): i
+0
+image path:  ./papsociaty\data\BENIGN\adenomatoid_nodule-Benign_follicular_cells_and_dense_colloid-pap-medium-_zhang.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): i
+0
+image path:  ./papsociaty\data\BENIGN\adenomatoid_nodule-Watery_colloid-pap-low-_2-zhang.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): i
+0
+image path:  ./papsociaty\data\BENIGN\adenomatoid_nodule-normal__follicular_cells_and_watery_colloid-pap-medium-zhang.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.6
+0
+image path:  ./papsociaty\data\BENIGN\adenomatoid_nodule-normal_follicular_cells-pap-medium-2-zhang.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.95
+2
+image path:  ./papsociaty\data\BENIGN\adenomatoid_nodule_with_a_background_of_chronic__lymphocytic_thyroiditis-pap-high-zhang.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.8
+6
+image path:  ./papsociaty\data\BENIGN\chronic_Lymph_ocytic_thyroiditis-_microfollicle_formation_in_oncocytes-_DQ-medium-crothers.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.2
+0
+image path:  ./papsociaty\data\BENIGN\chronic_Lymphocytic_thyroiditis-_Follicular_cells_with_juxtaposed_mixed_lymphocytes-PAP_high-crothers.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.5
+1
+image path:  ./papsociaty\data\BENIGN\chronic_Lymphocytic_thyroiditis-_Reactive_oncocytes-dq-medium-crothers.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 2
+1
+image path:  ./papsociaty\data\BENIGN\chronic_Lymphocytic_thyroiditis-_microfollicle_and_admixed_lymphs-dq-medium-crothers_.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 2
+1
+image path:  ./papsociaty\data\BENIGN\chronic_Lymphocytic_thyroiditis-predominantly_mature_lymphocytes_with_no_Hurthle_cells-_Pap-low-crothers.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.5
+0
+image path:  ./papsociaty\data\BENIGN\chronic_lymphocytic_thyroiditis-Hurthle_cells_and__lymphocytes-pap-medium-zhang.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.55
+0
+image path:  ./papsociaty\data\BENIGN\chronic_lymphocytic_thyroiditis-Hurthle_cells_and__lymphocytes-pap-medium-zhang400x4.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.5
+0
+image path:  ./papsociaty\data\BENIGN\chronic_lymphocytic_thyroiditis-_oncocytes_mixed_into_dense_lymphoid_population-dq-high-crothers-2.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.3
+2
+image path:  ./papsociaty\data\BENIGN\chronic_lymphocytic_thyroiditis-_oncocytes_surrounded_by_mature_lymphocytes-dq-high-crothers-3_.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.7
+1
+image path:  ./papsociaty\data\BENIGN\chronic_lymphocytic_thyroiditis-typical_nuclear_streaking_of_lymphocytes-dq-low-crothers.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.05
+4
+image path:  ./papsociaty\data\BENIGN\colloid_nodule-Dense_colloid-pap-medium-zhang.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): i
+0
+image path:  ./papsociaty\data\BENIGN\colloid_nodule-Dense_colloid_dq-medium-zhang.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): i
+0
+image path:  ./papsociaty\data\BENIGN\colloid_nodule-Watery_colloid-pap-low-zhang.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): i
+0
+image path:  ./papsociaty\data\BENIGN\colloid_nodule-Watery_colloid_on_PAP-low-zhang.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): i
+0
+image path:  ./papsociaty\data\BENIGN\colloid_nodule-dessicated_colloid_PAP-low-zhang.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): i
+0
+image path:  ./papsociaty\data\BENIGN\colloid_nodule-watery_colloid-dq-low-29-zhang.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): i
+0
+image path:  ./papsociaty\data\BENIGN\gd-fn20.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.1
+4
+image path:  ./papsociaty\data\BENIGN\gd-fn20_0.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.1
+4
+image path:  ./papsociaty\data\BENIGN\gd10p.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.5
+7
+image path:  ./papsociaty\data\BENIGN\gd10p_0.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.45
+1
+image path:  ./papsociaty\data\BENIGN\gd20g.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.1
+4
+image path:  ./papsociaty\data\BENIGN\gd20g_0.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.1
+4
+image path:  ./papsociaty\data\BENIGN\image_000302_001_2.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.4
+0
+image path:  ./papsociaty\data\BENIGN\image_000302_002_2.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.7
+4
+image path:  ./papsociaty\data\BENIGN\image_000302_003_2.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.65
+0
+image path:  ./papsociaty\data\BENIGN\image_000302_004_2.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.05
+0
+image path:  ./papsociaty\data\BENIGN\image_000302_005_1.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+4
+image path:  ./papsociaty\data\BENIGN\image_000305_001_0.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.8
+6
+image path:  ./papsociaty\data\BENIGN\image_000305_001_2.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.9
+4
+image path:  ./papsociaty\data\BENIGN\image_000305_002_0.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.5
+2
+image path:  ./papsociaty\data\BENIGN\image_000305_003_0.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.38
+0
+image path:  ./papsociaty\data\BENIGN\image_000305_004_0.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 2.2
+1
+image path:  ./papsociaty\data\BENIGN\image_000305_006_0.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.1
+4
+image path:  ./papsociaty\data\BENIGN\image_000305_007_0.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+4
+image path:  ./papsociaty\data\BENIGN\normal_colloid_nodule-watery_colloid-dq-low-zhang-2.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.4
+0
+image path:  ./papsociaty\data\BENIGN\subacute_granulomatous_thyroiditis-a_well-formed_granuloma_with_epithelioid_histiocytes-pap-medium-ali.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.05
+2
+image path:  ./papsociaty\data\BENIGN\subacute_granulomatous_thyroiditis-epithelioid_histiocytes_and_scant_background_colloid-high-pap-ali.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.1
+4
+image path:  ./papsociaty\data\BENIGN\subacute_granulomatous_thyroiditis-epithelioid_histiocytes_forming_granulomas_in_a_background_contianing_colloid-dq-medium-ali.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+4
+image path:  ./papsociaty\data\MALIGNANT\ATC20L.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.2
+4
+image path:  ./papsociaty\data\MALIGNANT\ATC20L_0.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 120
+1
+image path:  ./papsociaty\data\MALIGNANT\ATC20b.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.5
+8
+image path:  ./papsociaty\data\MALIGNANT\ATC20b_0.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.5
+12
+image path:  ./papsociaty\data\MALIGNANT\ATC40BB.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 2.1
+1
+image path:  ./papsociaty\data\MALIGNANT\ATC40BB_0.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 2.2
+1
+image path:  ./papsociaty\data\MALIGNANT\ATC40FC.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 2
+1
+image path:  ./papsociaty\data\MALIGNANT\ATC40FC_0.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 2
+1
+image path:  ./papsociaty\data\MALIGNANT\ATC40J.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): i
+0
+image path:  ./papsociaty\data\MALIGNANT\ATC40J_0.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): i
+0
+image path:  ./papsociaty\data\MALIGNANT\ATC40p.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.7
+0
+image path:  ./papsociaty\data\MALIGNANT\ATC40p_0.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.7
+0
+image path:  ./papsociaty\data\MALIGNANT\ATC5A.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.3
+0
+image path:  ./papsociaty\data\MALIGNANT\ATC5A_0.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.3
+0
+image path:  ./papsociaty\data\MALIGNANT\AliMalt003.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+6
+image path:  ./papsociaty\data\MALIGNANT\AliMalt005.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.5
+2
+image path:  ./papsociaty\data\MALIGNANT\AliMalt006.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.7
+9
+image path:  ./papsociaty\data\MALIGNANT\AliMalt007.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+6
+image path:  ./papsociaty\data\MALIGNANT\Anaplastic_Ca_Thyroid_OSS-ZC08-6549-4.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.6
+0
+image path:  ./papsociaty\data\MALIGNANT\Anaplastic_ca_thyroidOSS-ZC08-6549-1.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.6
+0
+image path:  ./papsociaty\data\MALIGNANT\Anaplastic_ca_thyroidOSS-ZC08-6549-5.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 4
+1
+image path:  ./papsociaty\data\MALIGNANT\Anaplastic_ca_thyroidOSS-ZC08-6549-6.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 3.7
+1
+image path:  ./papsociaty\data\MALIGNANT\Anaplastic_ca_thyroidOSS-ZC08-6549.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 4
+1
+image path:  ./papsociaty\data\MALIGNANT\Atc63w.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 2.5
+1
+image path:  ./papsociaty\data\MALIGNANT\Atc63w_0.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 2.5
+1
+image path:  ./papsociaty\data\MALIGNANT\BC06-44681A.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.1
+4
+image path:  ./papsociaty\data\MALIGNANT\BC06-44681B.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): i
+0
+image path:  ./papsociaty\data\MALIGNANT\BC06-44681C.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.1
+3
+image path:  ./papsociaty\data\MALIGNANT\BC06-44681D.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 2.2
+0
+image path:  ./papsociaty\data\MALIGNANT\BC06-44681E.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.2
+0
+image path:  ./papsociaty\data\MALIGNANT\BC06-44681F.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): i
+0
+image path:  ./papsociaty\data\MALIGNANT\BC06-44681H.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): i
+0
+image path:  ./papsociaty\data\MALIGNANT\BC08-18757A.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.5
+0
+image path:  ./papsociaty\data\MALIGNANT\BC08-18757D.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.3
+4
+image path:  ./papsociaty\data\MALIGNANT\BC08-18757E.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 2.2
+0
+image path:  ./papsociaty\data\MALIGNANT\BC08-18757G.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 2.2
+0
+image path:  ./papsociaty\data\MALIGNANT\BC08-18757H.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): sfgsg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 3.3
+1
+image path:  ./papsociaty\data\MALIGNANT\BS07-16211A.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.5
+0
+image path:  ./papsociaty\data\MALIGNANT\BS07-16211B.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.4
+4
+image path:  ./papsociaty\data\MALIGNANT\BS07-16211C.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.35
+4
+image path:  ./papsociaty\data\MALIGNANT\BS07-16211D.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.1
+0
+image path:  ./papsociaty\data\MALIGNANT\BS07-16211E.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.2
+4
+image path:  ./papsociaty\data\MALIGNANT\C00-4582B.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+4
+image path:  ./papsociaty\data\MALIGNANT\C01-23782C.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): sdfsf
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.2
+4
+image path:  ./papsociaty\data\MALIGNANT\C01-23782D.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 2.1
+1
+image path:  ./papsociaty\data\MALIGNANT\C01-23782F.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 2
+1
+image path:  ./papsociaty\data\MALIGNANT\C03-54313A.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.2
+0
+image path:  ./papsociaty\data\MALIGNANT\C03-54313A_0.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.2
+0
+image path:  ./papsociaty\data\MALIGNANT\C03-54313B.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.2
+0
+image path:  ./papsociaty\data\MALIGNANT\C03-54313B_0.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.2
+0
+image path:  ./papsociaty\data\MALIGNANT\C03-54313C.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 3.2
+0
+image path:  ./papsociaty\data\MALIGNANT\C03-54313C_0.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 3.2
+0
+image path:  ./papsociaty\data\MALIGNANT\C03-54313D.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 3
+0
+image path:  ./papsociaty\data\MALIGNANT\C03-54313D_0.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 3
+0
+image path:  ./papsociaty\data\MALIGNANT\C03-54313E.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 3.3
+0
+image path:  ./papsociaty\data\MALIGNANT\C03-54313E_0.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 3.3
+0
+image path:  ./papsociaty\data\MALIGNANT\C03-54313F.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): i
+0
+image path:  ./papsociaty\data\MALIGNANT\C03-54313F_0.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): i
+0
+image path:  ./papsociaty\data\MALIGNANT\C03-54313G.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 3
+1
+image path:  ./papsociaty\data\MALIGNANT\C03-54313G_0.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 3
+1
+image path:  ./papsociaty\data\MALIGNANT\CellBlock.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.1
+4
+image path:  ./papsociaty\data\MALIGNANT\CompositeMetRCC.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 2.2
+2
+image path:  ./papsociaty\data\MALIGNANT\Cystic_PTC-1.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./papsociaty\data\MALIGNANT\Cystic_PTC-2.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.1
+0
+image path:  ./papsociaty\data\MALIGNANT\Cystic_PTC-3.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): i
+0
+image path:  ./papsociaty\data\MALIGNANT\Cystic_PTC-5.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.05
+4
+image path:  ./papsociaty\data\MALIGNANT\Cystic_PTC-6.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.3
+0
+image path:  ./papsociaty\data\MALIGNANT\DLBL_a.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 2
+1
+image path:  ./papsociaty\data\MALIGNANT\DLBL_b.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 3.5
+1
+image path:  ./papsociaty\data\MALIGNANT\EC10_110b_copy.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 2
+0
+image path:  ./papsociaty\data\MALIGNANT\ED62A.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.4
+0
+image path:  ./papsociaty\data\MALIGNANT\ED62B-1.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.4
+0
+image path:  ./papsociaty\data\MALIGNANT\ED82A.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.5
+2
+image path:  ./papsociaty\data\MALIGNANT\Ed82C_1.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.5
+0
+image path:  ./papsociaty\data\MALIGNANT\Ed82C_1_0.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.5
+0
+image path:  ./papsociaty\data\MALIGNANT\F10-17_3.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 2.1
+0
+image path:  ./papsociaty\data\MALIGNANT\F10-17_5_0.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 2
+1
+image path:  ./papsociaty\data\MALIGNANT\F10-17_7.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 2
+1
+image path:  ./papsociaty\data\MALIGNANT\Figure_1.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.1
+4
+image path:  ./papsociaty\data\MALIGNANT\Figure_2.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 2.2
+4
+image path:  ./papsociaty\data\MALIGNANT\Figure_5.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 2.2
+0
+image path:  ./papsociaty\data\MALIGNANT\Figure_8.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 7
+1
+image path:  ./papsociaty\data\MALIGNANT\Follicular_CA,_microfollicles_in_sheet_bx_proven,_DQ.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.3
+4
+image path:  ./papsociaty\data\MALIGNANT\Follicular_neoplasm1,_PAP_bx_proven_FVPTC_SM.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.5
+0
+image path:  ./papsociaty\data\MALIGNANT\Follicular_neoplasm1,_low_power,_Bx_confirm_FVPTC_DQ_SM.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.3
+0
+image path:  ./papsociaty\data\MALIGNANT\Follicular_neoplasm2,_bx_proven_FVPTC_Pap_SM.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.5
+0
+image path:  ./papsociaty\data\MALIGNANT\Follicular_neoplasm2,_low_power,_confirmed_FVPTC_DQ_SM.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.4
+4
+image path:  ./papsociaty\data\MALIGNANT\Follicular_neoplasm2,_low_power,_confirmed_FVPTC_DQ_SM_0.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.3
+4
+image path:  ./papsociaty\data\MALIGNANT\Follicular_neoplasm3,_microfollicles,bx_confirmed_FVPTC_Pap.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 2
+0
+image path:  ./papsociaty\data\MALIGNANT\Follicular_neoplasm3,_microfollicles_confirmed_FVPTC_DQ_SM.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 2
+2
+image path:  ./papsociaty\data\MALIGNANT\IC-PTC40.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.9
+0
+image path:  ./papsociaty\data\MALIGNANT\Ic40f.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 2
+0
+image path:  ./papsociaty\data\MALIGNANT\Insular_CA_C.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./papsociaty\data\MALIGNANT\Insular_CA_D.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./papsociaty\data\MALIGNANT\Large_Cell_Lymphoma_1_0.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 2
+1
+image path:  ./papsociaty\data\MALIGNANT\Large_Cell_Lymphoma_2_0.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+6
+image path:  ./papsociaty\data\MALIGNANT\MED_CA-1.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.4
+0
+image path:  ./papsociaty\data\MALIGNANT\MED_CA-2.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.2
+2
+image path:  ./papsociaty\data\MALIGNANT\MetSignetRingGastric.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat):
+how much plus pointer fill a cell(float, i:ignore, else repeat): 2
+1
+image path:  ./papsociaty\data\MALIGNANT\Met_PD_breast_CA_to_thyroid,_hp_DQ.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 3.5
+1
+image path:  ./papsociaty\data\MALIGNANT\Met_PD_breast_CA_to_thyroid,_huge_cell,_PAP.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): i
+0
+image path:  ./papsociaty\data\MALIGNANT\Met_PD_breast_CA_to_thyroid,_huge_cell_with_vacuoles,_DQ.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): i
+0
+image path:  ./papsociaty\data\MALIGNANT\Met_PD_breast_CA_to_thyroid,_prom_nucleoli_PAP.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): i
+0
+image path:  ./papsociaty\data\MALIGNANT\Met_esophageal_CA_a.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.45
+4
+image path:  ./papsociaty\data\MALIGNANT\Met_esophageal_CA_c.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 3
+1
+image path:  ./papsociaty\data\MALIGNANT\MetastaticBAC.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 2.1
+1
+image path:  ./papsociaty\data\MALIGNANT\MetastaticMerkelCell.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.9
+0
+image path:  ./papsociaty\data\MALIGNANT\Metastatic_Colon_CA.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.6
+0
+image path:  ./papsociaty\data\MALIGNANT\NG10-1319n.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): i
+0
+image path:  ./papsociaty\data\MALIGNANT\PDCA-1.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.1
+0
+image path:  ./papsociaty\data\MALIGNANT\PDCA-2.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.2
+0
+image path:  ./papsociaty\data\MALIGNANT\PDCA-3.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.45
+2
+image path:  ./papsociaty\data\MALIGNANT\PTC,_oncocytic_type_-intranuc_inclusion_Pap.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): i
+0
+image path:  ./papsociaty\data\MALIGNANT\PTC_TCV-1.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): i
+0
+image path:  ./papsociaty\data\MALIGNANT\PTC_TCV-2.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): i
+0
+image path:  ./papsociaty\data\MALIGNANT\PTC_TCV-3.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): i
+0
+image path:  ./papsociaty\data\MALIGNANT\PTC_TCV-4.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+4
+image path:  ./papsociaty\data\MALIGNANT\PTC_TCV-5.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.55
+1
+image path:  ./papsociaty\data\MALIGNANT\PTC_TCV-6.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 2
+1
+image path:  ./papsociaty\data\MALIGNANT\PTC_TCV-7.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.2
+1
+image path:  ./papsociaty\data\MALIGNANT\PTC_TCV_.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 3.1
+1
+image path:  ./papsociaty\data\MALIGNANT\PTC_inci_1EC.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 2.5
+0
+image path:  ./papsociaty\data\MALIGNANT\PTC_inci_2EC.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 3
+1
+image path:  ./papsociaty\data\MALIGNANT\Pap-ptc-4.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1
+0
+image path:  ./papsociaty\data\MALIGNANT\Pap-ptc-5.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.9
+1
+image path:  ./papsociaty\data\MALIGNANT\Pap_CA,_excellent_inclusion,_DQ.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 3.2
+1
+image path:  ./papsociaty\data\MALIGNANT\Pap_CA,_excellent_inclusion,_DQ_0.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 3.2
+1
+image path:  ./papsociaty\data\MALIGNANT\Pap_CA,_nuclear_grooves,_PAP.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): i
+0
+image path:  ./papsociaty\data\MALIGNANT\Pap_CA,_perfect_inclusion_with_cleft,_PAP.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 4
+1
+image path:  ./papsociaty\data\MALIGNANT\Pap_CA,_powdery_nuclei,_small_nucleoli_and_small_inclusion,_PAP_hp.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 3.1
+1
+image path:  ./papsociaty\data\MALIGNANT\Pap_CA,_powdery_nuclei,_small_nucleoli_and_small_inclusion,_PAP_hp_0.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 3.1
+1
+image path:  ./papsociaty\data\MALIGNANT\Pap_Ca_DQ_5X_anastomosing_true_papillae.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.2
+0
+image path:  ./papsociaty\data\MALIGNANT\Pap_Ca_Pap_100X_INCI___powdery_chromatin.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 3
+1
+image path:  ./papsociaty\data\MALIGNANT\Pap_Ca_Pap_100X_INCIs.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 3
+0
+image path:  ./papsociaty\data\MALIGNANT\Pap_Ca_Pap_100X_psammoma_bodies.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): i
+0
+image path:  ./papsociaty\data\MALIGNANT\Papillary.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.5
+0
+image path:  ./papsociaty\data\MALIGNANT\Papillary_CA,_cystic_type_DQ.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.6
+0
+image path:  ./papsociaty\data\MALIGNANT\Papillary_CA,_cystic_type_DQ_sm.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.6
+4
+image path:  ./papsociaty\data\MALIGNANT\Papillary_CA,_disordered_nuclei_in_sheet_of_tumor,_PAP_sm.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 2
+2
+image path:  ./papsociaty\data\MALIGNANT\Papillary_CA,_giant_cell,_DQ_lp.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 2
+4
+image path:  ./papsociaty\data\MALIGNANT\Papillary_CA,_giant_cell,_DQ_lp_0.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 2
+0
+image path:  ./papsociaty\data\MALIGNANT\Papillary_CA,_giant_cell_and_tumor_sheets,_PAP_lp2.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.55
+0
+image path:  ./papsociaty\data\MALIGNANT\Papillary_CA,_giant_cell_and_tumor_sheets,_PAP_lp2_0.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.55
+9
+image path:  ./papsociaty\data\MALIGNANT\Papillary_CA,_high_cellularity_3,_PAP_lp.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.45
+15
+image path:  ./papsociaty\data\MALIGNANT\Papillary_CA,_high_cellularity_3,_PAP_lp_0.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.45
+15
+image path:  ./papsociaty\data\MALIGNANT\Papillary_CA,_nuclear_clefts_and_elongation,_PAP_hp_0.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 3
+1
+image path:  ./papsociaty\data\MALIGNANT\Papillary_CA,_psammoma_body_in_papillae,_HE_hp_0.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): i
+0
+image path:  ./papsociaty\data\MALIGNANT\Papilllary_CA_with_papillary_frond_tips_PAP,_lp.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.55
+0
+image path:  ./papsociaty\data\MALIGNANT\S10-6501_2.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.6
+2
+image path:  ./papsociaty\data\MALIGNANT\S10-6501_3.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.5
+2
+image path:  ./papsociaty\data\MALIGNANT\S10-6501_4.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.4
+0
+image path:  ./papsociaty\data\MALIGNANT\S10-6501_7_1.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.25
+4
+image path:  ./papsociaty\data\MALIGNANT\Spindle_Medullary_CA-1.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): i
+0
+image path:  ./papsociaty\data\MALIGNANT\Spindle_Medullary_CA-2.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.25
+4
+image path:  ./papsociaty\data\MALIGNANT\Spindle_Medullary_CA-4_0.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 2.1
+1
+image path:  ./papsociaty\data\MALIGNANT\Spindle_medullary_CA_w_amyloid.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.1
+4
+image path:  ./papsociaty\data\MALIGNANT\Squamous_cell_CA_of_thyroid_a.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): i
+0
+image path:  ./papsociaty\data\MALIGNANT\Squamous_cell_CA_of_thyroid_b.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): i
+0
+image path:  ./papsociaty\data\MALIGNANT\Thy_FNA_Plasmacytoid_B-cell_lymphoma2_DQ_SM.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 3.2
+1
+image path:  ./papsociaty\data\MALIGNANT\Thy_FNA_Plasmacytoid_B-cell_lymphoma3_DQ_SM.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 2.5
+1
+image path:  ./papsociaty\data\MALIGNANT\_Sus_Met_Prostate_sm.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 3.2
+1
+image path:  ./papsociaty\data\MALIGNANT\image_000305_007.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): ergseg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.5
+2
+image path:  ./papsociaty\data\MALIGNANT\image_101208_002_1.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 2.1
+0
+image path:  ./papsociaty\data\MALIGNANT\image_101208_003.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 2.1
+0
+image path:  ./papsociaty\data\MALIGNANT\image_101208_004 (1).jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1,45
+could not convert string to float: '1,45'
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.45
+4
+image path:  ./papsociaty\data\MALIGNANT\image_101208_004.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.4
+0
+image path:  ./papsociaty\data\MALIGNANT\image_101208_005_copy.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): i
+0
+image path:  ./papsociaty\data\MALIGNANT\image_101208_006 (1).jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): i
+0
+image path:  ./papsociaty\data\MALIGNANT\image_101208_006.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.3
+0
+image path:  ./papsociaty\data\MALIGNANT\image_101208_007 (1).jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.35
+0
+image path:  ./papsociaty\data\MALIGNANT\image_101208_007.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.8
+6
+image path:  ./papsociaty\data\MALIGNANT\image_101208_008 (1).jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 0.8
+0
+image path:  ./papsociaty\data\MALIGNANT\image_101208_008.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.5
+4
+image path:  ./papsociaty\data\MALIGNANT\image_101208_009 (1).jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): i
+0
+image path:  ./papsociaty\data\MALIGNANT\image_101208_009.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 2.1
+0
+image path:  ./papsociaty\data\MALIGNANT\image_101208_010.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.8
+2
+image path:  ./papsociaty\data\MALIGNANT\image_101208_012.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): 1.8
+2
+image path:  ./papsociaty\data\MALIGNANT\ins63a.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): i
+0
+image path:  ./papsociaty\data\MALIGNANT\mixedcarcinoma.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): i
+0
+image path:  ./papsociaty\data\MALIGNANT\s10-6501_1.jpg
+how much plus pointer fill a cell(float, i:ignore, else repeat): i
+0
+
+Process finished with exit code -1

@@ -3,6 +3,7 @@ import json
 import os
 import os.path as os_path
 import random
+import re
 from math import ceil
 from os import listdir
 from os.path import isfile, join
@@ -11,7 +12,8 @@ import cv2
 import tifffile
 import zarr as ZarrObject
 
-from database_crawlers.web_stain_sample import ThyroidType, WebStainImage
+from classification_stuff.utils import show_and_wait
+from database_crawlers.web_stain_sample import ThyroidCancerLevel, WebStainImage
 
 
 class ThyroidFragmentFilters:
@@ -69,6 +71,8 @@ class ImageAndSlidePatcher:
     @classmethod
     def _generate_raw_fragments_from_image_array_or_zarr(cls, image_object, frag_size=512, frag_overlap=0.1,
                                                          shuffle=True):
+        if image_object is None:
+            return None
         zarr_shape = image_object.shape
 
         step_size = int(frag_size * (1 - frag_overlap))
@@ -99,8 +103,8 @@ class ImageAndSlidePatcher:
                 yield next_test_item, frag_pos
 
     @classmethod
-    def _get_json_and_image_address_of_directory(cls, directory_path):
-        image_formats = [".jpeg", ".tiff"]
+    def _get_json_and_image_address_of_directory(cls, directory_path, ignore_json=False):
+        image_formats = [".jpeg", ".tiff", ".jpg"]
         json_format = ".json"
         files = [f for f in listdir(directory_path) if isfile(join(directory_path, f))]
         files.sort()
@@ -113,25 +117,59 @@ class ImageAndSlidePatcher:
                 pairs[file_name][1] = file_path
             elif cls._get_extension_from_path(file_path) == json_format:
                 pairs[file_name][0] = file_path
+        if ignore_json:
+            return [value for key, value in pairs.values() if value is not None]
         return [(key, value) for key, value in pairs.values() if key is not None and value is not None]
 
+    @staticmethod
+    def create_patch_dir_and_initialize_csv(database_path):
+        data_dir = os.path.join(database_path, "data")
+        patch_dir = os.path.join(database_path, "patches")
+        if not os.path.isdir(patch_dir):
+            os.mkdir(patch_dir)
+        label_csv_path = os.path.join(patch_dir, "patch_labels.csv")
+        csv_file = open(label_csv_path, "a+")
+        csv_writer = csv.writer(csv_file)
+        csv_file.seek(0)
+        if len(csv_file.read(100)) <= 0:
+            csv_writer.writerow(WebStainImage.sorted_json_keys())
+        return data_dir, patch_dir, csv_writer, csv_file
+
     @classmethod
-    def save_patches_in_folders(cls, database_directory):
-        thyroid_desired_classes = [ThyroidType.NORMAL, ThyroidType.PAPILLARY_CARCINOMA]
-        list_dir = [os.path.join(database_directory, o) for o in os.listdir(database_directory)
+    def save_image_patches_and_update_csv(cls, thyroid_type, thyroid_desired_classes, csv_writer, web_details,
+                                          image_path, slide_patch_dir, slide_id):
+        if thyroid_type not in thyroid_desired_classes:
+            return
+        csv_writer.writerow(list(web_details.values()))
+
+        if cls._get_extension_from_path(image_path) == ".tiff":
+            generator = cls._generate_raw_fragments_from_image_array_or_zarr(cls._zarr_loader(image_path))
+        else:
+            jpeg_image = cls._jpeg_loader(image_path)
+            jpeg_image = cls.ask_image_scale_and_rescale(jpeg_image)
+            generator = cls._generate_raw_fragments_from_image_array_or_zarr(jpeg_image)
+        if generator is None:
+            return
+
+        if not os.path.isdir(slide_patch_dir):
+            os.mkdir(slide_patch_dir)
+        filters = [ThyroidFragmentFilters.empty_frag_with_laplacian_threshold]
+        fragment_id = 0
+        for fragment, frag_pos in cls._filter_frag_from_generator(generator, filters):
+            fragment_file_path = os.path.join(slide_patch_dir, f"{slide_id}-{fragment_id}.jpeg")
+            cv2.imwrite(fragment_file_path, fragment)
+            fragment_id += 1
+        print(fragment_id)
+
+    @classmethod
+    def save_patches_in_folders(cls, database_directory, dataset_dir=None):
+        thyroid_desired_classes = [ThyroidCancerLevel.MALIGNANT, ThyroidCancerLevel.BENIGN]
+        datasets_dirs = os.listdir(database_directory) if dataset_dir is None else dataset_dir
+        list_dir = [os.path.join(database_directory, o) for o in datasets_dirs
                     if os.path.isdir(os.path.join(database_directory, o, "data"))]
         for database_path in list_dir:
             print("database path: ", database_path)
-            data_dir = os.path.join(database_path, "data")
-            patch_dir = os.path.join(database_path, "patches")
-            if not os.path.isdir(patch_dir):
-                os.mkdir(patch_dir)
-            label_csv_path = os.path.join(patch_dir, "patch_labels.csv")
-            csv_file = open(label_csv_path, "a+")
-            csv_writer = csv.writer(csv_file)
-            csv_file.seek(0)
-            if len(csv_file.read(100)) <= 0:
-                csv_writer.writerow(WebStainImage.sorted_json_keys())
+            data_dir, patch_dir, csv_writer, csv_file = cls.create_patch_dir_and_initialize_csv(database_path)
             for json_path, image_path in cls._get_json_and_image_address_of_directory(data_dir):
                 print("image path: ", image_path)
                 file_name = cls._get_file_name_from_path(image_path)
@@ -146,31 +184,71 @@ class ImageAndSlidePatcher:
                 web_details = cls._json_key_loader(json_path)
                 web_details["image_id"] = slide_id
                 web_label = web_details["image_web_label"]
-                thyroid_type = ThyroidType.get_thyroid_type_from_diagnosis_label(web_label)
+                thyroid_type = ThyroidCancerLevel.get_thyroid_level_from_diagnosis_label(web_label)
                 web_details["image_class_label"] = thyroid_type.value[1]
-                if thyroid_type not in thyroid_desired_classes:
-                    continue
-                csv_writer.writerow(list(web_details.values()))
 
-                if cls._get_extension_from_path(image_path) == ".tiff":
-                    generator = cls._generate_raw_fragments_from_image_array_or_zarr(cls._zarr_loader(image_path))
-                else:
-                    generator = cls._generate_raw_fragments_from_image_array_or_zarr(cls._jpeg_loader(image_path))
-
-                if not os.path.isdir(slide_patch_dir):
-                    os.mkdir(slide_patch_dir)
-                filters = [ThyroidFragmentFilters.empty_frag_with_laplacian_threshold]
-                fragment_id = 0
-                for fragment, frag_pos in cls._filter_frag_from_generator(generator, filters):
-                    fragment_file_path = os.path.join(slide_patch_dir, f"{slide_id}-{fragment_id}.jpeg")
-                    cv2.imwrite(fragment_file_path, fragment)
-                    fragment_id += 1
-                print(fragment_id)
+                cls.save_image_patches_and_update_csv(thyroid_type, thyroid_desired_classes, csv_writer, web_details,
+                                                      image_path, slide_patch_dir, slide_id)
             csv_file.close()
+
+    @classmethod
+    def save_papsociaty_patch(cls, database_path):
+        thyroid_desired_classes = [ThyroidCancerLevel.MALIGNANT, ThyroidCancerLevel.BENIGN]
+        print("database path: ", database_path)
+        for folder in ["BENIGN", "MALIGNANT"]:
+            group_path = os.path.join(database_path, "data", folder)
+            data_dir, patch_dir, csv_writer, csv_file = cls.create_patch_dir_and_initialize_csv(database_path)
+            for image_path in cls._get_json_and_image_address_of_directory(group_path, ignore_json=True):
+                print("image path: ", image_path)
+                file_name = cls._get_file_name_from_path(image_path)
+                slide_id = str(hash(file_name))
+                slide_patch_dir = os.path.join(patch_dir, slide_id)
+                if os.path.isdir(slide_patch_dir):
+                    """
+                    it has already been patched
+                    """
+                    continue
+                web_label = folder + "-" + file_name
+                thyroid_type = ThyroidCancerLevel.get_thyroid_level_from_diagnosis_label(web_label)
+                web_details = {"database_name": "PapSociety",
+                               "image_id": slide_id,
+                               "image_web_label": web_label,
+                               "image_class_label": thyroid_type.value[1],
+                               "report": None,
+                               "stain_type": "UNKNOWN",
+                               "is_wsi": False}
+                cls.save_image_patches_and_update_csv(thyroid_type, thyroid_desired_classes, csv_writer, web_details,
+                                                      image_path, slide_patch_dir, slide_id)
+
+            csv_file.close()
+
+    @classmethod
+    def ask_image_scale_and_rescale(cls, image):
+        # small: S, Medium: M, Large:L
+        show_and_wait(image)
+        res = input("how much plus pointer fill a cell(float, i:ignore, else repeat): ")
+        try:
+            if res == "i":
+                return None
+            elif re.match("[0-9]+(.[0-9]*)?", res):
+                scale = 1 / float(res)
+                return cv2.resize(image, (0, 0), fx=scale, fy=scale)
+            else:
+                return cls.ask_image_scale_and_rescale(image)
+        except Exception as e:
+            print(e)
+            return cls.ask_image_scale_and_rescale(image)
 
 
 if __name__ == '__main__':
     random.seed(1)
 
     database_directory = "./"
-    ImageAndSlidePatcher.save_patches_in_folders(database_directory)
+    datasets = ["stanford_tissue_microarray"]
+    ImageAndSlidePatcher.save_patches_in_folders(database_directory, dataset_dir=datasets)
+    ImageAndSlidePatcher.save_papsociaty_patch(os.path.join(database_directory, "papsociaty"))
+# # test
+# if __name__ == '__main__':
+#     image_path = "./stanford_tissue_microarray/data/C-TA-41-04.134.nmbasISH_4_41_5_4_134_1159_6d07c74a5fc0ccd424e063fdadeeb806acd43ad5a1fcf39d0da108a9d62acec9.jpeg"
+#     image = ImageAndSlidePatcher._jpeg_loader(image_path)
+#     ImageAndSlidePatcher.ask_image_scale_and_rescale(image)

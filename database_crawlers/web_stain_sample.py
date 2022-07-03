@@ -17,6 +17,22 @@ class StainType(enum.Enum):
     UNKNOWN = 1, "UNKNOWN"
 
 
+class ThyroidCancerLevel(enum.Enum):
+    UNKNOWN = -1, "UNKNOWN"
+    MALIGNANT = 0, "MALIGNANT"
+    BENIGN = 1, "BENIGN"
+
+    @staticmethod
+    def get_thyroid_level_from_diagnosis_label(label: str):
+        label = label.lower()
+        if "malignant" in label:
+            return ThyroidCancerLevel.MALIGNANT
+        elif "benign" in label:
+            return ThyroidCancerLevel.BENIGN
+        else:
+            return ThyroidCancerLevel.UNKNOWN
+
+
 class ThyroidType(enum.Enum):
     UNKNOWN = -1, "UNKNOWN"
     NORMAL = 0, "NORMAL"
