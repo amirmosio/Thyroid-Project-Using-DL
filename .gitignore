@@ -1,4 +1,6 @@
 # Custom
+*.svs
+*.xml
 *.csv
 *.json
 *.state
