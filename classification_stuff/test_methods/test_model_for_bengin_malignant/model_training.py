@@ -24,7 +24,7 @@ def validate(model, data_loader):
     for images, labels in data_loader:
         images = images.to(Config.available_device)
         labels = labels.to(Config.available_device)
-        x = model(images)
+        x = model(images, validate=True)
         values, preds = torch.max(x, 1)
         for c in class_set:
             class_correct_count[c] = class_correct_count.get(c, 0) + ((preds == labels) * (labels == c)).sum()
@@ -36,6 +36,8 @@ def validate(model, data_loader):
 
 
 def train_model(base_model, model_name, sort_batch=False, augmentation="min"):
+    _is_inception3 = type(base_model) == torchvision.models.inception.Inception3
+
     class_idx_dict = {"BENIGN": 0, "MALIGNANT": 1}
     datasets_folder = ["stanford_tissue_microarray", "papsociaty"]
 
@@ -68,6 +70,8 @@ def train_model(base_model, model_name, sort_batch=False, augmentation="min"):
         test_acc = 0
         for e in range(Config.n_epoch):
             for images, labels in tqdm(train_data_loader, colour="#0000ff"):
+                # if type(base_model) == torchvision.models.inception.Inception3:
+                # if image_model
                 image_model.train()
                 i += 1
                 images = images.to(Config.available_device)
@@ -75,7 +79,12 @@ def train_model(base_model, model_name, sort_batch=False, augmentation="min"):
                 optimizer.zero_grad()
                 pred = image_model(images)
                 # pred label: torch.max(pred, 1)[1], labels
-                loss = cec(pred, labels)
+                if _is_inception3:
+                    pred, aux_pred = pred
+                    loss, aux_loss = cec(pred, labels), cec(aux_pred, labels)
+                    loss = loss + 0.4 * aux_loss
+                else:
+                    loss = cec(pred, labels)
                 loss.backward()
                 optimizer.step()
                 if (i + 1) % Config.n_print == 0:

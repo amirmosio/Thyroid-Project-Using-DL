@@ -4,7 +4,7 @@ from albumentations.pytorch import ToTensorV2
 from albumentations_mixup import Mixup
 
 
-def get_transformation(augmentation='min', crop_size=256, base_data_loader=None):
+def get_transformation(augmentation='min', crop_size=299, base_data_loader=None):
     if augmentation == "min":
         trans = A.Compose([
             (lambda x: A.RandomCrop(x, x, p=1) if x > 0 else A.RandomCrop(x, x, p=0))(crop_size),

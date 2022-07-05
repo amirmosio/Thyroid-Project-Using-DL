@@ -18,10 +18,25 @@ class ThyroidClassificationModel(nn.Module):
             nn.BatchNorm1d(2),
             nn.Softmax(dim=-1)
         )
+        self._is_inception3 = type(base_model) == torchvision.models.inception.Inception3
+        if self._is_inception3:
+            self.classifier2 = nn.Sequential(
+                nn.Linear(1000, 500),
+                nn.BatchNorm1d(500),
+                nn.ReLU(),
+                nn.Linear(500, 100),
+                nn.BatchNorm1d(100),
+                nn.ReLU(),
+                nn.Linear(100, 2),
+                nn.BatchNorm1d(2),
+                nn.Softmax(dim=-1)
+            )
 
-    def forward(self, x):
-        res_net_output = self.base_model(x)
-        return self.classifier(res_net_output)
+    def forward(self, x, validate=False):
+        output = self.base_model(x)
+        if self._is_inception3 and not validate:
+            return self.classifier(output[0]), self.classifier2(output[1])
+        return self.classifier(output)
 
     def save_model(self, path):
         torch.save(self.state_dict(), path)

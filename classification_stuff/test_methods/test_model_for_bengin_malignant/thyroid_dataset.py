@@ -7,6 +7,7 @@ from albumentations.pytorch import ToTensorV2
 from torch.utils.data import Dataset
 
 from fragment_splitter import CustomFragmentLoader
+from transformation import get_transformation
 
 
 class ThyroidDataset(Dataset):
@@ -51,10 +52,7 @@ class ThyroidDataset(Dataset):
         if self.transform is not None:
             image = self.transform(image=image)['image']
         else:
-            transform = A.Compose([
-                A.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
-                ToTensorV2()
-            ])
+            transform = get_transformation(augmentation="min")
 
             image = transform(image=image)['image']
 
