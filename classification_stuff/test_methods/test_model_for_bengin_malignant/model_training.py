@@ -153,7 +153,6 @@ if __name__ == '__main__':
         ("resnet18", torchvision.models.resnet18(pretrained=True, progress=True)),
         ("resnet34", torchvision.models.resnet34(pretrained=True, progress=True)),
         ("inception_v3", torchvision.models.inception_v3(pretrained=True, progress=True)),
-        ("vgg19", torchvision.models.vgg19(pretrained=True, progress=True)),
     ]:
         for aug in ["fda",
                     "std",

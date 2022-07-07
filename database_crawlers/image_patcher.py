@@ -2,6 +2,7 @@ import csv
 import json
 import os
 import os.path as os_path
+import pathlib
 import random
 import re
 from math import ceil
@@ -11,9 +12,11 @@ from os.path import isfile, join
 import cv2
 import tifffile
 import zarr as ZarrObject
+from tqdm import tqdm
 
 from classification_stuff.utils import show_and_wait
 from database_crawlers.web_stain_sample import ThyroidCancerLevel, WebStainImage
+from national_cancer_institute.read_xml_file import get_slide_info_from_bcr_xml
 
 
 class ThyroidFragmentFilters:
@@ -91,8 +94,9 @@ class ImageAndSlidePatcher:
                 yield image_object[start_w:end_w, start_h: end_h], (start_w, start_h)
 
     @classmethod
-    def _filter_frag_from_generator(cls, frag_generator, filter_func_list, return_all_with_condition=False):
-        for next_test_item, frag_pos in frag_generator:
+    def _filter_frag_from_generator(cls, frag_generator, filter_func_list, return_all_with_condition=False,
+                                    all_frag_count=None):
+        for next_test_item, frag_pos in tqdm(frag_generator, total=all_frag_count):
             condition = True
             for function in filter_func_list:
                 condition &= function(next_test_item)
@@ -138,16 +142,19 @@ class ImageAndSlidePatcher:
     @classmethod
     def save_image_patches_and_update_csv(cls, thyroid_type, thyroid_desired_classes, csv_writer, web_details,
                                           image_path, slide_patch_dir, slide_id):
-        if thyroid_type not in thyroid_desired_classes:
+        if thyroid_desired_classes is not None and thyroid_type not in thyroid_desired_classes:
             return
         csv_writer.writerow(list(web_details.values()))
 
-        if cls._get_extension_from_path(image_path) == ".tiff":
-            generator = cls._generate_raw_fragments_from_image_array_or_zarr(cls._zarr_loader(image_path))
+        if cls._get_extension_from_path(image_path) in [".tiff", ".tif", ".svs"]:
+            zarr_object = cls._zarr_loader(image_path)
+            generator = cls._generate_raw_fragments_from_image_array_or_zarr(zarr_object)
+            total_counts = cls._get_number_of_initial_frags(zarr_object=zarr_object)
         else:
             jpeg_image = cls._jpeg_loader(image_path)
             jpeg_image = cls.ask_image_scale_and_rescale(jpeg_image)
             generator = cls._generate_raw_fragments_from_image_array_or_zarr(jpeg_image)
+            total_counts = cls._get_number_of_initial_frags(zarr_object=jpeg_image)
         if generator is None:
             return
 
@@ -155,7 +162,7 @@ class ImageAndSlidePatcher:
             os.mkdir(slide_patch_dir)
         filters = [ThyroidFragmentFilters.empty_frag_with_laplacian_threshold]
         fragment_id = 0
-        for fragment, frag_pos in cls._filter_frag_from_generator(generator, filters):
+        for fragment, frag_pos in cls._filter_frag_from_generator(generator, filters, all_frag_count=total_counts):
             fragment_file_path = os.path.join(slide_patch_dir, f"{slide_id}-{fragment_id}.jpeg")
             cv2.imwrite(fragment_file_path, fragment)
             fragment_id += 1
@@ -223,6 +230,37 @@ class ImageAndSlidePatcher:
             csv_file.close()
 
     @classmethod
+    def save_national_cancer_institute_patch(cls, database_path):
+        data_dir = os.path.join(database_path, "data")
+        slide_infos = {}
+        for xml_path in pathlib.Path(data_dir).glob("**/*.xml"):
+            slide_infos.update(get_slide_info_from_bcr_xml(str(xml_path)))
+
+        data_dir, patch_dir, csv_writer, csv_file = cls.create_patch_dir_and_initialize_csv(database_path)
+        for image_path in pathlib.Path(data_dir).glob("**/*.svs"):
+            image_path = str(image_path)
+            print("image path: ", image_path)
+            file_name = cls._get_file_name_from_path(image_path)
+            slide_id = file_name.split(".")[0]
+            slide_patch_dir = os.path.join(patch_dir, slide_id)
+            if os.path.isdir(slide_patch_dir):
+                print("it has already been patched")
+                continue
+            web_label = slide_infos.get(slide_id, None)
+            if web_label is None:
+                print("Ignored")
+                continue
+            web_details = {"database_name": "NationalCancerInstitute",
+                           "image_id": slide_id,
+                           "image_web_label": web_label,
+                           "image_class_label": web_label,
+                           "report": None,
+                           "stain_type": "H&E",
+                           "is_wsi": True}
+            cls.save_image_patches_and_update_csv(web_label, None, csv_writer, web_details,
+                                                  image_path, slide_patch_dir, slide_id)
+
+    @classmethod
     def ask_image_scale_and_rescale(cls, image):
         # small: S, Medium: M, Large:L
         show_and_wait(image)
@@ -244,9 +282,10 @@ if __name__ == '__main__':
     random.seed(1)
 
     database_directory = "./"
-    datasets = ["stanford_tissue_microarray"]
-    ImageAndSlidePatcher.save_patches_in_folders(database_directory, dataset_dir=datasets)
-    ImageAndSlidePatcher.save_papsociaty_patch(os.path.join(database_directory, "papsociaty"))
+    # ImageAndSlidePatcher.save_patches_in_folders(database_directory, dataset_dir=["stanford_tissue_microarray"])
+    # ImageAndSlidePatcher.save_papsociaty_patch(os.path.join(database_directory, "papsociaty"))
+    ImageAndSlidePatcher.save_national_cancer_institute_patch(
+        os.path.join(database_directory, "national_cancer_institute"))
 # # test
 # if __name__ == '__main__':
 #     image_path = "./stanford_tissue_microarray/data/C-TA-41-04.134.nmbasISH_4_41_5_4_134_1159_6d07c74a5fc0ccd424e063fdadeeb806acd43ad5a1fcf39d0da108a9d62acec9.jpeg"
