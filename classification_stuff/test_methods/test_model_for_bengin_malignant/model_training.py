@@ -109,13 +109,13 @@ def train_model(base_model, model_name, sort_batch=False, augmentation="min"):
         i = -1
         val_acc = 0
         train_acc = 0
-        for e in range(Config.n_epoch):
+        for epoch in range(Config.n_epoch):
             # variables to calculate train acc
             class_set = sorted(train_data_loader.dataset.class_to_idx_dict.values())
             class_total_count = {}
             class_correct_count = {}
 
-            e = 0.00001
+            epsilon = 0.00001
             for images, labels in tqdm(train_data_loader, colour="#0000ff"):
                 image_model.train()
                 i += 1
@@ -143,15 +143,15 @@ def train_model(base_model, model_name, sort_batch=False, augmentation="min"):
                     image_model.eval()
                     val_acc, val_c_acc = validate(image_model, val_data_loader)
                     val_acc = float(val_acc)
-                    logger.info(f'Val|E:{e + 1}, B:{i + 1}|Loss:{float(loss.data)} Accuracy:{val_acc}%, {val_c_acc}')
+                    logger.info(f'Val|E:{epoch + 1}, B:{i + 1}|Loss:{float(loss.data)} Accuracy:{val_acc}%, {val_c_acc}')
 
                     val_acc_history.append(val_acc)
                     train_acc_history.append(train_acc)
 
-            class_accuracies = [class_correct_count[c] / (class_total_count[c] + e) for c in class_set]
+            class_accuracies = [class_correct_count[c] / (class_total_count[c] + epsilon) for c in class_set]
             train_acc = 100 * sum(class_accuracies) / len(class_set)
-            logger.info(f'Train|E:{e + 1}|Accuracy:{train_acc}%, {class_accuracies}')
-            plot_and_save_model_per_epoch(e, image_model, val_acc_history, train_acc_history, config_name)
+            logger.info(f'Train|E:{epoch + 1}|Accuracy:{train_acc}%, {class_accuracies}')
+            plot_and_save_model_per_epoch(epoch, image_model, val_acc_history, train_acc_history, config_name)
     except Exception as e:
         print(e)
         logger.info(str(e))
