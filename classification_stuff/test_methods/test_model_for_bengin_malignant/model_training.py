@@ -149,7 +149,7 @@ def train_model(base_model, model_name, sort_batch=False, augmentation="min"):
                     train_acc_history.append(train_acc)
 
             class_accuracies = [class_correct_count[c] / (class_total_count[c] + epsilon) for c in class_set]
-            train_acc = 100 * sum(class_accuracies) / len(class_set)
+            train_acc = (100 * sum(class_accuracies) / len(class_set)).item()
             logger.info(f'Train|E:{epoch + 1}|Accuracy:{train_acc}%, {class_accuracies}')
             plot_and_save_model_per_epoch(epoch, image_model, val_acc_history, train_acc_history, config_name)
     except Exception as e:
