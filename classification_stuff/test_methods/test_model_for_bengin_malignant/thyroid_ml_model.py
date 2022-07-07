@@ -33,7 +33,7 @@ class ThyroidClassificationModel(nn.Module):
             )
 
     def forward(self, x, validate=False):
-        output = self.base_model(x)
+        output = self.base_model(x.float())
         if self._is_inception3 and not validate:
             return self.classifier(output[0]), self.classifier2(output[1])
         return self.classifier(output)

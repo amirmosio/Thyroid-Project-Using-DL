@@ -1,11 +1,10 @@
 import os
 
-import albumentations as A
 import numpy as np
 from PIL import Image
-from albumentations.pytorch import ToTensorV2
 from torch.utils.data import Dataset
 
+from classification_stuff.utils import show_and_wait
 from fragment_splitter import CustomFragmentLoader
 from transformation import get_transformation
 
@@ -50,7 +49,10 @@ class ThyroidDataset(Dataset):
         image = self.add_margin(image)
         image = np.array(image)
         if self.transform is not None:
+            # show_and_wait(image)
             image = self.transform(image=image)['image']
+            # image_show = np.moveaxis(image.cpu().detach().numpy(), 0, -1)
+            # show_and_wait(image_show)
         else:
             transform = get_transformation(augmentation="min")
 

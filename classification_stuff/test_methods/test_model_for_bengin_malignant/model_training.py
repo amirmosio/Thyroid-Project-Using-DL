@@ -35,78 +35,6 @@ def validate(model, data_loader):
     return acc * 100, class_accuracies
 
 
-def train_model(base_model, model_name, sort_batch=False, augmentation="min"):
-    _is_inception3 = type(base_model) == torchvision.models.inception.Inception3
-
-    class_idx_dict = {"BENIGN": 0, "MALIGNANT": 1}
-    datasets_folder = ["stanford_tissue_microarray", "papsociaty"]
-
-    config_name = f"{model_name}-{augmentation}-{','.join(class_idx_dict.keys())}-{','.join(datasets_folder)}"
-
-    logger = set_config_for_logger(config_name)
-    logger.info(f"training config: {config_name}")
-    try:
-        image_model = ThyroidClassificationModel(base_model).to(Config.available_device)
-        transformation = get_transformation(augmentation="min")
-
-        train, val, test = CustomFragmentLoader(datasets_folder).load_image_path_and_labels_and_split(
-            test_percent=Config.test_percent,
-            val_percent=Config.val_percent)
-        train_ds = ThyroidDataset(train, class_idx_dict, transform=transformation)
-        test_ds = ThyroidDataset(test, class_idx_dict)
-        val_ds = ThyroidDataset(val, class_idx_dict)
-
-        train_data_loader = DataLoader(train_ds, batch_size=Config.batch_size, shuffle=True)
-        val_data_loader = DataLoader(val_ds, batch_size=Config.eval_batch_size, shuffle=True)
-        test_data_loader = DataLoader(test_ds, batch_size=Config.eval_batch_size, shuffle=True)
-
-        cec = nn.CrossEntropyLoss(weight=torch.tensor(train_ds.class_weights).to(Config.available_device))
-        optimizer = optim.Adam(image_model.parameters(), lr=Config.learning_rate)
-        val_acc_history = []
-        test_acc_history = []
-
-        i = -1
-        val_acc = 0
-        test_acc = 0
-        for e in range(Config.n_epoch):
-            for images, labels in tqdm(train_data_loader, colour="#0000ff"):
-                # if type(base_model) == torchvision.models.inception.Inception3:
-                # if image_model
-                image_model.train()
-                i += 1
-                images = images.to(Config.available_device)
-                labels = labels.to(Config.available_device)
-                optimizer.zero_grad()
-                pred = image_model(images)
-                # pred label: torch.max(pred, 1)[1], labels
-                if _is_inception3:
-                    pred, aux_pred = pred
-                    loss, aux_loss = cec(pred, labels), cec(aux_pred, labels)
-                    loss = loss + 0.4 * aux_loss
-                else:
-                    loss = cec(pred, labels)
-                loss.backward()
-                optimizer.step()
-                if (i + 1) % Config.n_print == 0:
-                    image_model.eval()
-                    val_acc, val_c_acc = validate(image_model, val_data_loader)
-                    val_acc = float(val_acc)
-                    logger.info(f'Val|E:{e + 1}, B:{i + 1} Loss:{float(loss.data)} Accuracy:{val_acc}%, {val_c_acc}')
-
-                    val_acc_history.append(val_acc)
-                    test_acc_history.append(test_acc)
-
-            image_model.eval()
-            test_acc, test_c_acc = validate(image_model, test_data_loader)
-            test_acc = float(test_acc)
-            logger.info(f'Test|Epoch:{e + 1}, Accuracy: {test_acc}, {test_c_acc}%')
-
-            plot_and_save_model_per_epoch(e, image_model, val_acc_history, test_acc_history, config_name)
-    except Exception as e:
-        print(e)
-        logger.info(str(e))
-
-
 def set_config_for_logger(config_label):
     import logging
     trains_state_dir = "./train_state"
@@ -148,14 +76,102 @@ def plot_and_save_model_per_epoch(epoch, model, val_acc_list, test_acc_list, con
     model.save_model(model_save_path)
 
 
+def train_model(base_model, model_name, sort_batch=False, augmentation="min"):
+    class_idx_dict = {"BENIGN": 0, "MALIGNANT": 1}
+    datasets_folder = ["stanford_tissue_microarray", "papsociaty"]
+
+    config_name = f"{model_name}-{augmentation}-{','.join(class_idx_dict.keys())}-{','.join(datasets_folder)}"
+
+    logger = set_config_for_logger(config_name)
+    logger.info(f"training config: {config_name}")
+    try:
+        _is_inception3 = type(base_model) == torchvision.models.inception.Inception3
+        image_model = ThyroidClassificationModel(base_model).to(Config.available_device)
+        train, val, test = CustomFragmentLoader(datasets_folder).load_image_path_and_labels_and_split(
+            test_percent=Config.test_percent,
+            val_percent=Config.val_percent)
+        test_ds = ThyroidDataset(test, class_idx_dict)
+        val_ds = ThyroidDataset(val, class_idx_dict)
+
+        transformation = get_transformation(augmentation=augmentation, base_data_loader=val_ds)
+
+        train_ds = ThyroidDataset(train, class_idx_dict, transform=transformation)
+
+        train_data_loader = DataLoader(train_ds, batch_size=Config.batch_size, shuffle=True)
+        val_data_loader = DataLoader(val_ds, batch_size=Config.eval_batch_size, shuffle=True)
+        test_data_loader = DataLoader(test_ds, batch_size=Config.eval_batch_size, shuffle=True)
+
+        cec = nn.CrossEntropyLoss(weight=torch.tensor(train_ds.class_weights).to(Config.available_device))
+        optimizer = optim.Adam(image_model.parameters(), lr=Config.learning_rate)
+        val_acc_history = []
+        train_acc_history = []
+
+        i = -1
+        val_acc = 0
+        train_acc = 0
+        for e in range(Config.n_epoch):
+            # variables to calculate train acc
+            class_set = sorted(train_data_loader.dataset.class_to_idx_dict.values())
+            class_total_count = {}
+            class_correct_count = {}
+
+            e = 0.00001
+            for images, labels in tqdm(train_data_loader, colour="#0000ff"):
+                image_model.train()
+                i += 1
+                images = images.to(Config.available_device)
+                labels = labels.to(Config.available_device)
+                optimizer.zero_grad()
+                pred = image_model(images)
+                # pred label: torch.max(pred, 1)[1], labels
+                if _is_inception3:
+                    pred, aux_pred = pred
+                    loss, aux_loss = cec(pred, labels), cec(aux_pred, labels)
+                    loss = loss + 0.4 * aux_loss
+                else:
+                    loss = cec(pred, labels)
+                loss.backward()
+                optimizer.step()
+
+                # train acc
+                values, preds = torch.max(pred, 1)
+                for c in class_set:
+                    class_correct_count[c] = class_correct_count.get(c, 0) + ((preds == labels) * (labels == c)).sum()
+                    class_total_count[c] = class_total_count.get(c, 0) + (labels == c).sum()
+                # validation data
+                if (i + 1) % Config.n_print == 0:
+                    image_model.eval()
+                    val_acc, val_c_acc = validate(image_model, val_data_loader)
+                    val_acc = float(val_acc)
+                    logger.info(f'Val|E:{e + 1}, B:{i + 1}|Loss:{float(loss.data)} Accuracy:{val_acc}%, {val_c_acc}')
+
+                    val_acc_history.append(val_acc)
+                    train_acc_history.append(train_acc)
+
+            class_accuracies = [class_correct_count[c] / (class_total_count[c] + e) for c in class_set]
+            train_acc = 100 * sum(class_accuracies) / len(class_set)
+            logger.info(f'Train|E:{e + 1}|Accuracy:{train_acc}%, {class_accuracies}')
+            plot_and_save_model_per_epoch(e, image_model, val_acc_history, train_acc_history, config_name)
+    except Exception as e:
+        print(e)
+        logger.info(str(e))
+    else:
+        # Test acc
+        image_model.eval()
+        test_acc, test_c_acc = validate(image_model, test_data_loader)
+        test_acc = float(test_acc)
+        logger.info(f'Test|Accuracy: {test_acc}, {test_c_acc}%')
+
+
 if __name__ == '__main__':
     for model_name, model in [
         ("resnet18", torchvision.models.resnet18(pretrained=True, progress=True)),
         ("resnet34", torchvision.models.resnet34(pretrained=True, progress=True)),
         ("inception_v3", torchvision.models.inception_v3(pretrained=True, progress=True)),
     ]:
-        for aug in ["fda",
-                    "std",
-                    "mixup"
-                    ]:
+        for aug in [
+            "fda",
+            "std",
+            "mixup"
+        ]:
             train_model(model, model_name, augmentation=aug)

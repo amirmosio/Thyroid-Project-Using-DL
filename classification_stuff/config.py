@@ -6,10 +6,10 @@ import torch
 class Config:
     DEBUG = False
 
-    batch_size = 32
-    eval_batch_size = 8
+    batch_size = 64
+    eval_batch_size = 16
     test_percent = 20
-    val_percent = 5
+    val_percent = 10
 
     learning_rate = 0.01
     n_epoch = 3 if DEBUG else 50

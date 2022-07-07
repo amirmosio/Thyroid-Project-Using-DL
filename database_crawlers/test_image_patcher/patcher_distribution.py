@@ -21,7 +21,13 @@ if __name__ == '__main__':
                                                                           all_frag_count=total_counts)
         for fragment, frag_pos in patch_filtered:
             fragment_id += 1
-        res_patch_counts.append(fragment_id)
+        res_patch_counts.append((fragment_id, total_counts))
 
-    plt.hist(res_patch_counts, bins=1000)
+    plt.hist([i[0] for i in res_patch_counts], bins=1000)
     plt.savefig("patch_distribution.jpeg")
+    plt.clf()
+
+    plt.hist([i[0] / i[1] for i in res_patch_counts], bins=1000)
+    plt.savefig("patch_percent_distribution.jpeg")
+    plt.clf()
+
