@@ -25,7 +25,11 @@ class CustomFragmentLoader:
                     if row:
                         database_id = row[0]
                         image_id = row[1]
-                        slide_frag_folder_name = [o for o in os.listdir(db_dir) if image_id.startswith(o)][0]
+                        slide_frag_folder_name = [o for o in os.listdir(db_dir) if image_id.startswith(o)]
+                        if slide_frag_folder_name:
+                            slide_frag_folder_name = slide_frag_folder_name[0]
+                        else:
+                            continue
                         slide_path = os.path.join(db_dir, slide_frag_folder_name)
                         image_paths = glob.glob(os.path.join(slide_path, "*.jpeg"))
                         if image_paths:
