@@ -211,7 +211,7 @@ if __name__ == '__main__':
     test_data_loader = DataLoader(test_ds, batch_size=Config.eval_batch_size, shuffle=True)
 
     for config_base_name, model in [
-        ("resnet18_lr_decay", torchvision.models.resnet18(pretrained=True, progress=True)),
+        # ("resnet18_lr_decay", torchvision.models.resnet18(pretrained=True, progress=True)),
         ("resnet34_lr_decay", torchvision.models.resnet34(pretrained=True, progress=True)),
         ("inception_v3_lr_decay", torchvision.models.inception_v3(pretrained=True, progress=True)),
     ]:
