@@ -88,8 +88,8 @@ def plot_and_save_model_per_epoch(epoch,
     plt.clf()
 
     fig_save_path = os.path.join(config_train_dir, "val_train_loss.jpeg")
-    plt.plot(range(len(val_acc_list)), val_acc_list, label="val")
-    plt.plot(range(len(train_acc_list)), train_acc_list, label="train")
+    plt.plot(range(len(val_loss_list)), val_loss_list, label="val")
+    plt.plot(range(len(train_loss_list)), train_loss_list, label="train")
     plt.legend(loc="lower right")
     plt.xlabel('Time-Every 7 Epoch')
     plt.ylabel('Loss')
