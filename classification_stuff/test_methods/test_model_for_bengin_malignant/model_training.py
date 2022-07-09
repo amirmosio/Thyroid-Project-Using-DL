@@ -170,8 +170,8 @@ def train_model(base_model, config_base_name, train_val_test_data_loaders, augme
                     val_acc_history.append(val_acc)
                     train_acc_history.append(train_acc)
 
-                    val_loss_history.append(val_loss.data)
-                    train_loss_history.append(loss.data)
+                    val_loss_history.append(val_loss.data.item())
+                    train_loss_history.append(loss.data.item())
 
             my_lr_scheduler.step()
             class_accuracies = [class_correct_count[c] / (class_total_count[c] + epsilon) for c in class_set]
