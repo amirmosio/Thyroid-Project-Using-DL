@@ -46,9 +46,11 @@ def save_national_cancer_institute_patch(database_path):
         image_paths = pathlib.Path(data_dir).glob("**/*.svs")
         image_paths = [i for i in image_paths]
         print()
-        for filtered_frags, total_counts in tqdm(executor.map(patch_image, image_paths), total=len(image_paths)):
-            csv_file.flush()
-            res_patch_counts.append((filtered_frags, total_counts))
+        for res in tqdm(executor.map(patch_image, image_paths), total=len(image_paths)):
+            if res:
+                filtered_frags, total_counts = res
+                csv_file.flush()
+                res_patch_counts.append((filtered_frags, total_counts))
     csv_file.flush()
 
     plt.hist([i[0] for i in res_patch_counts], bins=800)
