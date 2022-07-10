@@ -2,7 +2,6 @@ import csv
 import json
 import os
 import os.path as os_path
-import pathlib
 import random
 import re
 from math import ceil
@@ -16,7 +15,6 @@ from tqdm import tqdm
 
 from classification_stuff.utils import show_and_wait
 from database_crawlers.web_stain_sample import ThyroidCancerLevel, WebStainImage
-from national_cancer_institute.read_xml_file import get_slide_info_from_bcr_xml
 
 
 class ThyroidFragmentFilters:
@@ -95,8 +93,8 @@ class ImageAndSlidePatcher:
 
     @classmethod
     def _filter_frag_from_generator(cls, frag_generator, filter_func_list, return_all_with_condition=False,
-                                    all_frag_count=None):
-        for next_test_item, frag_pos in tqdm(frag_generator, total=all_frag_count):
+                                    all_frag_count=None, output_file=None):
+        for next_test_item, frag_pos in tqdm(frag_generator, total=all_frag_count, file=output_file):
             condition = True
             for function in filter_func_list:
                 condition &= function(next_test_item)
@@ -162,11 +160,14 @@ class ImageAndSlidePatcher:
             os.mkdir(slide_patch_dir)
         filters = [ThyroidFragmentFilters.empty_frag_with_laplacian_threshold]
         fragment_id = 0
-        for fragment, frag_pos in cls._filter_frag_from_generator(generator, filters, all_frag_count=total_counts):
-            fragment_file_path = os.path.join(slide_patch_dir, f"{slide_id}-{fragment_id}.jpeg")
-            cv2.imwrite(fragment_file_path, fragment)
-            fragment_id += 1
-        print(fragment_id)
+        slide_progress_file_path = os.path.join(slide_patch_dir, "progress.txt")
+        with open(slide_progress_file_path, "w") as file:
+            for fragment, frag_pos in cls._filter_frag_from_generator(generator, filters, all_frag_count=total_counts,
+                                                                      output_file=file):
+                fragment_file_path = os.path.join(slide_patch_dir, f"{slide_id}-{fragment_id}.jpeg")
+                cv2.imwrite(fragment_file_path, fragment)
+                fragment_id += 1
+        return fragment_id, total_counts
 
     @classmethod
     def save_patches_in_folders(cls, database_directory, dataset_dir=None):
@@ -228,37 +229,6 @@ class ImageAndSlidePatcher:
                                                       image_path, slide_patch_dir, slide_id)
 
             csv_file.close()
-
-    @classmethod
-    def save_national_cancer_institute_patch(cls, database_path):
-        data_dir = os.path.join(database_path, "data")
-        slide_infos = {}
-        for xml_path in pathlib.Path(data_dir).glob("**/*.xml"):
-            slide_infos.update(get_slide_info_from_bcr_xml(str(xml_path)))
-
-        data_dir, patch_dir, csv_writer, csv_file = cls.create_patch_dir_and_initialize_csv(database_path)
-        for image_path in pathlib.Path(data_dir).glob("**/*.svs"):
-            image_path = str(image_path)
-            print("image path: ", image_path)
-            file_name = cls._get_file_name_from_path(image_path)
-            slide_id = file_name.split(".")[0]
-            slide_patch_dir = os.path.join(patch_dir, slide_id)
-            if os.path.isdir(slide_patch_dir):
-                print("it has already been patched")
-                continue
-            web_label = slide_infos.get(slide_id, None)
-            if web_label is None:
-                print("Ignored")
-                continue
-            web_details = {"database_name": "NationalCancerInstitute",
-                           "image_id": slide_id,
-                           "image_web_label": web_label,
-                           "image_class_label": web_label,
-                           "report": None,
-                           "stain_type": "H&E",
-                           "is_wsi": True}
-            cls.save_image_patches_and_update_csv(web_label, None, csv_writer, web_details,
-                                                  image_path, slide_patch_dir, slide_id)
 
     @classmethod
     def ask_image_scale_and_rescale(cls, image):

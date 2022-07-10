@@ -1,6 +1,6 @@
 from tqdm import tqdm
 
-from database_crawlers.image_patcher import ImageAndSlidePatcher, ThyroidFragmentFilters
+from image_patcher.image_patcher import ImageAndSlidePatcher, ThyroidFragmentFilters
 
 
 def calculate_acc_and_sensitivity(image_path, image_mask_path):

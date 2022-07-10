@@ -1,3 +1,4 @@
+export PYTHONPATH="${PYTHONPATH}:../../";
 export PYTHONPATH="${PYTHONPATH}:../";
 export PYTHONPATH="${PYTHONPATH}:./";
-python image_patcher.py;
+python national_cancer_patcher.py;

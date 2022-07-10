@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 from tqdm import tqdm
 
-from database_crawlers.image_patcher import ImageAndSlidePatcher, ThyroidFragmentFilters
+from image_patcher.image_patcher import ImageAndSlidePatcher, ThyroidFragmentFilters
 
 
 def imul(a, b):
