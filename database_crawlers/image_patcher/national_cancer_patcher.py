@@ -2,7 +2,7 @@ import concurrent.futures
 import os
 import pathlib
 
-from matplotlib.pyplot import plot as plt
+import matplotlib.pyplot as plt
 from tqdm import tqdm
 
 from image_patcher import ImageAndSlidePatcher
@@ -40,19 +40,26 @@ def save_national_cancer_institute_patch(database_path):
         slide_infos.update(get_slide_info_from_bcr_xml(str(xml_path)))
 
     data_dir, patch_dir, csv_writer, csv_file = ImageAndSlidePatcher.create_patch_dir_and_initialize_csv(database_path)
+    csv_file.flush()
     res_patch_counts = []
     with concurrent.futures.ThreadPoolExecutor() as executor:
         image_paths = pathlib.Path(data_dir).glob("**/*.svs")
         image_paths = [i for i in image_paths]
         print()
         for filtered_frags, total_counts in tqdm(executor.map(patch_image, image_paths), total=len(image_paths)):
+            csv_file.flush()
             res_patch_counts.append((filtered_frags, total_counts))
+    csv_file.flush()
 
     plt.hist([i[0] for i in res_patch_counts], bins=800)
+    plt.xlabel("Patch per slide")
+    plt.ylabel("Frequency")
     plt.savefig("patch_distribution.jpeg")
     plt.clf()
 
     plt.hist([i[0] / (i[1] + 0.00001) for i in res_patch_counts], bins=800)
+    plt.xlabel("Patch per slide percent")
+    plt.ylabel("Frequency")
     plt.savefig("patch_percent_distribution.jpeg")
     plt.clf()
 
