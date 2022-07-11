@@ -46,13 +46,13 @@ def save_patch_distribution(database_path):
                 frags, total = res
                 res_patch_counts.append(res)
     print(res_patch_counts)
-    plt.hist([i[0] for i in res_patch_counts], bins=1000)
+    plt.hist([i[0] for i in res_patch_counts], bins=500)
     plt.xlabel("Patch per slide")
     plt.ylabel("Frequency")
     plt.savefig("patch_distribution.jpeg")
     plt.clf()
 
-    plt.hist([round(i[0] / (i[1] + 0.00001), 5) for i in res_patch_counts], bins=1000)
+    plt.hist([round(i[0] / (i[1] + 0.00001), 5) * 100 for i in res_patch_counts], bins=500)
     plt.xlabel("Patch per slide percent")
     plt.ylabel("Frequency")
     plt.savefig("patch_percent_distribution.jpeg")
