@@ -4,7 +4,7 @@ import torch
 
 
 class Config:
-    DEBUG = False
+    DEBUG = True
 
     batch_size = 64
     eval_batch_size = 16
@@ -18,6 +18,8 @@ class Config:
 
     available_device = "cuda" if torch.cuda.is_available() and not DEBUG else "cpu"
     print(f"device: {available_device}")
+
+    workers = 1 if DEBUG else 40
 
     seed = 115
     random.seed(seed)

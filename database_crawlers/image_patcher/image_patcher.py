@@ -13,13 +13,26 @@ import tifffile
 import zarr as ZarrObject
 from tqdm import tqdm
 
-from classification_stuff.utils import show_and_wait
+from utils import show_and_wait
 from database_crawlers.web_stain_sample import ThyroidCancerLevel, WebStainImage
 
 
 class ThyroidFragmentFilters:
     @staticmethod
-    def empty_frag_with_laplacian_threshold(image_nd_array, threshold=500):
+    def func_laplacian_threshold_in_half_magnification(threshold=500, rescale=.7):
+        def wrapper(image_nd_array):
+            res, var = ThyroidFragmentFilters.empty_frag_with_laplacian_threshold(image_nd_array, threshold,
+                                                                                  return_variance=True)
+            if res or var * (1 / rescale) ** 2 < threshold:
+                return res
+            image_nd_array = cv2.resize(image_nd_array, dsize=(0, 0), fx=rescale, fy=rescale)
+            res = ThyroidFragmentFilters.empty_frag_with_laplacian_threshold(image_nd_array, threshold)
+            return res
+
+        return wrapper
+
+    @staticmethod
+    def empty_frag_with_laplacian_threshold(image_nd_array, threshold=500, return_variance=False):
         gray = cv2.cvtColor(image_nd_array, cv2.COLOR_BGR2GRAY)
         gray = cv2.GaussianBlur(gray, (3, 3), 0)
 
@@ -27,11 +40,22 @@ class ThyroidFragmentFilters:
         std = cv2.meanStdDev(laplacian)[1][0][0]
 
         variance = std ** 2
-
+        if return_variance:
+            return variance >= threshold, variance
         return variance >= threshold
 
 
 class ImageAndSlidePatcher:
+    @classmethod
+    def _check_magnification_from_description(cls, tiff_address):
+        try:
+            tif_file_obj = tifffile.TiffFile(tiff_address)
+            image_description = tif_file_obj.pages.keyframe.tags["ImageDescription"].value
+            app_mag = int(re.findall("(AppMag = [0-9]+)", image_description)[0].split(" = ")[-1])
+            return app_mag
+        except Exception as e:
+            return None
+
     @classmethod
     def _zarr_loader(cls, tiff_address, key=0):
         image_zarr = tifffile.imread(tiff_address, aszarr=True, key=key, )
@@ -94,7 +118,8 @@ class ImageAndSlidePatcher:
     @classmethod
     def _filter_frag_from_generator(cls, frag_generator, filter_func_list, return_all_with_condition=False,
                                     all_frag_count=None, output_file=None):
-        for next_test_item, frag_pos in tqdm(frag_generator, total=all_frag_count, file=output_file):
+        for next_test_item, frag_pos in tqdm(frag_generator, total=all_frag_count, file=output_file,
+                                             postfix="Filtering", position=0):
             condition = True
             for function in filter_func_list:
                 condition &= function(next_test_item)

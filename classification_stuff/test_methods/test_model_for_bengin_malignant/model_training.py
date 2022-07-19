@@ -8,7 +8,7 @@ from torch import nn, optim
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 
-from classification_stuff.config import Config
+from config import Config
 from fragment_splitter import CustomFragmentLoader
 from thyroid_dataset import ThyroidDataset
 from thyroid_ml_model import ThyroidClassificationModel

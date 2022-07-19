@@ -3,7 +3,7 @@ import glob
 import os
 import random
 
-from classification_stuff.config import Config
+from config import Config
 
 
 class CustomFragmentLoader:
