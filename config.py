@@ -4,7 +4,7 @@ import torch
 
 
 class Config:
-    DEBUG = True
+    DEBUG = False
 
     batch_size = 64
     eval_batch_size = 16

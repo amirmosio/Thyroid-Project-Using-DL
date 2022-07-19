@@ -13,8 +13,8 @@ import tifffile
 import zarr as ZarrObject
 from tqdm import tqdm
 
-from utils import show_and_wait
 from database_crawlers.web_stain_sample import ThyroidCancerLevel, WebStainImage
+from utils import show_and_wait
 
 
 class ThyroidFragmentFilters:
@@ -96,6 +96,11 @@ class ImageAndSlidePatcher:
     @classmethod
     def _generate_raw_fragments_from_image_array_or_zarr(cls, image_object, frag_size=512, frag_overlap=0.1,
                                                          shuffle=True):
+        def frag_picker(w_pos, h_pos):
+            end_w, end_h = min(zarr_shape[0], w_pos + frag_size), min(zarr_shape[1], h_pos + frag_size)
+            start_w, start_h = end_w - frag_size, end_h - frag_size
+            return image_object[start_w:end_w, start_h: end_h], (start_w, start_h)
+
         if image_object is None:
             return None
         zarr_shape = image_object.shape
@@ -107,13 +112,19 @@ class ImageAndSlidePatcher:
         h_range = list(range(0, ceil((zarr_shape[1] - overlap_size) / step_size) * step_size, step_size))
 
         if shuffle:
-            random.shuffle(w_range)
-            random.shuffle(h_range)
-        for w in w_range:
-            for h in h_range:
-                end_w, end_h = min(zarr_shape[0], w + frag_size), min(zarr_shape[1], h + frag_size)
-                start_w, start_h = end_w - frag_size, end_h - frag_size
-                yield image_object[start_w:end_w, start_h: end_h], (start_w, start_h)
+            pos_list = [None] * len(w_range) * len(h_range)
+            index = 0
+            for w in w_range:
+                for h in h_range:
+                    pos_list[index] = (w, h)
+                    index += 1
+            random.shuffle(pos_list)
+            for w, h in pos_list:
+                yield frag_picker(w, h)
+        else:
+            for w in w_range:
+                for h in h_range:
+                    yield frag_picker(w, h)
 
     @classmethod
     def _filter_frag_from_generator(cls, frag_generator, filter_func_list, return_all_with_condition=False,
