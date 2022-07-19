@@ -85,8 +85,10 @@ def calculate_acc_and_sensitivity(image_path, zarr_loader_mask, zarr_loader, fra
 
 
 def update_and_find_best_threshold():
-    threshold_jump_size = 100
+    initial_threshold_jump_size_const = 100
+    threshold_jump_size = initial_threshold_jump_size_const
     decay_const = 0.8
+    decay_count = 0
 
     threshold_jump_increase = 1
 
@@ -116,7 +118,7 @@ def update_and_find_best_threshold():
                                                        generated_scaled_mask_image,
                                                        generated_mask_scale,
                                                        laplacian_threshold,
-                                                       slide_patch_size=None if threshold_jump_size * decay_const ** 30 else 500)
+                                                       slide_patch_size=None if decay_count >= 30 else 500)
             for i in range(len(zarr_loaders_and_generators)):
                 if zarr_loaders_and_generators[i]:
                     generator = check_if_generator_is_empty(zarr_loaders_and_generators[i][2])
@@ -140,7 +142,6 @@ def update_and_find_best_threshold():
                 threshold_score = next_score
 
                 laplacian_threshold += threshold_jump_increase * threshold_jump_size
-
             elif next_score <= threshold_score:
                 threshold_score = next_score
 
@@ -148,6 +149,7 @@ def update_and_find_best_threshold():
                 threshold_jump_size *= decay_const
 
                 laplacian_threshold += threshold_jump_increase * threshold_jump_size
+                decay_count += 1
 
         print(f"acc:{acc},spec:{spec},table:{whole_background_dict}, threshold:{laplacian_threshold}")
 
