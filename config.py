@@ -21,6 +21,9 @@ class Config:
 
     workers = 1 if DEBUG else 40
 
+    # learned from evaluate_image_patcher_and_visualize.py
+    laplacian_threshold = 750
+
     seed = 115
     random.seed(seed)
     torch.manual_seed(seed)

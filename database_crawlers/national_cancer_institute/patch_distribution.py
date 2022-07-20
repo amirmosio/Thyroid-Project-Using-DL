@@ -5,6 +5,7 @@ import pathlib
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 
+from config import Config
 from image_patcher import ImageAndSlidePatcher
 
 
@@ -37,7 +38,7 @@ def save_patch_distribution(database_path):
 
     patch_dir = os.path.join(database_path, "patches")
 
-    with concurrent.futures.ThreadPoolExecutor() as executor:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=Config.workers) as executor:
         image_paths = pathlib.Path(data_dir).glob("**/*.svs")
         image_paths = [i for i in image_paths]
         print()

@@ -7,6 +7,8 @@ from urllib.request import urlretrieve
 from torch.utils.data import IterableDataset
 from tqdm import tqdm
 
+from config import Config
+
 
 def find_in_log_n(start, end, func, bias=0.3):
     if end - start <= 1:
@@ -42,7 +44,7 @@ def download_urls_in_thread(url_and_index_list):
         file_content = fetch_tile_content(url)
         return file_content, index
 
-    with concurrent.futures.ThreadPoolExecutor(max_workers=50) as executor:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=Config.workers) as executor:
         for tile, i in tqdm(executor.map(download, url_and_index_list), total=len(url_and_index_list)):
             yield tile, i
 

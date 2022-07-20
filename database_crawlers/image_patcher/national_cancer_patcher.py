@@ -4,6 +4,7 @@ import pathlib
 
 from tqdm import tqdm
 
+from config import Config
 from image_patcher import ImageAndSlidePatcher
 from national_cancer_institute.read_xml_file import get_slide_info_from_bcr_xml
 
@@ -44,7 +45,7 @@ def save_national_cancer_institute_patch(database_path):
     data_dir, patch_dir, csv_writer, csv_file = ImageAndSlidePatcher.create_patch_dir_and_initialize_csv(database_path)
     csv_file.flush()
 
-    with concurrent.futures.ThreadPoolExecutor() as executor:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=Config.workers) as executor:
         image_paths = pathlib.Path(data_dir).glob("**/*.svs")
         image_paths = [i for i in image_paths]
         print()

@@ -13,26 +13,28 @@ import tifffile
 import zarr as ZarrObject
 from tqdm import tqdm
 
+from config import Config
 from database_crawlers.web_stain_sample import ThyroidCancerLevel, WebStainImage
 from utils import show_and_wait
 
 
 class ThyroidFragmentFilters:
     @staticmethod
-    def func_laplacian_threshold_in_half_magnification(threshold=500, rescale=.7):
+    def func_laplacian_threshold_in_half_magnification(threshold=Config.laplacian_threshold, rescale=.7):
         def wrapper(image_nd_array):
-            res, var = ThyroidFragmentFilters.empty_frag_with_laplacian_threshold(image_nd_array, threshold,
-                                                                                  return_variance=True)
+            res, var = ThyroidFragmentFilters._empty_frag_with_laplacian_threshold(image_nd_array, threshold,
+                                                                                   return_variance=True)
             if res or var * (1 / rescale) ** 2 < threshold:
                 return res
             image_nd_array = cv2.resize(image_nd_array, dsize=(0, 0), fx=rescale, fy=rescale)
-            res = ThyroidFragmentFilters.empty_frag_with_laplacian_threshold(image_nd_array, threshold)
+            res = ThyroidFragmentFilters._empty_frag_with_laplacian_threshold(image_nd_array, threshold)
             return res
 
         return wrapper
 
     @staticmethod
-    def empty_frag_with_laplacian_threshold(image_nd_array, threshold=500, return_variance=False):
+    def _empty_frag_with_laplacian_threshold(image_nd_array, threshold=Config.laplacian_threshold,
+                                             return_variance=False):
         gray = cv2.cvtColor(image_nd_array, cv2.COLOR_BGR2GRAY)
         gray = cv2.GaussianBlur(gray, (3, 3), 0)
 
@@ -194,7 +196,7 @@ class ImageAndSlidePatcher:
 
         if not os.path.isdir(slide_patch_dir):
             os.mkdir(slide_patch_dir)
-        filters = [ThyroidFragmentFilters.empty_frag_with_laplacian_threshold]
+        filters = [ThyroidFragmentFilters.func_laplacian_threshold_in_half_magnification(Config.laplacian_threshold)]
         fragment_id = 0
         slide_progress_file_path = os.path.join(slide_patch_dir, "progress.txt")
         with open(slide_progress_file_path, "w") as file:
@@ -290,10 +292,3 @@ if __name__ == '__main__':
     database_directory = "./"
     # ImageAndSlidePatcher.save_patches_in_folders(database_directory, dataset_dir=["stanford_tissue_microarray"])
     # ImageAndSlidePatcher.save_papsociaty_patch(os.path.join(database_directory, "papsociaty"))
-    ImageAndSlidePatcher.save_national_cancer_institute_patch(
-        os.path.join(database_directory, "national_cancer_institute"))
-# # test
-# if __name__ == '__main__':
-#     image_path = "./stanford_tissue_microarray/data/C-TA-41-04.134.nmbasISH_4_41_5_4_134_1159_6d07c74a5fc0ccd424e063fdadeeb806acd43ad5a1fcf39d0da108a9d62acec9.jpeg"
-#     image = ImageAndSlidePatcher._jpeg_loader(image_path)
-#     ImageAndSlidePatcher.ask_image_scale_and_rescale(image)
