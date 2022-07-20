@@ -14,7 +14,7 @@ def imul(a, b):
 
 
 def calculate_acc_and_sensitivity(image_path, zarr_loader_mask, zarr_loader, frag_generator, scaled_masked_image,
-                                  generated_mask_scale, laplacian_threshold, slide_patch_size=500):
+                                  generated_mask_scale, laplacian_threshold, slide_patch_size=900):
     def process_frag(args):
         next_test_item, frag_pos, condition = args
         frag_shape = next_test_item.shape
@@ -96,7 +96,9 @@ def update_and_find_best_threshold():
     threshold_jump_increase = 1
 
     threshold_score = None
-    laplacian_threshold = 250
+    # update after initial run
+    # laplacian_threshold = 250
+    laplacian_threshold = 750
 
     def score_calculator(accuracy, specificity, acc_w=0.1):
         return accuracy * acc_w + specificity * (1 - acc_w)
@@ -159,7 +161,6 @@ def update_and_find_best_threshold():
 
 if __name__ == '__main__':
 
-
     image_lists = [
         (
             "./TCGA-BJ-A3F0-01A-01-TSA.728CE583-95BE-462B-AFDF-FC0B228DF3DE__3_masked.tiff",
@@ -203,3 +204,5 @@ if __name__ == '__main__':
             _zarr_loader_mask, _zarr_loader, _frag_generator, _scaled_masked_image, _generated_mask_scale
         ])
     update_and_find_best_threshold()
+
+#500 patch size| acc:0.9935897404051611,spec:0.9999999861111113,table:{'TP': 72, 'FP': 0, 'TN': 238, 'FN': 2}, threshold:755.9870661958269
