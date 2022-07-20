@@ -204,5 +204,11 @@ if __name__ == '__main__':
             _zarr_loader_mask, _zarr_loader, _frag_generator, _scaled_masked_image, _generated_mask_scale
         ])
     update_and_find_best_threshold()
-
+# 500 last  for steps initial with 250 threshold
 #500 patch size| acc:0.9935897404051611,spec:0.9999999861111113,table:{'TP': 72, 'FP': 0, 'TN': 238, 'FN': 2}, threshold:755.9870661958269
+
+# 900 last  for steps initial with 755 threshold
+#900 patch size| acc:0.9733333322518518,spec:0.9864253349030528,table:{'TP': 218, 'FP': 3, 'TN': 658, 'FN': 21}, threshold:754.6453731858838
+#900 patch size| acc:0.9922222211197531,spec:0.999999996031746,table:{'TP': 252, 'FP': 0, 'TN': 641, 'FN': 7}, threshold:757.4601229529904
+#900 patch size| acc:0.9911111100098765,spec:0.9954954910112815,table:{'TP': 221, 'FP': 1, 'TN': 671, 'FN': 7}, threshold:755.2083231393052
+#900 patch size| acc:0.9933333322296296,spec:0.9999999953703704,table:{'TP': 216, 'FP': 0, 'TN': 678, 'FN': 6}, threshold:752.95652332562
