@@ -49,9 +49,6 @@ def calculate_acc_and_sensitivity(image_path, zarr_loader_mask, zarr_loader, fra
         if not condition:
             # background patches get dark
             scaled_frag = (scaled_frag * 0.3).astype(np.int8)
-            print("no")
-        else:
-            print("yes")
         scaled_pos = list((imul(frag_pos[i], generated_mask_scale) for i in range(2)))
         try:
             mask_g_w1, mask_g_w2 = scaled_pos[0], scaled_pos[0] + scaled_frag_size[0]
