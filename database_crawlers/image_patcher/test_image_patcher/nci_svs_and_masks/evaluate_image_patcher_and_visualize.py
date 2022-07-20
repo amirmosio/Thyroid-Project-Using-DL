@@ -49,6 +49,9 @@ def calculate_acc_and_sensitivity(image_path, zarr_loader_mask, zarr_loader, fra
         if not condition:
             # background patches get dark
             scaled_frag = (scaled_frag * 0.3).astype(np.int8)
+            print("no")
+        else:
+            print("yes")
         scaled_pos = list((imul(frag_pos[i], generated_mask_scale) for i in range(2)))
         try:
             mask_g_w1, mask_g_w2 = scaled_pos[0], scaled_pos[0] + scaled_frag_size[0]
@@ -159,33 +162,32 @@ def update_and_find_best_threshold():
 
 if __name__ == '__main__':
 
-    max_w_h_size = 2000
 
     image_lists = [
-        (
-            "./TCGA-BJ-A3F0-01A-01-TSA.728CE583-95BE-462B-AFDF-FC0B228DF3DE__3_masked.tiff",
-            "./TCGA-BJ-A3F0-01A-01-TSA.728CE583-95BE-462B-AFDF-FC0B228DF3DE__3.svs"
-        ),
-        (
-            "./TCGA-DJ-A1QG-01A-01-TSA.04c62c21-dd45-49ea-a74f-53822defe097__2000_masked.tiff",
-            "./TCGA-DJ-A1QG-01A-01-TSA.04c62c21-dd45-49ea-a74f-53822defe097__2000.svs"
-        ),
+        # (
+        #     "./TCGA-BJ-A3F0-01A-01-TSA.728CE583-95BE-462B-AFDF-FC0B228DF3DE__3_masked.tiff",
+        #     "./TCGA-BJ-A3F0-01A-01-TSA.728CE583-95BE-462B-AFDF-FC0B228DF3DE__3.svs"
+        # ),
+        # (
+        #     "./TCGA-DJ-A1QG-01A-01-TSA.04c62c21-dd45-49ea-a74f-53822defe097__2000_masked.tiff",
+        #     "./TCGA-DJ-A1QG-01A-01-TSA.04c62c21-dd45-49ea-a74f-53822defe097__2000.svs"
+        # ),
         (
             "./TCGA-EL-A3ZQ-01A-01-TS1.344610D2-AB50-41C6-916E-FF0F08940BF1__2000_masked.tiff",
             "./TCGA-EL-A3ZQ-01A-01-TS1.344610D2-AB50-41C6-916E-FF0F08940BF1__2000.svs"
         ),
-        (
-            "./TCGA-ET-A39N-01A-01-TSA.C38FCE19-9558-4035-9F0B-AD05B9BE321D___198_masked.tiff",
-            "./TCGA-ET-A39N-01A-01-TSA.C38FCE19-9558-4035-9F0B-AD05B9BE321D___198.svs"
-        ),
-        (
-            "./TCGA-J8-A42S-01A-01-TSA.7B80CBEB-7B85-417E-AA0C-11C79DE40250__0_masked.tiff",
-            "./TCGA-J8-A42S-01A-01-TSA.7B80CBEB-7B85-417E-AA0C-11C79DE40250__0.svs"
-        ),
-        (
-            "./TCGA-ET-A39O-01A-01-TSA.3829C900-7597-4EA9-AFC7-AA238221CE69_7000_masked.tiff",
-            "./TCGA-ET-A39O-01A-01-TSA.3829C900-7597-4EA9-AFC7-AA238221CE69_7000.svs"
-        ),
+        # (
+        #     "./TCGA-ET-A39N-01A-01-TSA.C38FCE19-9558-4035-9F0B-AD05B9BE321D___198_masked.tiff",
+        #     "./TCGA-ET-A39N-01A-01-TSA.C38FCE19-9558-4035-9F0B-AD05B9BE321D___198.svs"
+        # ),
+        # (
+        #     "./TCGA-J8-A42S-01A-01-TSA.7B80CBEB-7B85-417E-AA0C-11C79DE40250__0_masked.tiff",
+        #     "./TCGA-J8-A42S-01A-01-TSA.7B80CBEB-7B85-417E-AA0C-11C79DE40250__0.svs"
+        # ),
+        # (
+        #     "./TCGA-ET-A39O-01A-01-TSA.3829C900-7597-4EA9-AFC7-AA238221CE69_7000_masked.tiff",
+        #     "./TCGA-ET-A39O-01A-01-TSA.3829C900-7597-4EA9-AFC7-AA238221CE69_7000.svs"
+        # ),
     ]
     zarr_loaders_and_generators = []
     for _img_mask_path, _img_path in image_lists:
@@ -195,7 +197,7 @@ if __name__ == '__main__':
                                                                                                 shuffle=True)
         _zarr_shape = _zarr_loader.shape
 
-        _generated_mask_scale = max_w_h_size / max(_zarr_shape)
+        _generated_mask_scale = 10 / 512
         _scaled_zarr_shape = (
             imul(_zarr_shape[0], _generated_mask_scale) + 5, imul(_zarr_shape[1], _generated_mask_scale) + 5, 3)
         _scaled_masked_image = np.zeros(_scaled_zarr_shape)
