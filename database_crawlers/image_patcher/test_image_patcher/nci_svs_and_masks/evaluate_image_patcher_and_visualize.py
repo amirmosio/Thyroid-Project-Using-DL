@@ -14,7 +14,7 @@ def imul(a, b):
 
 
 def calculate_acc_and_sensitivity(image_path, zarr_loader_mask, zarr_loader, frag_generator, scaled_masked_image,
-                                  generated_mask_scale, laplacian_threshold, slide_patch_size=900):
+                                  generated_mask_scale, laplacian_threshold, slide_patch_size):
     def process_frag(args):
         next_test_item, frag_pos, condition = args
         frag_shape = next_test_item.shape
@@ -123,7 +123,7 @@ def update_and_find_best_threshold():
                                                        generated_scaled_mask_image,
                                                        generated_mask_scale,
                                                        laplacian_threshold,
-                                                       slide_patch_size=None if decay_count >= 30 else 500)
+                                                       slide_patch_size=None if decay_count >= 30 else 900)
             for i in range(len(zarr_loaders_and_generators)):
                 if zarr_loaders_and_generators[i]:
                     generator = check_if_generator_is_empty(zarr_loaders_and_generators[i][2])
