@@ -7,7 +7,7 @@ class Config:
     DEBUG = False
 
     batch_size = 64
-    eval_batch_size = 16
+    eval_batch_size = 64
     test_percent = 20
     val_percent = 10
 
@@ -24,6 +24,13 @@ class Config:
     # learned from evaluate_image_patcher_and_visualize.py
     laplacian_threshold = 750
 
+    # RANDOM SEED
     seed = 115
-    random.seed(seed)
-    torch.manual_seed(seed)
+
+    @staticmethod
+    def reset_random_seeds():
+        random.seed(Config.seed)
+        torch.manual_seed(Config.seed)
+
+
+Config.reset_random_seeds()

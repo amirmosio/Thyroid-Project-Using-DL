@@ -229,5 +229,6 @@ if __name__ == '__main__':
             "fda",
             "mixup"
         ]:
+            Config.reset_random_seeds()
             train_model(model, config_base_name, (train_data_loader, val_data_loader, test_data_loader),
                         augmentation=aug)
