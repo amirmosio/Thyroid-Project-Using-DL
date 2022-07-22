@@ -4,11 +4,12 @@ import time
 import cv2
 
 
-def show_and_wait(img, name="img"):
+def show_and_wait(img, name="img", wait=True):
     cv2.imshow(name, img)
-    while cv2.waitKey() != ord('q'):
-        continue
-    cv2.destroyAllWindows()
+    if wait:
+        while cv2.waitKey() != ord('q'):
+            continue
+        cv2.destroyAllWindows()
 
 
 def check_if_generator_is_empty(generator):

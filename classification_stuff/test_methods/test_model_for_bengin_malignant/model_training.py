@@ -11,6 +11,7 @@ from tqdm import tqdm
 
 from config import Config
 from fragment_splitter import CustomFragmentLoader
+from model_train_logger import set_config_for_logger
 from thyroid_dataset import ThyroidDataset
 from thyroid_ml_model import ThyroidClassificationModel
 from transformation import get_transformation
@@ -51,23 +52,6 @@ def validate(model, data_loader, loss_function=None):
     return acc * 100, cf_matrix, (fpr, tpr, auc)
 
 
-def set_config_for_logger(config_label):
-    import logging
-    trains_state_dir = "./train_state"
-    if not os.path.isdir(trains_state_dir):
-        os.mkdir(trains_state_dir)
-    config_train_dir = os.path.join(trains_state_dir, config_label)
-    if not os.path.isdir(config_train_dir):
-        os.mkdir(config_train_dir)
-    log_file = os.path.join(config_train_dir, "console.log")
-    logger = logging.getLogger(config_label)
-    logger.setLevel(logging.DEBUG)
-    fh = logging.FileHandler(log_file)
-    formatter = logging.Formatter('%(asctime)s|%(levelname)s|%(message)s', datefmt='%Y-%m-%d %H:%M:%S')
-    fh.setFormatter(formatter)
-    fh.setLevel(logging.DEBUG)
-    logger.addHandler(fh)
-    return logger
 
 
 def plot_and_save_model_per_epoch(epoch,
@@ -125,7 +109,7 @@ def plot_and_save_model_per_epoch(epoch,
     model_to_save.save_model(model_save_path)
 
 
-def train_model(base_model, config_base_name, train_val_test_data_loaders, augmentation="min"):
+def train_model(base_model, config_base_name, train_val_test_data_loaders, augmentation):
     config_name = f"{config_base_name}-{augmentation}-{','.join(class_idx_dict.keys())}"
 
     logger = set_config_for_logger(config_name)
@@ -134,7 +118,7 @@ def train_model(base_model, config_base_name, train_val_test_data_loaders, augme
         _is_inception3 = type(base_model) == torchvision.models.inception.Inception3
 
         image_model = ThyroidClassificationModel(base_model).to(Config.available_device)
-        transformation = get_transformation(augmentation=augmentation, base_data_loader=val_ds)
+        transformation = get_transformation(augmentation=augmentation, base_data_loader=train_ds)
 
         train_data_loader, val_data_loader, test_data_loader = train_val_test_data_loaders
         cast(ThyroidDataset, train_data_loader.dataset).transform = transformation
@@ -189,7 +173,7 @@ def train_model(base_model, config_base_name, train_val_test_data_loaders, augme
             train_acc_history.append(train_acc)
             logger.info(f'Train|E:{epoch + 1}|Balanced Accuracy:{round(train_acc, 4)}%,\n{train_cf_matrix}')
 
-            val_acc, val_cf_matrix, (val_TPR, val_FPR, val_auc_score), val_loss = validate(image_model,
+            val_acc, val_cf_matrix, (val_FPR, val_TPR, val_auc_score), val_loss = validate(image_model,
                                                                                            val_data_loader,
                                                                                            cec)
             val_acc = float(val_acc)
@@ -201,19 +185,23 @@ def train_model(base_model, config_base_name, train_val_test_data_loaders, augme
                                           val_acc_history,
                                           train_acc_history,
                                           [],
-                                          [], train_fpr=train_FPR, train_tpr=train_TPR,
-                                          train_auc_score=train_auc_score, val_fpr=val_FPR, val_tpr=val_TPR,
+                                          [],
+                                          train_fpr=train_FPR,
+                                          train_tpr=train_TPR,
+                                          train_auc_score=train_auc_score,
+                                          val_fpr=val_FPR,
+                                          val_tpr=val_TPR,
                                           val_auc_score=val_auc_score,
                                           config_label=config_name)
             my_lr_scheduler.step()
     except Exception as e:
         print(e)
-        logger.info(str(e))
+        logger.error(str(e))
         raise e
     else:
         # Test acc
         image_model.eval()
-        test_acc, test_c_acc, (test_TPR, test_FPR) = validate(image_model, test_data_loader)
+        test_acc, test_c_acc, (test_FPR, test_TPR, test_auc_score) = validate(image_model, test_data_loader)
         test_acc = float(test_acc)
         logger.info(f'Test|Accuracy:{round(test_acc, 4)}, {test_c_acc}%')
 
@@ -234,12 +222,12 @@ if __name__ == '__main__':
 
     for config_base_name, model in [
         ("resnet18_lr_decay", torchvision.models.resnet18(pretrained=True, progress=True)),
-        # ("resnet34_lr_decay", torchvision.models.resnet34(pretrained=True, progress=True)),
-        # ("inception_v3_lr_decay", torchvision.models.inception_v3(pretrained=True, progress=True)),
+        ("resnet34_lr_decay", torchvision.models.resnet34(pretrained=True, progress=True)),
+        ("inception_v3_lr_decay", torchvision.models.inception_v3(pretrained=True, progress=True)),
     ]:
         for aug in [
+            "jit",
             "fda",
-            "std",
             "mixup"
         ]:
             train_model(model, config_base_name, (train_data_loader, val_data_loader, test_data_loader),
