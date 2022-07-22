@@ -11,8 +11,8 @@ class Config:
     test_percent = 20
     val_percent = 10
 
-    learning_rate = 0.01
-    decay_rate = 0.95
+    learning_rate = 0.005
+    decay_rate = 0.99
     n_epoch = 3 if DEBUG else 50
     n_print = 1 if DEBUG else 7
 

@@ -136,10 +136,11 @@ def update_and_find_best_threshold():
                 whole_background_dict[key] = whole_background_dict.get(key, 0) + value
 
         e = .000001
-        acc = (whole_background_dict["TP"] + whole_background_dict["TN"]) / (
-                sum(list(whole_background_dict.values())) + e)
-        spec = whole_background_dict["TP"] / (whole_background_dict["TP"] + whole_background_dict["FP"] + e)
-        next_score = score_calculator(acc, spec)
+        total_preds = (sum(list(whole_background_dict.values())) + e)
+        acc = (whole_background_dict["TP"] + whole_background_dict["TN"]) / total_preds
+        positive_preds = (whole_background_dict["TP"] + whole_background_dict["FP"] + e)
+        precision = whole_background_dict["TP"] / positive_preds
+        next_score = score_calculator(acc, precision)
         if threshold_score is None:
             threshold_score = next_score
         else:
@@ -156,7 +157,7 @@ def update_and_find_best_threshold():
                 laplacian_threshold += threshold_jump_increase * threshold_jump_size
                 decay_count += 1
 
-        print(f"acc:{acc},spec:{spec},table:{whole_background_dict}, threshold:{laplacian_threshold}")
+        print(f"acc:{acc},precision:{precision},table:{whole_background_dict}, threshold:{laplacian_threshold}")
 
 
 if __name__ == '__main__':
