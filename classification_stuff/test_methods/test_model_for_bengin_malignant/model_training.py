@@ -52,8 +52,6 @@ def validate(model, data_loader, loss_function=None):
     return acc * 100, cf_matrix, (fpr, tpr, auc)
 
 
-
-
 def plot_and_save_model_per_epoch(epoch,
                                   model_to_save,
                                   val_acc_list,
@@ -227,6 +225,7 @@ if __name__ == '__main__':
     ]:
         for aug in [
             "jit",
+            "jit-nrs",
             "fda",
             "mixup"
         ]:
