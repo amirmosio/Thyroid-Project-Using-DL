@@ -94,7 +94,7 @@ def plot_and_save_model_per_epoch(epoch,
     if not os.path.isdir(save_state_dir):
         os.mkdir(save_state_dir)
 
-    fig_save_path = os.path.join(save_state_dir, "val_train_auc.jpeg")
+    fig_save_path = os.path.join(config_train_dir, "val_train_auc.jpeg")
     plt.plot(val_fpr, val_tpr, label="validation, auc=" + str(val_auc_score))
     plt.plot(train_fpr, train_tpr, label="train, auc=" + str(train_auc_score))
     plt.legend(loc="lower right")
