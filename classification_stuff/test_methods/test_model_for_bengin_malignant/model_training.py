@@ -52,25 +52,28 @@ def validate(model, data_loader, loss_function=None):
     return acc * 100, cf_matrix, (fpr, tpr, auc)
 
 
-def plot_and_save_model_per_epoch(epoch,
-                                  model_to_save,
-                                  val_acc_list,
-                                  train_acc_list,
-                                  val_loss_list,
-                                  train_loss_list,
-                                  train_fpr,
-                                  train_tpr,
-                                  train_auc_score,
-                                  val_fpr,
-                                  val_tpr,
-                                  val_auc_score,
-                                  config_label):
+def get_save_state_dirs(epoch, config_label):
     trains_state_dir = "./train_state"
     if not os.path.isdir(trains_state_dir):
         os.mkdir(trains_state_dir)
     config_train_dir = os.path.join(trains_state_dir, config_label)
     if not os.path.isdir(config_train_dir):
         os.mkdir(config_train_dir)
+
+    save_state_dir = os.path.join(config_train_dir, f"epoch-{epoch}")
+    if not os.path.isdir(save_state_dir):
+        os.mkdir(save_state_dir)
+    return trains_state_dir, config_train_dir, save_state_dir
+
+
+def plot_and_save_model_per_epoch(epoch,
+                                  model_to_save,
+                                  val_acc_list,
+                                  train_acc_list,
+                                  val_loss_list,
+                                  train_loss_list,
+                                  config_label):
+    trains_state_dir, config_train_dir, save_state_dir = get_save_state_dirs(epoch, config_label)
 
     fig_save_path = os.path.join(config_train_dir, "val_train_acc.jpeg")
     plt.plot(range(len(val_acc_list)), val_acc_list, label="validation")
@@ -90,24 +93,21 @@ def plot_and_save_model_per_epoch(epoch,
     plt.savefig(fig_save_path)
     plt.clf()
 
-    save_state_dir = os.path.join(config_train_dir, f"epoch-{epoch}")
-    if not os.path.isdir(save_state_dir):
-        os.mkdir(save_state_dir)
-
-    fig_save_path = os.path.join(config_train_dir, "val_train_auc.jpeg")
-    plt.plot(val_fpr, val_tpr, label="validation, auc=" + str(val_auc_score))
-    plt.plot(train_fpr, train_tpr, label="train, auc=" + str(train_auc_score))
-    plt.legend(loc="lower right")
-    plt.xlabel('FPR')
-    plt.ylabel('TPR')
-    plt.savefig(fig_save_path)
-    plt.clf()
+    # fig_save_path = os.path.join(config_train_dir, "val_train_auc.jpeg")
+    # plt.plot(val_fpr, val_tpr, label="validation, auc=" + str(val_auc_score))
+    # plt.plot(train_fpr, train_tpr, label="train, auc=" + str(train_auc_score))
+    # plt.legend(loc="lower right")
+    # plt.xlabel('FPR')
+    # plt.ylabel('TPR')
+    # plt.savefig(fig_save_path)
+    # plt.clf()
 
     model_save_path = os.path.join(save_state_dir, "model.state")
     model_to_save.save_model(model_save_path)
 
 
-def train_model(base_model, config_base_name, train_val_test_data_loaders, augmentation):
+def train_model(base_model, config_base_name, train_val_test_data_loaders, augmentation,
+                load_model_from_epoch_and_run_test=None):
     config_name = f"{config_base_name}-{augmentation}-{','.join(class_idx_dict.keys())}"
 
     logger = set_config_for_logger(config_name)
@@ -115,83 +115,82 @@ def train_model(base_model, config_base_name, train_val_test_data_loaders, augme
     try:
         _is_inception3 = type(base_model) == torchvision.models.inception.Inception3
 
-        image_model = ThyroidClassificationModel(base_model).to(Config.available_device)
         transformation = get_transformation(augmentation=augmentation, base_data_loader=train_ds)
 
         train_data_loader, val_data_loader, test_data_loader = train_val_test_data_loaders
         cast(ThyroidDataset, train_data_loader.dataset).transform = transformation
 
-        cec = nn.CrossEntropyLoss(weight=torch.tensor(train_ds.class_weights).to(Config.available_device))
-        optimizer = optim.Adam(image_model.parameters(), lr=Config.learning_rate)
-        my_lr_scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer=optimizer, gamma=Config.decay_rate)
+        image_model = None
+        if load_model_from_epoch_and_run_test is None:
+            image_model = ThyroidClassificationModel(base_model).to(Config.available_device)
 
-        val_acc_history = [0]
-        train_acc_history = [0]
+            cec = nn.CrossEntropyLoss(weight=torch.tensor(train_ds.class_weights).to(Config.available_device))
+            optimizer = optim.Adam(image_model.parameters(), lr=Config.learning_rate)
+            my_lr_scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer=optimizer, gamma=Config.decay_rate)
 
-        for epoch in range(Config.n_epoch):
-            # variables to calculate train acc
-            class_set = sorted(train_data_loader.dataset.class_to_idx_dict.values())
+            val_acc_history = [0]
+            train_acc_history = [0]
             train_y_preds = []
             train_y_targets = []
+            for epoch in range(Config.n_epoch):
+                # variables to calculate train acc
+                class_set = sorted(train_data_loader.dataset.class_to_idx_dict.values())
 
-            for images, labels in tqdm(train_data_loader, colour="#0000ff"):
-                image_model.train()
-                images = images.to(Config.available_device)
-                labels = labels.to(Config.available_device)
-                optimizer.zero_grad()
-                pred = image_model(images)
-                # pred label: torch.max(pred, 1)[1], labels
-                if _is_inception3:
-                    pred, aux_pred = pred
-                    loss, aux_loss = cec(pred, labels), cec(aux_pred, labels)
-                    loss = loss + 0.4 * aux_loss
-                else:
-                    loss = cec(pred, labels)
-                loss.backward()
-                optimizer.step()
+                for images, labels in tqdm(train_data_loader, colour="#0000ff"):
+                    image_model.train()
+                    images = images.to(Config.available_device)
+                    labels = labels.to(Config.available_device)
+                    optimizer.zero_grad()
+                    pred = image_model(images)
+                    # pred label: torch.max(pred, 1)[1], labels
+                    if _is_inception3:
+                        pred, aux_pred = pred
+                        loss, aux_loss = cec(pred, labels), cec(aux_pred, labels)
+                        loss = loss + 0.4 * aux_loss
+                    else:
+                        loss = cec(pred, labels)
+                    loss.backward()
+                    optimizer.step()
 
-                # train preds and labels
-                values, preds = torch.max(pred, 1)
-                train_y_preds.extend(preds.cpu())
-                train_y_targets.extend(labels.cpu())
+                    # train preds and labels
+                    values, preds = torch.max(pred, 1)
+                    train_y_preds.extend(preds.cpu())
+                    train_y_targets.extend(labels.cpu())
 
-            # Epoch level
-            # validation data
-            image_model.eval()
+                # Epoch level
+                # validation data
+                image_model.eval()
 
-            train_cf_matrix = confusion_matrix(train_y_targets, train_y_preds, normalize="true")
+                train_cf_matrix = confusion_matrix(train_y_targets, train_y_preds, normalize="true")
 
-            class_accuracies = [train_cf_matrix[c][c] for c in class_set]
-            train_acc = sum(class_accuracies)
-            train_acc /= len(class_set)
-            train_FPR, train_TPR, _ = roc_curve(train_y_targets, train_y_preds)
-            train_auc_score = roc_auc_score(train_y_targets, train_y_preds)
+                class_accuracies = [train_cf_matrix[c][c] for c in class_set]
+                train_acc = sum(class_accuracies)
+                train_acc /= len(class_set)
 
-            train_acc = (100 * sum(class_accuracies) / len(class_set)).item()
-            train_acc_history.append(train_acc)
-            logger.info(f'Train|E:{epoch + 1}|Balanced Accuracy:{round(train_acc, 4)}%,\n{train_cf_matrix}')
+                train_acc = (100 * sum(class_accuracies) / len(class_set)).item()
+                train_acc_history.append(train_acc)
+                logger.info(f'Train|E:{epoch + 1}|Balanced Accuracy:{round(train_acc, 4)}%,\n{train_cf_matrix}')
 
-            val_acc, val_cf_matrix, (val_FPR, val_TPR, val_auc_score), val_loss = validate(image_model,
-                                                                                           val_data_loader,
-                                                                                           cec)
-            val_acc = float(val_acc)
-            val_acc_history.append(val_acc)
-            logger.info(f'Val|E:{epoch + 1}|Balanced Accuracy:{round(val_acc, 4)}%,\n{val_cf_matrix}')
+                val_acc, val_cf_matrix, _, val_loss = validate(image_model,
+                                                               val_data_loader,
+                                                               cec)
+                val_acc = float(val_acc)
+                val_acc_history.append(val_acc)
+                logger.info(f'Val|E:{epoch + 1}|Balanced Accuracy:{round(val_acc, 4)}%,\n{val_cf_matrix}')
 
-            plot_and_save_model_per_epoch(epoch,
-                                          image_model,
-                                          val_acc_history,
-                                          train_acc_history,
-                                          [],
-                                          [],
-                                          train_fpr=train_FPR,
-                                          train_tpr=train_TPR,
-                                          train_auc_score=train_auc_score,
-                                          val_fpr=val_FPR,
-                                          val_tpr=val_TPR,
-                                          val_auc_score=val_auc_score,
-                                          config_label=config_name)
-            my_lr_scheduler.step()
+                plot_and_save_model_per_epoch(epoch,
+                                              image_model,
+                                              val_acc_history,
+                                              train_acc_history,
+                                              [],
+                                              [],
+                                              config_label=config_name)
+                my_lr_scheduler.step()
+            else:
+                # Load model from file
+                save_dir = get_save_state_dirs(load_model_from_epoch_and_run_test, config_name)[2]
+                model_path = os.path.join(save_dir, 'model.state')
+                image_model = ThyroidClassificationModel(base_model).load_model(model_path).to(Config.available_device)
     except Exception as e:
         print(e)
         logger.error(str(e))
@@ -231,4 +230,4 @@ if __name__ == '__main__':
         ]:
             Config.reset_random_seeds()
             train_model(model, config_base_name, (train_data_loader, val_data_loader, test_data_loader),
-                        augmentation=aug)
+                        augmentation=aug, load_model_from_epoch_and_run_test=None)
