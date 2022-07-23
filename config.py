@@ -13,7 +13,7 @@ class Config:
 
     learning_rate = 0.005
     decay_rate = 0.99
-    n_epoch = 3 if DEBUG else 50
+    n_epoch = 2 if DEBUG else 50
     n_print = 1 if DEBUG else 7
 
     available_device = "cuda" if torch.cuda.is_available() and not DEBUG else "cpu"

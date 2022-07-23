@@ -33,8 +33,8 @@ def validate(model, data_loader, loss_function=None):
             loss_values.append(loss_function(x, labels))
         values, preds = torch.max(x, 1)
 
-        y_preds += preds
-        y_targets += labels
+        y_preds += preds.cpu()
+        y_targets += labels.cpu()
 
     cf_matrix = confusion_matrix(y_targets, y_preds, normalize="true")
 
@@ -152,8 +152,8 @@ def train_model(base_model, config_base_name, train_val_test_data_loaders, augme
 
                 # train preds and labels
                 values, preds = torch.max(pred, 1)
-                train_y_preds.extend(preds)
-                train_y_targets.extend(labels)
+                train_y_preds.extend(preds.cpu())
+                train_y_targets.extend(labels.cpu())
 
             # Epoch level
             # validation data
