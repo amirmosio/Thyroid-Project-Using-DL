@@ -45,7 +45,20 @@ class CustomFragmentLoader:
             # image_paths_by_slide.sort()
             class_slides_dict = {}
             for item in image_paths_by_slide:
-                class_slides_dict[item[2]] = class_slides_dict.get(item[2], []) + [item]
+                if database_name == "NationalCancerInstitute":
+                    normal_percent = item[2].strip(r"(|)|\'").split("\', \'")[0]
+                    tumor_percent = item[2].strip(r"(|)|\'").split("\', \'")[1]
+                    if normal_percent == "0" and tumor_percent == "100":
+                        class_name = "MALIGNANT"
+                    elif normal_percent == "100" and tumor_percent == "0":
+                        class_name = "BENIGN"
+                    else:
+                        class_name = item[2]
+
+                else:
+                    class_name = item[2]
+                if class_name in class_names:
+                    class_slides_dict[class_name] = class_slides_dict.get(class_name, []) + [(item[0], item[1], class_name)]
 
             # split test val train because they must not share same slide id fragment
 
@@ -70,7 +83,8 @@ class CustomFragmentLoader:
 
 
 if __name__ == '__main__':
-    datasets_folder = ["stanford_tissue_microarray", "papsociaty"]
+    class_names = ["BENIGN", "MALIGNANT"]
+    datasets_folder = ["stanford_tissue_microarray", "papsociaty", "national_cancer_institute"]
     train, val, test = CustomFragmentLoader(datasets_folder).load_image_path_and_labels_and_split(
         val_percent=Config.val_percent,
         test_percent=Config.test_percent)
