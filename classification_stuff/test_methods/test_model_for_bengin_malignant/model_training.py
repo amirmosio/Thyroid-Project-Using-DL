@@ -2,6 +2,7 @@ import os
 from typing import cast
 
 import matplotlib.pyplot as plt
+import numpy as np
 import torch
 import torchvision
 from sklearn.metrics import confusion_matrix, roc_curve, roc_auc_score
@@ -24,6 +25,7 @@ def validate(model, data_loader, loss_function=None):
     loss_values = []
     y_preds = []
     y_targets = []
+    y_positive_scores = []
 
     for images, labels in data_loader:
         images = images.to(Config.available_device)
@@ -33,6 +35,7 @@ def validate(model, data_loader, loss_function=None):
             loss_values.append(loss_function(x, labels))
         values, preds = torch.max(x, 1)
 
+        y_positive_scores += x[:, 1].cpu()
         y_preds += preds.cpu()
         y_targets += labels.cpu()
 
@@ -43,8 +46,8 @@ def validate(model, data_loader, loss_function=None):
     acc /= len(class_set)
     # TN|FN
     # FP|TP
-    fpr, tpr, _ = roc_curve(y_targets, y_preds)
-    auc = roc_auc_score(y_targets, y_preds)
+    fpr, tpr, _ = roc_curve(y_targets, y_positive_scores)
+    auc = roc_auc_score(y_targets, y_positive_scores)
     if loss_function:
         loss = sum(loss_values)
         loss /= len(loss_values)
@@ -52,17 +55,19 @@ def validate(model, data_loader, loss_function=None):
     return acc * 100, cf_matrix, (fpr, tpr, auc)
 
 
-def get_save_state_dirs(epoch, config_label):
+def get_save_state_dirs(config_label, epoch=None):
     trains_state_dir = "./train_state"
     if not os.path.isdir(trains_state_dir):
         os.mkdir(trains_state_dir)
     config_train_dir = os.path.join(trains_state_dir, config_label)
     if not os.path.isdir(config_train_dir):
         os.mkdir(config_train_dir)
-
-    save_state_dir = os.path.join(config_train_dir, f"epoch-{epoch}")
-    if not os.path.isdir(save_state_dir):
-        os.mkdir(save_state_dir)
+    if epoch is not None:
+        save_state_dir = os.path.join(config_train_dir, f"epoch-{epoch}")
+        if not os.path.isdir(save_state_dir):
+            os.mkdir(save_state_dir)
+    else:
+        save_state_dir = None
     return trains_state_dir, config_train_dir, save_state_dir
 
 
@@ -73,7 +78,7 @@ def plot_and_save_model_per_epoch(epoch,
                                   val_loss_list,
                                   train_loss_list,
                                   config_label):
-    trains_state_dir, config_train_dir, save_state_dir = get_save_state_dirs(epoch, config_label)
+    trains_state_dir, config_train_dir, save_state_dir = get_save_state_dirs(config_label, epoch)
 
     fig_save_path = os.path.join(config_train_dir, "val_train_acc.jpeg")
     plt.plot(range(len(val_acc_list)), val_acc_list, label="validation")
@@ -93,17 +98,19 @@ def plot_and_save_model_per_epoch(epoch,
     plt.savefig(fig_save_path)
     plt.clf()
 
-    # fig_save_path = os.path.join(config_train_dir, "val_train_auc.jpeg")
-    # plt.plot(val_fpr, val_tpr, label="validation, auc=" + str(val_auc_score))
-    # plt.plot(train_fpr, train_tpr, label="train, auc=" + str(train_auc_score))
-    # plt.legend(loc="lower right")
-    # plt.xlabel('FPR')
-    # plt.ylabel('TPR')
-    # plt.savefig(fig_save_path)
-    # plt.clf()
-
     model_save_path = os.path.join(save_state_dir, "model.state")
     model_to_save.save_model(model_save_path)
+
+
+def save_auc_roc_chart_for_test(test_fpr, test_tpr, test_auc_score, config_label, epoch):
+    trains_state_dir, config_train_dir, save_dir = get_save_state_dirs(config_label, epoch)
+    fig_save_path = os.path.join(save_dir, "test_roc.jpeg")
+    plt.plot(test_fpr, test_tpr, label="test, auc=" + str(test_auc_score))
+    plt.legend(loc="lower right")
+    plt.xlabel('FPR')
+    plt.ylabel('TPR')
+    plt.savefig(fig_save_path)
+    plt.clf()
 
 
 def train_model(base_model, config_base_name, train_val_test_data_loaders, augmentation,
@@ -186,11 +193,11 @@ def train_model(base_model, config_base_name, train_val_test_data_loaders, augme
                                               [],
                                               config_label=config_name)
                 my_lr_scheduler.step()
-            else:
-                # Load model from file
-                save_dir = get_save_state_dirs(load_model_from_epoch_and_run_test, config_name)[2]
-                model_path = os.path.join(save_dir, 'model.state')
-                image_model = ThyroidClassificationModel(base_model).load_model(model_path).to(Config.available_device)
+        else:
+            # Load model from file
+            save_dir = get_save_state_dirs(config_name, load_model_from_epoch_and_run_test)[2]
+            model_path = os.path.join(save_dir, 'model.state')
+            image_model = ThyroidClassificationModel(base_model).load_model(model_path).to(Config.available_device)
     except Exception as e:
         print(e)
         logger.error(str(e))
@@ -200,7 +207,13 @@ def train_model(base_model, config_base_name, train_val_test_data_loaders, augme
         image_model.eval()
         test_acc, test_c_acc, (test_FPR, test_TPR, test_auc_score) = validate(image_model, test_data_loader)
         test_acc = float(test_acc)
-        logger.info(f'Test|Accuracy:{round(test_acc, 4)}, {test_c_acc}%')
+
+    if load_model_from_epoch_and_run_test is not None:
+        save_auc_roc_chart_for_test(test_FPR, test_TPR, test_auc_score, config_name, load_model_from_epoch_and_run_test)
+        logger.info(f'Test|Epoch:{load_model_from_epoch_and_run_test}|Accuracy:{round(test_acc, 4)}, {test_c_acc}%')
+    else:
+        save_auc_roc_chart_for_test(test_FPR, test_TPR, test_auc_score, config_name, epoch)
+        logger.info(f'Test|Epoch:{epoch}|Accuracy:{round(test_acc, 4)}, {test_c_acc}%')
 
 
 if __name__ == '__main__':
@@ -230,4 +243,4 @@ if __name__ == '__main__':
         ]:
             Config.reset_random_seeds()
             train_model(model, config_base_name, (train_data_loader, val_data_loader, test_data_loader),
-                        augmentation=aug, load_model_from_epoch_and_run_test=None)
+                        augmentation=aug, load_model_from_epoch_and_run_test=44)

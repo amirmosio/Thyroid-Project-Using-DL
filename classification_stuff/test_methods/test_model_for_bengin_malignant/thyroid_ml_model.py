@@ -44,3 +44,4 @@ class ThyroidClassificationModel(nn.Module):
     def load_model(self, path):
         self.load_state_dict(torch.load(path))
         self.eval()
+        return self
