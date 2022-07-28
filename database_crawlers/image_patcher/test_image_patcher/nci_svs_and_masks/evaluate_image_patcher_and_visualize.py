@@ -101,6 +101,8 @@ def update_and_find_best_threshold():
 
     # laplacian_threshold = 780
 
+    learning_done = False
+
     def score_calculator(accuracy, specificity, acc_w=0.1):
         return accuracy * acc_w + specificity * (1 - acc_w)
 
@@ -157,6 +159,10 @@ def update_and_find_best_threshold():
 
                 laplacian_threshold += threshold_jump_increase * threshold_jump_size
                 decay_count += 1
+        else:
+            if not learning_done:
+                input("Done?")
+            learning_done = True
 
         print(f"acc:{acc},precision:{precision},table:{whole_background_dict}, threshold:{laplacian_threshold}")
 
