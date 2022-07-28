@@ -97,8 +97,8 @@ def update_and_find_best_threshold():
 
     threshold_score = None
     # update after initial run
-    laplacian_threshold = 250
-    laplacian_threshold = 820
+    laplacian_threshold = 500
+    # laplacian_threshold = 820
 
     def score_calculator(accuracy, specificity, acc_w=0.1):
         return accuracy * acc_w + specificity * (1 - acc_w)
@@ -208,7 +208,7 @@ if __name__ == '__main__':
 # 500 last  for steps initial with 250 threshold
 # acc:0.9935897404051611,spec:0.9999999861111113,table:{'TP': 72, 'FP': 0, 'TN': 238, 'FN': 2}, threshold:755.9870661958269
 
-# 900 last  for steps initial with 755 threshold
+# 900 patch size last  for steps initial with 755 threshold
 # acc:0.9581481477932785,spec:0.9905437328828753,table:{'TP': 419, 'FP': 4, 'TN': 2168, 'FN': 109}, threshold:768.9005414399998
 # acc:0.9462962959458162,spec:0.9892703841431966,table:{'TP': 461, 'FP': 5, 'TN': 2094, 'FN': 140}, threshold:760.3106068479998
 # acc:0.9514814811290809,spec:0.9953379930178602,table:{'TP': 427, 'FP': 2, 'TN': 2142, 'FN': 129}, threshold:751.7206722559998
