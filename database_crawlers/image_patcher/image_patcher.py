@@ -20,7 +20,7 @@ from utils import show_and_wait
 
 class ThyroidFragmentFilters:
     @staticmethod
-    def func_laplacian_threshold_in_half_magnification(threshold=Config.laplacian_threshold, rescale=.7):
+    def func_laplacian_threshold_in_half_magnification(threshold=Config.laplacian_threshold, rescale=.5):
         def wrapper(image_nd_array):
             res, var = ThyroidFragmentFilters._empty_frag_with_laplacian_threshold(image_nd_array, threshold,
                                                                                    return_variance=True)
