@@ -98,7 +98,7 @@ def update_and_find_best_threshold():
     threshold_score = None
     # update after initial run
     laplacian_threshold = 250
-    # laplacian_threshold = 750
+    laplacian_threshold = 820
 
     def score_calculator(accuracy, specificity, acc_w=0.1):
         return accuracy * acc_w + specificity * (1 - acc_w)
@@ -223,3 +223,23 @@ if __name__ == '__main__':
 # acc:0.9922222211197531,spec:0.999999996031746,table:{'TP': 252, 'FP': 0, 'TN': 641, 'FN': 7}, threshold:757.4601229529904
 # acc:0.9911111100098765,spec:0.9954954910112815,table:{'TP': 221, 'FP': 1, 'TN': 671, 'FN': 7}, threshold:755.2083231393052
 # acc:0.9933333322296296,spec:0.9999999953703704,table:{'TP': 216, 'FP': 0, 'TN': 678, 'FN': 6}, threshold:752.95652332562
+
+
+
+# 250 start rescale 0.5
+# acc:0.9766666663049384,precision:0.9688715934457751,table:{'TP': 498, 'FP': 16, 'TN': 2139, 'FN': 47}, threshold:820.752
+# acc:0.9770370366751715,precision:0.9623015853922587,table:{'TP': 485, 'FP': 19, 'TN': 2153, 'FN': 43}, threshold:846.9663999999999
+# acc:0.9670370366788752,precision:0.9571428554336735,table:{'TP': 536, 'FP': 24, 'TN': 2075, 'FN': 65}, threshold:825.9948799999999
+# acc:0.9729629626026064,precision:0.9744597230364249,table:{'TP': 496, 'FP': 13, 'TN': 2131, 'FN': 60}, threshold:805.0233599999998
+# acc:0.9681174084169446,precision:0.9538461509112426,table:{'TP': 310, 'FP': 15, 'TN': 1603, 'FN': 48}, threshold:821.8005759999998
+# acc:0.9772222216793209,precision:0.9814814778463649,table:{'TP': 265, 'FP': 5, 'TN': 1494, 'FN': 36}, threshold:838.5777919999997
+# acc:0.9747652576439171,precision:0.9824561369036627,table:{'TP': 280, 'FP': 5, 'TN': 1381, 'FN': 38}, threshold:855.3550079999997
+# acc:0.9922222211197531,precision:0.9923664084260824,table:{'TP': 260, 'FP': 2, 'TN': 633, 'FN': 5}, threshold:872.1322239999996
+# acc:0.9944444433395062,precision:0.9959839317430365,table:{'TP': 248, 'FP': 1, 'TN': 647, 'FN': 4}, threshold:888.9094399999996
+# acc:0.9922222211197531,precision:0.9888888852263374,table:{'TP': 267, 'FP': 3, 'TN': 626, 'FN': 4}, threshold:875.4876671999996
+# acc:0.9966666655592593,precision:0.9917012406983351,table:{'TP': 239, 'FP': 2, 'TN': 658, 'FN': 1}, threshold:862.0658943999996
+# acc:0.9888888877901234,precision:0.9790794938113829,table:{'TP': 234, 'FP': 5, 'TN': 656, 'FN': 5}, threshold:872.8033126399996
+# acc:0.9988888877790123,precision:0.999999996124031,table:{'TP': 258, 'FP': 0, 'TN': 641, 'FN': 1}, threshold:883.5407308799996
+# acc:0.9922222211197531,precision:0.9825327468011671,table:{'TP': 225, 'FP': 4, 'TN': 668, 'FN': 3}, threshold:874.9507962879997
+# acc:0.9955555544493827,precision:0.9999999954128441,table:{'TP': 218, 'FP': 0, 'TN': 678, 'FN': 4}, threshold:866.3608616959997
+# acc:0.9999999166666736,precision:0.9999998333333611,table:{'TP': 6, 'FP': 0, 'TN': 6, 'FN': 0}, threshold:857.7709271039997
