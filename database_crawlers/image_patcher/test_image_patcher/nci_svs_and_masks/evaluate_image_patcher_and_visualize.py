@@ -98,7 +98,7 @@ def update_and_find_best_threshold():
     threshold_score = None
     # update after initial run
     laplacian_threshold = 500
-    # laplacian_threshold = 820
+    laplacian_threshold = 780
 
     def score_calculator(accuracy, specificity, acc_w=0.1):
         return accuracy * acc_w + specificity * (1 - acc_w)
