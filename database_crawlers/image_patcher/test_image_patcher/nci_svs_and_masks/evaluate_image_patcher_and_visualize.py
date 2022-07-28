@@ -88,18 +88,18 @@ def calculate_acc_and_sensitivity(image_path, zarr_loader_mask, zarr_loader, fra
 
 
 def update_and_find_best_threshold():
-    initial_threshold_jump_size_const = 100
+    initial_threshold_jump_size_const = 20
     threshold_jump_size = initial_threshold_jump_size_const
-    decay_const = 0.7
+    decay_const = 0.9
     decay_count = 0
 
     threshold_jump_increase = 1
 
     threshold_score = None
     # update after initial run
-    laplacian_threshold = 500
+    # laplacian_threshold = 500
 
-    # laplacian_threshold = 780
+    laplacian_threshold = 780
 
     learning_done = False
 
@@ -230,3 +230,16 @@ if __name__ == '__main__':
 # acc:0.9922222211197531,spec:0.999999996031746,table:{'TP': 252, 'FP': 0, 'TN': 641, 'FN': 7}, threshold:757.4601229529904
 # acc:0.9911111100098765,spec:0.9954954910112815,table:{'TP': 221, 'FP': 1, 'TN': 671, 'FN': 7}, threshold:755.2083231393052
 # acc:0.9933333322296296,spec:0.9999999953703704,table:{'TP': 216, 'FP': 0, 'TN': 678, 'FN': 6}, threshold:752.95652332562
+
+
+# 500 patch size initial threshold with 250
+# acc:0.95999999968,precision:0.9783001790627484,table:{'TP': 541, 'FP': 12, 'TN': 2339, 'FN': 108}, threshold:772.826
+# acc:0.9576666663474445,precision:0.9533678740010918,table:{'TP': 552, 'FP': 27, 'TN': 2321, 'FN': 100}, threshold:784.5909
+# acc:0.9583333330138889,precision:0.9565217373976056,table:{'TP': 528, 'FP': 24, 'TN': 2347, 'FN': 101}, threshold:796.3558
+# acc:0.9547237073245192,precision:0.955357141151148,table:{'TP': 535, 'FP': 25, 'TN': 2143, 'FN': 102}, threshold:788.1203700000001
+# acc:0.96039999961584,precision:0.9563492044516881,table:{'TP': 482, 'FP': 22, 'TN': 1919, 'FN': 77}, threshold:779.8849400000001
+# acc:0.9539999996184001,precision:0.9519832965511831,table:{'TP': 456, 'FP': 23, 'TN': 1929, 'FN': 92}, threshold:785.6497410000002
+# acc:0.9639999996144001,precision:0.9757575737863483,table:{'TP': 483, 'FP': 12, 'TN': 1927, 'FN': 78}, threshold:791.4145420000002
+# acc:0.9507999996196801,precision:0.9586614154357059,table:{'TP': 487, 'FP': 21, 'TN': 1890, 'FN': 102}, threshold:787.3791813000003
+# acc:0.9748991479269838,precision:0.9705304499596651,table:{'TP': 494, 'FP': 15, 'TN': 1681, 'FN': 41}, threshold:783.3438206000003
+
