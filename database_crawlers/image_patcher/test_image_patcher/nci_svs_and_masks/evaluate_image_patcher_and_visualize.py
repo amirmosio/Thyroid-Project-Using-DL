@@ -87,7 +87,7 @@ def calculate_acc_and_sensitivity(image_path, zarr_loader_mask, zarr_loader, fra
     return background_dict
 
 
-def update_and_find_best_threshold():
+def update_and_find_best_threshold(learn_threshold=True):
     initial_threshold_jump_size_const = 20
     threshold_jump_size = initial_threshold_jump_size_const
     decay_const = 0.9
@@ -101,7 +101,6 @@ def update_and_find_best_threshold():
 
     laplacian_threshold = 780
 
-    learning_done = False
 
     def score_calculator(accuracy, specificity, acc_w=0.1):
         return accuracy * acc_w + specificity * (1 - acc_w)
@@ -146,7 +145,7 @@ def update_and_find_best_threshold():
         next_score = score_calculator(acc, precision)
         if threshold_score is None:
             threshold_score = next_score
-        elif len(none_empty_generators) >= 5:
+        elif learn_threshold and len(none_empty_generators) >= 5:
             if next_score > threshold_score:
                 threshold_score = next_score
 
@@ -159,10 +158,6 @@ def update_and_find_best_threshold():
 
                 laplacian_threshold += threshold_jump_increase * threshold_jump_size
                 decay_count += 1
-        else:
-            if not learning_done:
-                input("Done?")
-            learning_done = True
 
         print(f"acc:{acc},precision:{precision},table:{whole_background_dict}, threshold:{laplacian_threshold}")
 
@@ -211,7 +206,7 @@ if __name__ == '__main__':
         zarr_loaders_and_generators.append([
             _zarr_loader_mask, _zarr_loader, _frag_generator, _scaled_masked_image, _generated_mask_scale
         ])
-    update_and_find_best_threshold()
+    update_and_find_best_threshold(learn_threshold=False)
 # 500 last  for steps initial with 250 threshold
 # acc:0.9935897404051611,spec:0.9999999861111113,table:{'TP': 72, 'FP': 0, 'TN': 238, 'FN': 2}, threshold:755.9870661958269
 
