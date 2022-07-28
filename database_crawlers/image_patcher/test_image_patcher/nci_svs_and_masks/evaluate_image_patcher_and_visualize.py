@@ -98,7 +98,8 @@ def update_and_find_best_threshold():
     threshold_score = None
     # update after initial run
     laplacian_threshold = 500
-    laplacian_threshold = 780
+
+    # laplacian_threshold = 780
 
     def score_calculator(accuracy, specificity, acc_w=0.1):
         return accuracy * acc_w + specificity * (1 - acc_w)
@@ -143,7 +144,7 @@ def update_and_find_best_threshold():
         next_score = score_calculator(acc, precision)
         if threshold_score is None:
             threshold_score = next_score
-        else:
+        elif len(none_empty_generators) >= 5:
             if next_score > threshold_score:
                 threshold_score = next_score
 
@@ -223,7 +224,3 @@ if __name__ == '__main__':
 # acc:0.9922222211197531,spec:0.999999996031746,table:{'TP': 252, 'FP': 0, 'TN': 641, 'FN': 7}, threshold:757.4601229529904
 # acc:0.9911111100098765,spec:0.9954954910112815,table:{'TP': 221, 'FP': 1, 'TN': 671, 'FN': 7}, threshold:755.2083231393052
 # acc:0.9933333322296296,spec:0.9999999953703704,table:{'TP': 216, 'FP': 0, 'TN': 678, 'FN': 6}, threshold:752.95652332562
-
-
-
-
