@@ -49,10 +49,10 @@ class ThyroidDataset(Dataset):
         image = self.add_margin(image)
         image = np.array(image)
         if self.transform is not None:
-            # show_and_wait(image, name="original", wait=False)
+            show_and_wait(image, name=f"./transformations/{index}-original", wait=False, save=True)
             image = self.transform(image=image)['image']
-            # image_show = np.moveaxis(image.cpu().detach().numpy(), 0, -1)
-            # show_and_wait(image_show, name="transformed")
+            image_show = np.moveaxis(image.cpu().detach().numpy(), 0, -1)
+            show_and_wait(image_show, name=f"./transformations/{index}-transformed", save=True)
         else:
             transform = get_transformation(augmentation="min")
 

@@ -11,9 +11,9 @@ class Config:
     test_percent = 20
     val_percent = 10
 
-    learning_rate = 0.005
-    decay_rate = 0.99
-    n_epoch = 2 if DEBUG else 50
+    learning_rate = 0.001
+    decay_rate = 0.98
+    n_epoch = 2 if DEBUG else 100
     n_print = 1 if DEBUG else 7
 
     available_device = "cuda" if torch.cuda.is_available() and not DEBUG else "cpu"
@@ -31,6 +31,9 @@ class Config:
     def reset_random_seeds():
         random.seed(Config.seed)
         torch.manual_seed(Config.seed)
+
+    class_names = ["BENIGN", "MALIGNANT"]
+    class_idx_dict = {"BENIGN": 0, "MALIGNANT": 1}
 
 
 Config.reset_random_seeds()

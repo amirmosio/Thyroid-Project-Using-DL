@@ -2,7 +2,7 @@ import os
 from typing import cast
 
 import matplotlib.pyplot as plt
-import numpy as np
+import timm
 import torch
 import torchvision
 from sklearn.metrics import confusion_matrix, roc_curve, roc_auc_score
@@ -115,19 +115,18 @@ def save_auc_roc_chart_for_test(test_fpr, test_tpr, test_auc_score, config_label
 
 def train_model(base_model, config_base_name, train_val_test_data_loaders, augmentation,
                 load_model_from_epoch_and_run_test=None):
-    config_name = f"{config_base_name}-{augmentation}-{','.join(class_idx_dict.keys())}"
+    config_name = f"{config_base_name}-{augmentation}-{','.join(Config.class_idx_dict.keys())}"
 
     logger = set_config_for_logger(config_name)
     logger.info(f"training config: {config_name}")
     try:
-        _is_inception3 = type(base_model) == torchvision.models.inception.Inception3
+        _is_inception = type(base_model) == torchvision.models.inception.Inception3
 
         transformation = get_transformation(augmentation=augmentation, base_data_loader=train_ds)
 
         train_data_loader, val_data_loader, test_data_loader = train_val_test_data_loaders
         cast(ThyroidDataset, train_data_loader.dataset).transform = transformation
 
-        image_model = None
         if load_model_from_epoch_and_run_test is None:
             image_model = ThyroidClassificationModel(base_model).to(Config.available_device)
 
@@ -150,7 +149,7 @@ def train_model(base_model, config_base_name, train_val_test_data_loaders, augme
                     optimizer.zero_grad()
                     pred = image_model(images)
                     # pred label: torch.max(pred, 1)[1], labels
-                    if _is_inception3:
+                    if _is_inception:
                         pred, aux_pred = pred
                         loss, aux_loss = cec(pred, labels), cec(aux_pred, labels)
                         loss = loss + 0.4 * aux_loss
@@ -176,14 +175,14 @@ def train_model(base_model, config_base_name, train_val_test_data_loaders, augme
 
                 train_acc = (100 * sum(class_accuracies) / len(class_set)).item()
                 train_acc_history.append(train_acc)
-                logger.info(f'Train|E:{epoch + 1}|Balanced Accuracy:{round(train_acc, 4)}%,\n{train_cf_matrix}')
+                logger.info(f'Train|E:{epoch}|Balanced Accuracy:{round(train_acc, 4)}%,\n{train_cf_matrix}')
 
                 val_acc, val_cf_matrix, _, val_loss = validate(image_model,
                                                                val_data_loader,
                                                                cec)
                 val_acc = float(val_acc)
                 val_acc_history.append(val_acc)
-                logger.info(f'Val|E:{epoch + 1}|Balanced Accuracy:{round(val_acc, 4)}%,\n{val_cf_matrix}')
+                logger.info(f'Val|E:{epoch}|Balanced Accuracy:{round(val_acc, 4)}%,\n{val_cf_matrix}')
 
                 plot_and_save_model_per_epoch(epoch,
                                               image_model,
@@ -217,30 +216,57 @@ def train_model(base_model, config_base_name, train_val_test_data_loaders, augme
 
 
 if __name__ == '__main__':
-    class_idx_dict = {"BENIGN": 0, "MALIGNANT": 1}
     datasets_folder = ["stanford_tissue_microarray", "papsociaty"]
     train, val, test = CustomFragmentLoader(datasets_folder).load_image_path_and_labels_and_split(
         test_percent=Config.test_percent,
         val_percent=Config.val_percent)
-    test_ds = ThyroidDataset(test, class_idx_dict)
-    val_ds = ThyroidDataset(val, class_idx_dict)
-    train_ds = ThyroidDataset(train, class_idx_dict)
+    test_ds = ThyroidDataset(test, Config.class_idx_dict)
+    val_ds = ThyroidDataset(val, Config.class_idx_dict)
+    train_ds = ThyroidDataset(train, Config.class_idx_dict)
 
     train_data_loader = DataLoader(train_ds, batch_size=Config.batch_size, shuffle=True)
     val_data_loader = DataLoader(val_ds, batch_size=Config.eval_batch_size, shuffle=True)
     test_data_loader = DataLoader(test_ds, batch_size=Config.eval_batch_size, shuffle=True)
 
-    for config_base_name, model in [
-        ("resnet18_lr_decay", torchvision.models.resnet18(pretrained=True, progress=True)),
-        ("resnet34_lr_decay", torchvision.models.resnet34(pretrained=True, progress=True)),
-        ("inception_v3_lr_decay", torchvision.models.inception_v3(pretrained=True, progress=True)),
-    ]:
-        for aug in [
+    for config_base_name, model, augmentations in [
+        (f"resnet18_{Config.learning_rate}*{Config.decay_rate}", torchvision.models.resnet18(pretrained=True, progress=True), [
             "jit",
             "jit-nrs",
             "fda",
-            "mixup"
-        ]:
+            "mixup",
+            "jit-fda-mixup"
+        ]),
+        (f"resnet101_{Config.learning_rate}*{Config.decay_rate}",
+         torchvision.models.resnet101(pretrained=True, progress=True), [
+             "jit",
+             "jit-nrs",
+             "fda",
+             "mixup",
+             "jit-fda-mixup"
+         ]),
+        ("resnet34_lr_decay", torchvision.models.resnet34(pretrained=True, progress=True), [
+            "jit",
+            "jit-nrs",
+            "fda",
+            "mixup",
+            "jit-fda-mixup"
+        ]),
+        ("inception_v3_lr_decay", torchvision.models.inception_v3(pretrained=True, progress=True), [
+            "jit",
+            "jit-nrs",
+            "fda",
+            "mixup",
+            "jit-fda-mixup"
+        ]),
+        ("inception_v4_lr_decay", timm.create_model('inception_v4', pretrained=True), [
+            "jit",
+            "jit-nrs",
+            "fda",
+            "mixup",
+            "jit-fda-mixup"
+        ])
+    ]:
+        for aug in augmentations:
             Config.reset_random_seeds()
             train_model(model, config_base_name, (train_data_loader, val_data_loader, test_data_loader),
-                        augmentation=aug, load_model_from_epoch_and_run_test=44)
+                        augmentation=aug)
