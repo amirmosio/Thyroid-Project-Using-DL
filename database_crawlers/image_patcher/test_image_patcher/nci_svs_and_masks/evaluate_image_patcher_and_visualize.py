@@ -94,7 +94,7 @@ def score_calculator(accuracy, specificity, acc_w=0.1):
 
 
 def update_and_find_best_threshold(learn_threshold_and_log_cf_matrix_per_patch=True):
-    initial_threshold_jump_size_const = 20
+    initial_threshold_jump_size_const = 80
     threshold_jump_size = initial_threshold_jump_size_const
     decay_const = 0.9
     decay_count = 0
