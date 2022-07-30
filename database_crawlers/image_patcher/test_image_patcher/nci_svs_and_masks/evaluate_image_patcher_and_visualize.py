@@ -132,7 +132,7 @@ def update_and_find_best_threshold(learn_threshold_and_log_cf_matrix_per_patch=T
     whole_background_dict = {}
     threshold_history = []
     score_history = []
-    for epoch in (Config.n_epoch if learn_threshold_and_log_cf_matrix_per_patch else 1):
+    for epoch in range((Config.n_epoch if learn_threshold_and_log_cf_matrix_per_patch else 1)):
         zarr_loaders_and_generators = get_zarr_loaders_and_generators()
         while sum([item is not None for item in zarr_loaders_and_generators]) >= 1:
             none_empty_generators = [i for i in range(len(zarr_loaders_and_generators)) if
