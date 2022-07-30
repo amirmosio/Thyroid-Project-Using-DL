@@ -197,7 +197,6 @@ def update_and_find_best_threshold(learn_threshold_and_log_cf_matrix_per_patch=T
                 else:
                     if not learning_done:
                         save_threshold_and_score_chart(threshold_history, score_history)
-                        input("Done, Hit enter to exit")
                         break
 
                     learning_done = True
