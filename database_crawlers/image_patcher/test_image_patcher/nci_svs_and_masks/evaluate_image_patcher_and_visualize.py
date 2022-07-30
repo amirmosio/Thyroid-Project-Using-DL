@@ -95,7 +95,7 @@ def score_calculator(accuracy, specificity, acc_w=0.1):
 
 
 def update_and_find_best_threshold(learn_threshold_and_log_cf_matrix_per_patch=True):
-    initial_threshold_jump_size_const = 80
+    initial_threshold_jump_size_const = 100
     threshold_jump_size = initial_threshold_jump_size_const
     decay_const = 0.9
     decay_count = 0
@@ -134,7 +134,7 @@ def update_and_find_best_threshold(learn_threshold_and_log_cf_matrix_per_patch=T
                                                        generated_scaled_mask_image,
                                                        generated_mask_scale,
                                                        laplacian_threshold,
-                                                       slide_patch_size=None if decay_count >= 30 else 800,
+                                                       slide_patch_size=None if decay_count >= 30 else 500,
                                                        save_generated_image=not learn_threshold_and_log_cf_matrix_per_patch)
             for i in range(len(zarr_loaders_and_generators)):
                 if zarr_loaders_and_generators[i]:
