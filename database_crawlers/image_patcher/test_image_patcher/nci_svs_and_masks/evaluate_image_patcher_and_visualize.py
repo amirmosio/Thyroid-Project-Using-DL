@@ -14,7 +14,8 @@ def imul(a, b):
 
 
 def calculate_acc_and_sensitivity(image_path, zarr_loader_mask, zarr_loader, frag_generator, scaled_masked_image,
-                                  generated_mask_scale, laplacian_threshold, slide_patch_size):
+                                  generated_mask_scale, laplacian_threshold, slide_patch_size,
+                                  save_generated_image=True):
     def process_frag(args):
         next_test_item, frag_pos, condition = args
         frag_shape = next_test_item.shape
@@ -81,8 +82,9 @@ def calculate_acc_and_sensitivity(image_path, zarr_loader_mask, zarr_loader, fra
                 if patch_count == slide_patch_size:
                     break
 
-    masked_image_path = ".".join(image_path.split(".")[:-1]) + "_generated_mask.jpg"
-    cv2.imwrite(masked_image_path, scaled_masked_image)
+    if save_generated_image:
+        masked_image_path = ".".join(image_path.split(".")[:-1]) + "_generated_mask.jpg"
+        cv2.imwrite(masked_image_path, scaled_masked_image)
 
     return background_dict
 
@@ -129,7 +131,8 @@ def update_and_find_best_threshold(learn_threshold_and_log_cf_matrix_per_patch=T
                                                        generated_scaled_mask_image,
                                                        generated_mask_scale,
                                                        laplacian_threshold,
-                                                       slide_patch_size=None if decay_count >= 30 else 600)
+                                                       slide_patch_size=None if decay_count >= 30 else 600,
+                                                       save_generated_image=learn_threshold_and_log_cf_matrix_per_patch)
             for i in range(len(zarr_loaders_and_generators)):
                 if zarr_loaders_and_generators[i]:
                     generator = check_if_generator_is_empty(zarr_loaders_and_generators[i][2])
@@ -219,4 +222,4 @@ if __name__ == '__main__':
         zarr_loaders_and_generators.append([
             _zarr_loader_mask, _zarr_loader, _frag_generator, _scaled_masked_image, _generated_mask_scale
         ])
-    update_and_find_best_threshold(learn_threshold_and_log_cf_matrix_per_patch=False)
+    update_and_find_best_threshold(learn_threshold_and_log_cf_matrix_per_patch=True)
