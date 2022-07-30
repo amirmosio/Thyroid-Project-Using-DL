@@ -2,6 +2,7 @@ import concurrent.futures
 import math
 
 import cv2
+import matplotlib.pyplot as plt
 import numpy as np
 
 from config import Config
@@ -109,6 +110,8 @@ def update_and_find_best_threshold(learn_threshold_and_log_cf_matrix_per_patch=T
     learning_done = False
 
     whole_background_dict = {}
+    threshold_history = []
+    score_history = []
     while sum([item is not None for item in zarr_loaders_and_generators]) >= 1:
         none_empty_generators = [i for i in range(len(zarr_loaders_and_generators)) if
                                  zarr_loaders_and_generators[i] is not None]
@@ -154,6 +157,8 @@ def update_and_find_best_threshold(learn_threshold_and_log_cf_matrix_per_patch=T
             if threshold_score is None:
                 threshold_score = next_score
             elif len(none_empty_generators) >= 4:
+                threshold_history.append(laplacian_threshold)
+                score_history.append(next_score)
                 if next_score > threshold_score:
                     threshold_score = next_score
 
@@ -166,8 +171,10 @@ def update_and_find_best_threshold(learn_threshold_and_log_cf_matrix_per_patch=T
 
                     laplacian_threshold += threshold_jump_increase * threshold_jump_size
                     decay_count += 1
+                save_threshold_and_score_chart(threshold_history, score_history)
             else:
                 if not learning_done:
+                    save_threshold_and_score_chart(threshold_history, score_history)
                     input("Done, hit enter to continue generating mask:")
                 learning_done = True
             acc = round(acc, 3)
@@ -178,6 +185,24 @@ def update_and_find_best_threshold(learn_threshold_and_log_cf_matrix_per_patch=T
         else:
             print(f"table:{whole_background_dict}," +
                   f"threshold:{laplacian_threshold},jump_size:{threshold_jump_size}")
+
+
+def save_threshold_and_score_chart(threshold_history, score_history):
+    fig_save_path = "threshold_history_chart.jpeg"
+    plt.plot(range(len(threshold_history)), threshold_history, label="Laplacian threshold")
+    plt.legend(loc="lower right")
+    plt.xlabel('Batch')
+    plt.ylabel('Laplacian threshold')
+    plt.savefig(fig_save_path)
+    plt.clf()
+
+    fig_save_path = "score_history_chart.jpeg"
+    plt.plot(range(len(score_history)), score_history)
+    plt.legend(loc="lower right")
+    plt.xlabel('Batch')
+    plt.ylabel('Objective function - Sore')
+    plt.savefig(fig_save_path)
+    plt.clf()
 
 
 if __name__ == '__main__':
