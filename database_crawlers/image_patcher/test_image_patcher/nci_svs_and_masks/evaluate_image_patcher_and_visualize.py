@@ -170,8 +170,10 @@ def update_and_find_best_threshold(learn_threshold_and_log_cf_matrix_per_patch=T
                 if not learning_done:
                     input("Done, hit enter to continue generating mask:")
                 learning_done = True
-
-            print(f"acc:{acc},precision:{precision},table:{whole_background_dict}" +
+            acc = round(acc, 3)
+            precision = round(precision, 3)
+            threshold_score_rounded = round(threshold_score, 3)
+            print(f"acc:{acc},precision:{precision},score:{threshold_score_rounded},table:{whole_background_dict}" +
                   f"thresh:{laplacian_threshold},jump_size:{threshold_jump_size}")
         else:
             print(f"table:{whole_background_dict}," +
