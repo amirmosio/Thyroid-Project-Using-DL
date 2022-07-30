@@ -241,7 +241,7 @@ class ImageAndSlidePatcher:
     def save_papsociaty_patch(cls, database_path):
         thyroid_desired_classes = [ThyroidCancerLevel.MALIGNANT, ThyroidCancerLevel.BENIGN]
         print("database path: ", database_path)
-        for folder in ["BENIGN", "MALIGNANT"]:
+        for folder in Config.class_names:
             group_path = os.path.join(database_path, "data", folder)
             data_dir, patch_dir, csv_writer, csv_file = cls.create_patch_dir_and_initialize_csv(database_path)
             for image_path in cls._get_json_and_image_address_of_directory(group_path, ignore_json=True):

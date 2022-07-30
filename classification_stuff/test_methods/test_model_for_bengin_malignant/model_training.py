@@ -138,6 +138,9 @@ def train_model(base_model, config_base_name, train_val_test_data_loaders, augme
             train_acc_history = [0]
             train_y_preds = []
             train_y_targets = []
+            best_epoch_train_acc = 0
+            best_epoch_val_acc = 0
+
             for epoch in range(Config.n_epoch):
                 # variables to calculate train acc
                 class_set = sorted(train_data_loader.dataset.class_to_idx_dict.values())
@@ -183,14 +186,17 @@ def train_model(base_model, config_base_name, train_val_test_data_loaders, augme
                 val_acc = float(val_acc)
                 val_acc_history.append(val_acc)
                 logger.info(f'Val|E:{epoch}|Balanced Accuracy:{round(val_acc, 4)}%,\n{val_cf_matrix}')
-
-                plot_and_save_model_per_epoch(epoch,
-                                              image_model,
-                                              val_acc_history,
-                                              train_acc_history,
-                                              [],
-                                              [],
-                                              config_label=config_name)
+                if train_acc >= best_epoch_train_acc and val_acc >= best_epoch_val_acc and abs(
+                        train_acc - val_acc) < Config.train_val_acc_max_distance_for_best_epoch:
+                    best_epoch_val_acc = val_acc
+                    best_epoch_train_acc = train_acc
+                    plot_and_save_model_per_epoch(epoch,
+                                                  image_model,
+                                                  val_acc_history,
+                                                  train_acc_history,
+                                                  [],
+                                                  [],
+                                                  config_label=config_name)
                 my_lr_scheduler.step()
         else:
             # Load model from file
@@ -229,13 +235,14 @@ if __name__ == '__main__':
     test_data_loader = DataLoader(test_ds, batch_size=Config.eval_batch_size, shuffle=True)
 
     for config_base_name, model, augmentations in [
-        (f"resnet18_{Config.learning_rate}*{Config.decay_rate}", torchvision.models.resnet18(pretrained=True, progress=True), [
-            "jit",
-            "jit-nrs",
-            "fda",
-            "mixup",
-            "jit-fda-mixup"
-        ]),
+        (f"resnet18_{Config.learning_rate}*{Config.decay_rate}",
+         torchvision.models.resnet18(pretrained=True, progress=True), [
+             "jit",
+             "jit-nrs",
+             "fda",
+             "mixup",
+             "jit-fda-mixup"
+         ]),
         (f"resnet101_{Config.learning_rate}*{Config.decay_rate}",
          torchvision.models.resnet101(pretrained=True, progress=True), [
              "jit",

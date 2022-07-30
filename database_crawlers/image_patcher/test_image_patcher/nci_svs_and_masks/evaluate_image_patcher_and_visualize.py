@@ -87,7 +87,11 @@ def calculate_acc_and_sensitivity(image_path, zarr_loader_mask, zarr_loader, fra
     return background_dict
 
 
-def update_and_find_best_threshold(learn_threshold=True):
+def score_calculator(accuracy, specificity, acc_w=0.1):
+    return accuracy * acc_w + specificity * (1 - acc_w)
+
+
+def update_and_find_best_threshold(learn_threshold_and_log_cf_matrix_per_patch=True):
     initial_threshold_jump_size_const = 20
     threshold_jump_size = initial_threshold_jump_size_const
     decay_const = 0.9
@@ -97,18 +101,18 @@ def update_and_find_best_threshold(learn_threshold=True):
 
     threshold_score = None
     # update after initial run
-    # laplacian_threshold = 500
+    laplacian_threshold = 500
+    # laplacian_threshold = 780
 
-    laplacian_threshold = 780
+    learning_done = False
 
-
-    def score_calculator(accuracy, specificity, acc_w=0.1):
-        return accuracy * acc_w + specificity * (1 - acc_w)
-
+    whole_background_dict = {}
     while sum([item is not None for item in zarr_loaders_and_generators]) >= 1:
         none_empty_generators = [i for i in range(len(zarr_loaders_and_generators)) if
                                  zarr_loaders_and_generators[i] is not None]
-        whole_background_dict = {}
+
+        if learn_threshold_and_log_cf_matrix_per_patch:
+            whole_background_dict = {}
         for slide_pick in none_empty_generators:
             img_path = image_lists[slide_pick][1]
             zarr_loader_mask = zarr_loaders_and_generators[slide_pick][0]
@@ -125,7 +129,7 @@ def update_and_find_best_threshold(learn_threshold=True):
                                                        generated_scaled_mask_image,
                                                        generated_mask_scale,
                                                        laplacian_threshold,
-                                                       slide_patch_size=None if decay_count >= 30 else 500)
+                                                       slide_patch_size=None if decay_count >= 30 else 600)
             for i in range(len(zarr_loaders_and_generators)):
                 if zarr_loaders_and_generators[i]:
                     generator = check_if_generator_is_empty(zarr_loaders_and_generators[i][2])
@@ -137,29 +141,38 @@ def update_and_find_best_threshold(learn_threshold=True):
             for key, value in group_dict.items():
                 whole_background_dict[key] = whole_background_dict.get(key, 0) + value
 
-        e = .000001
-        total_preds = (sum(list(whole_background_dict.values())) + e)
-        acc = (whole_background_dict["TP"] + whole_background_dict["TN"]) / total_preds
-        positive_preds = (whole_background_dict["TP"] + whole_background_dict["FP"] + e)
-        precision = whole_background_dict["TP"] / positive_preds
-        next_score = score_calculator(acc, precision)
-        if threshold_score is None:
-            threshold_score = next_score
-        elif learn_threshold and len(none_empty_generators) >= 5:
-            if next_score > threshold_score:
+        if learn_threshold_and_log_cf_matrix_per_patch:
+            e = .000001
+            total_preds = (sum(list(whole_background_dict.values())) + e)
+            acc = (whole_background_dict["TP"] + whole_background_dict["TN"]) / total_preds
+            positive_preds = (whole_background_dict["TP"] + whole_background_dict["FP"] + e)
+            precision = whole_background_dict["TP"] / positive_preds
+            next_score = score_calculator(acc, precision)
+            if threshold_score is None:
                 threshold_score = next_score
+            elif len(none_empty_generators) >= 4:
+                if next_score > threshold_score:
+                    threshold_score = next_score
 
-                laplacian_threshold += threshold_jump_increase * threshold_jump_size
-            elif next_score <= threshold_score:
-                threshold_score = next_score
+                    laplacian_threshold += threshold_jump_increase * threshold_jump_size
+                elif next_score <= threshold_score:
+                    threshold_score = next_score
 
-                threshold_jump_increase *= -1
-                threshold_jump_size *= decay_const
+                    threshold_jump_increase *= -1
+                    threshold_jump_size *= decay_const
 
-                laplacian_threshold += threshold_jump_increase * threshold_jump_size
-                decay_count += 1
+                    laplacian_threshold += threshold_jump_increase * threshold_jump_size
+                    decay_count += 1
+            else:
+                if not learning_done:
+                    input("Done, hit enter to continue generating mask:")
+                learning_done = True
 
-        print(f"acc:{acc},precision:{precision},table:{whole_background_dict}, threshold:{laplacian_threshold}")
+            print(f"acc:{acc},precision:{precision},table:{whole_background_dict}" +
+                  f"thresh:{laplacian_threshold},jump_size:{threshold_jump_size}")
+        else:
+            print(f"table:{whole_background_dict}," +
+                  f"threshold:{laplacian_threshold},jump_size:{threshold_jump_size}")
 
 
 if __name__ == '__main__':
@@ -206,35 +219,4 @@ if __name__ == '__main__':
         zarr_loaders_and_generators.append([
             _zarr_loader_mask, _zarr_loader, _frag_generator, _scaled_masked_image, _generated_mask_scale
         ])
-    update_and_find_best_threshold(learn_threshold=False)
-# 500 last  for steps initial with 250 threshold
-# acc:0.9935897404051611,spec:0.9999999861111113,table:{'TP': 72, 'FP': 0, 'TN': 238, 'FN': 2}, threshold:755.9870661958269
-
-# 900 patch size last  for steps initial with 755 threshold
-# acc:0.9581481477932785,spec:0.9905437328828753,table:{'TP': 419, 'FP': 4, 'TN': 2168, 'FN': 109}, threshold:768.9005414399998
-# acc:0.9462962959458162,spec:0.9892703841431966,table:{'TP': 461, 'FP': 5, 'TN': 2094, 'FN': 140}, threshold:760.3106068479998
-# acc:0.9514814811290809,spec:0.9953379930178602,table:{'TP': 427, 'FP': 2, 'TN': 2142, 'FN': 129}, threshold:751.7206722559998
-# acc:0.9514170035670966,spec:0.9851851815363512,table:{'TP': 266, 'FP': 4, 'TN': 1614, 'FN': 92}, threshold:758.5926199295998
-# acc:0.963333332798148,spec:0.9999999957446809,table:{'TP': 235, 'FP': 0, 'TN': 1499, 'FN': 66}, threshold:765.4645676031997
-# acc:0.9507042247941876,spec:0.9874999958854167,table:{'TP': 237, 'FP': 3, 'TN': 1383, 'FN': 81}, threshold:759.9670094643197
-# acc:0.9833333322407407,spec:0.999999996,table:{'TP': 250, 'FP': 0, 'TN': 635, 'FN': 15}, threshold:754.4694513254398
-# acc:0.9844444433506173,spec:0.9958333291840278,table:{'TP': 239, 'FP': 1, 'TN': 647, 'FN': 13}, threshold:758.8674978365437
-# acc:0.9855555544604938,spec:0.988636359891529,table:{'TP': 261, 'FP': 3, 'TN': 626, 'FN': 10}, threshold:755.3490606276605
-# acc:0.9888888877901234,spec:0.9999999956521739,table:{'TP': 230, 'FP': 0, 'TN': 660, 'FN': 10}, threshold:751.8306234187772
-# acc:0.9733333322518518,spec:0.9864253349030528,table:{'TP': 218, 'FP': 3, 'TN': 658, 'FN': 21}, threshold:754.6453731858838
-# acc:0.9922222211197531,spec:0.999999996031746,table:{'TP': 252, 'FP': 0, 'TN': 641, 'FN': 7}, threshold:757.4601229529904
-# acc:0.9911111100098765,spec:0.9954954910112815,table:{'TP': 221, 'FP': 1, 'TN': 671, 'FN': 7}, threshold:755.2083231393052
-# acc:0.9933333322296296,spec:0.9999999953703704,table:{'TP': 216, 'FP': 0, 'TN': 678, 'FN': 6}, threshold:752.95652332562
-
-
-# 500 patch size initial threshold with 250
-# acc:0.95999999968,precision:0.9783001790627484,table:{'TP': 541, 'FP': 12, 'TN': 2339, 'FN': 108}, threshold:772.826
-# acc:0.9576666663474445,precision:0.9533678740010918,table:{'TP': 552, 'FP': 27, 'TN': 2321, 'FN': 100}, threshold:784.5909
-# acc:0.9583333330138889,precision:0.9565217373976056,table:{'TP': 528, 'FP': 24, 'TN': 2347, 'FN': 101}, threshold:796.3558
-# acc:0.9547237073245192,precision:0.955357141151148,table:{'TP': 535, 'FP': 25, 'TN': 2143, 'FN': 102}, threshold:788.1203700000001
-# acc:0.96039999961584,precision:0.9563492044516881,table:{'TP': 482, 'FP': 22, 'TN': 1919, 'FN': 77}, threshold:779.8849400000001
-# acc:0.9539999996184001,precision:0.9519832965511831,table:{'TP': 456, 'FP': 23, 'TN': 1929, 'FN': 92}, threshold:785.6497410000002
-# acc:0.9639999996144001,precision:0.9757575737863483,table:{'TP': 483, 'FP': 12, 'TN': 1927, 'FN': 78}, threshold:791.4145420000002
-# acc:0.9507999996196801,precision:0.9586614154357059,table:{'TP': 487, 'FP': 21, 'TN': 1890, 'FN': 102}, threshold:787.3791813000003
-# acc:0.9748991479269838,precision:0.9705304499596651,table:{'TP': 494, 'FP': 15, 'TN': 1681, 'FN': 41}, threshold:783.3438206000003
-
+    update_and_find_best_threshold(learn_threshold_and_log_cf_matrix_per_patch=False)

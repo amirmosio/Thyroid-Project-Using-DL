@@ -4,6 +4,7 @@ import numpy as np
 from PIL import Image
 from torch.utils.data import Dataset
 
+from config import Config
 from fragment_splitter import CustomFragmentLoader
 from transformation import get_transformation
 from utils import show_and_wait
@@ -72,7 +73,7 @@ class ThyroidDataset(Dataset):
 
 
 if __name__ == '__main__':
-    class_idx_dict = {"BENIGN": 0, "MALIGNANT": 1}
+    class_idx_dict = Config.class_idx_dict
     datasets_folder = ["stanford_tissue_microarray", "papsociaty"]
     train, val, test = CustomFragmentLoader(datasets_folder).load_image_path_and_labels_and_split()
     train_ds = ThyroidDataset(train, class_idx_dict)
