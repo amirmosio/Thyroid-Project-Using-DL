@@ -189,8 +189,7 @@ def update_and_find_best_threshold(learn_threshold_and_log_cf_matrix_per_patch=T
 
 def save_threshold_and_score_chart(threshold_history, score_history):
     fig_save_path = "threshold_history_chart.jpeg"
-    plt.plot(range(len(threshold_history)), threshold_history, label="Laplacian threshold")
-    plt.legend(loc="lower right")
+    plt.plot(range(len(threshold_history)), threshold_history)
     plt.xlabel('Batch')
     plt.ylabel('Laplacian threshold')
     plt.savefig(fig_save_path)
@@ -198,7 +197,6 @@ def save_threshold_and_score_chart(threshold_history, score_history):
 
     fig_save_path = "score_history_chart.jpeg"
     plt.plot(range(len(score_history)), score_history)
-    plt.legend(loc="lower right")
     plt.xlabel('Batch')
     plt.ylabel('Objective function - Sore')
     plt.savefig(fig_save_path)
