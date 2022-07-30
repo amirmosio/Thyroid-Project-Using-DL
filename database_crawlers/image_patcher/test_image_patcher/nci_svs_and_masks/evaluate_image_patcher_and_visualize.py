@@ -132,7 +132,7 @@ def update_and_find_best_threshold(learn_threshold_and_log_cf_matrix_per_patch=T
                                                        generated_mask_scale,
                                                        laplacian_threshold,
                                                        slide_patch_size=None if decay_count >= 30 else 600,
-                                                       save_generated_image=learn_threshold_and_log_cf_matrix_per_patch)
+                                                       save_generated_image=not learn_threshold_and_log_cf_matrix_per_patch)
             for i in range(len(zarr_loaders_and_generators)):
                 if zarr_loaders_and_generators[i]:
                     generator = check_if_generator_is_empty(zarr_loaders_and_generators[i][2])
