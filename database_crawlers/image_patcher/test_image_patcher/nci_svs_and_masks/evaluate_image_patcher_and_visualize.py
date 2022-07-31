@@ -130,9 +130,10 @@ def update_and_find_best_threshold(initial_thresh, learn_threshold_and_log_cf_ma
     score_history = []
     for epoch in range((Config.n_epoch_for_image_patcher if learn_threshold_and_log_cf_matrix_per_patch else 1)):
         print("New Epoch")
+        zarr_loaders_and_generators = get_zarr_loaders_and_generators()
         whole_background_dict_per_slide = [{} for i in range(len(zarr_loaders_and_generators))]
         whole_background_dict = {}
-        zarr_loaders_and_generators = get_zarr_loaders_and_generators()
+
         while sum([item is not None for item in zarr_loaders_and_generators]) >= 1:
             none_empty_generators = [i for i in range(len(zarr_loaders_and_generators)) if
                                      zarr_loaders_and_generators[i] is not None]
@@ -207,6 +208,7 @@ def update_and_find_best_threshold(initial_thresh, learn_threshold_and_log_cf_ma
                           f"threshold:{laplacian_threshold},jump_size:{threshold_jump_size}")
             else:
                 break
+    return laplacian_threshold
 
 
 def save_threshold_and_score_chart(threshold_history, score_history):
@@ -262,4 +264,4 @@ if __name__ == '__main__':
     ]
 
     update_and_find_best_threshold(260, learn_threshold_and_log_cf_matrix_per_patch=False)
-    update_and_find_best_threshold(500, learn_threshold_and_log_cf_matrix_per_patch=True)
+    learned_threshold = update_and_find_best_threshold(500, learn_threshold_and_log_cf_matrix_per_patch=True)
