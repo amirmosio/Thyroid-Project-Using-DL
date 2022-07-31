@@ -130,6 +130,7 @@ def update_and_find_best_threshold(initial_thresh, learn_threshold_and_log_cf_ma
     score_history = []
     for epoch in range((Config.n_epoch_for_image_patcher if learn_threshold_and_log_cf_matrix_per_patch else 1)):
         print("New Epoch")
+        whole_background_dict_per_slide = [{} for i in range(len(zarr_loaders_and_generators))]
         whole_background_dict = {}
         zarr_loaders_and_generators = get_zarr_loaders_and_generators()
         while sum([item is not None for item in zarr_loaders_and_generators]) >= 1:
@@ -167,6 +168,7 @@ def update_and_find_best_threshold(initial_thresh, learn_threshold_and_log_cf_ma
 
                     for key, value in group_dict.items():
                         whole_background_dict[key] = whole_background_dict.get(key, 0) + value
+                        whole_background_dict_per_slide[slide_pick][key] = whole_background_dict[slide_pick].get(key, 0) + value
 
                 if learn_threshold_and_log_cf_matrix_per_patch:
                     e = .000001
@@ -201,7 +203,7 @@ def update_and_find_best_threshold(initial_thresh, learn_threshold_and_log_cf_ma
                         f"acc:{acc},precision:{precision},score:{threshold_score_rounded},table:{whole_background_dict}" +
                         f"thresh:{laplacian_threshold},jump_size:{threshold_jump_size}")
                 else:
-                    print(f"table:{whole_background_dict}," +
+                    print(f"table:{whole_background_dict},table_per_slide:{whole_background_dict_per_slide}" +
                           f"threshold:{laplacian_threshold},jump_size:{threshold_jump_size}")
             else:
                 break
