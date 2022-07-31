@@ -169,7 +169,7 @@ def update_and_find_best_threshold(initial_thresh, learn_threshold_and_log_cf_ma
 
                     for key, value in group_dict.items():
                         whole_background_dict[key] = whole_background_dict.get(key, 0) + value
-                        whole_background_dict_per_slide[slide_pick][key] = whole_background_dict[slide_pick].get(key, 0) + value
+                        whole_background_dict_per_slide[slide_pick][key] = whole_background_dict_per_slide[slide_pick].get(key, 0) + value
 
                 if learn_threshold_and_log_cf_matrix_per_patch:
                     e = .000001
