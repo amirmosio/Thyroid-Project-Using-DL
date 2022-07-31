@@ -114,7 +114,7 @@ def get_zarr_loaders_and_generators():
     return zarr_loaders_and_generators
 
 
-def update_and_find_best_threshold(learn_threshold_and_log_cf_matrix_per_patch=True):
+def update_and_find_best_threshold(initial_thresh, learn_threshold_and_log_cf_matrix_per_patch=True):
     initial_threshold_jump_size_const = 120
     threshold_jump_size = initial_threshold_jump_size_const
     decay_const = 0.85
@@ -259,4 +259,5 @@ if __name__ == '__main__':
         ),
     ]
 
-    update_and_find_best_threshold(learn_threshold_and_log_cf_matrix_per_patch=True)
+    update_and_find_best_threshold(260, learn_threshold_and_log_cf_matrix_per_patch=False)
+    update_and_find_best_threshold(500, learn_threshold_and_log_cf_matrix_per_patch=True)
