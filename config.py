@@ -36,7 +36,7 @@ class Config:
     class_idx_dict = {"BENIGN": 0, "MALIGNANT": 1}
 
     train_val_acc_max_distance_for_best_epoch = 3  # Percent
-    n_epoch_for_image_patcher = 30
+    n_epoch_for_image_patcher = 60
 
 
 Config.reset_random_seeds()

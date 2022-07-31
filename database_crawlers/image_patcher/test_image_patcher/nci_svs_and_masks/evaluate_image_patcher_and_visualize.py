@@ -126,8 +126,6 @@ def update_and_find_best_threshold(learn_threshold_and_log_cf_matrix_per_patch=T
     # update after initial run
     laplacian_threshold = 500
 
-    learning_done = False
-
     threshold_history = []
     score_history = []
     for epoch in range((Config.n_epoch_for_image_patcher if learn_threshold_and_log_cf_matrix_per_patch else 1)):
@@ -140,75 +138,73 @@ def update_and_find_best_threshold(learn_threshold_and_log_cf_matrix_per_patch=T
 
             if learn_threshold_and_log_cf_matrix_per_patch:
                 whole_background_dict = {}
-            for slide_pick in none_empty_generators:
-                img_path = image_lists[slide_pick][1]
-                zarr_loader_mask = zarr_loaders_and_generators[slide_pick][0]
-                zarr_loader = zarr_loaders_and_generators[slide_pick][1]
-                frag_generator = zarr_loaders_and_generators[slide_pick][2]
+            if len(none_empty_generators) >= 6 or not learn_threshold_and_log_cf_matrix_per_patch:
+                for slide_pick in none_empty_generators:
+                    img_path = image_lists[slide_pick][1]
+                    zarr_loader_mask = zarr_loaders_and_generators[slide_pick][0]
+                    zarr_loader = zarr_loaders_and_generators[slide_pick][1]
+                    frag_generator = zarr_loaders_and_generators[slide_pick][2]
 
-                generated_scaled_mask_image = zarr_loaders_and_generators[slide_pick][3]
-                generated_mask_scale = zarr_loaders_and_generators[slide_pick][4]
+                    generated_scaled_mask_image = zarr_loaders_and_generators[slide_pick][3]
+                    generated_mask_scale = zarr_loaders_and_generators[slide_pick][4]
 
-                group_dict = calculate_acc_and_sensitivity(img_path,
-                                                           zarr_loader_mask,
-                                                           zarr_loader,
-                                                           frag_generator,
-                                                           generated_scaled_mask_image,
-                                                           generated_mask_scale,
-                                                           laplacian_threshold,
-                                                           slide_patch_size=2000,
-                                                           save_generated_image=not learn_threshold_and_log_cf_matrix_per_patch)
-                for i in range(len(zarr_loaders_and_generators)):
-                    if zarr_loaders_and_generators[i]:
-                        generator = check_if_generator_is_empty(zarr_loaders_and_generators[i][2])
-                        if generator:
-                            zarr_loaders_and_generators[i][2] = generator
-                        else:
-                            zarr_loaders_and_generators[i] = None
+                    group_dict = calculate_acc_and_sensitivity(img_path,
+                                                               zarr_loader_mask,
+                                                               zarr_loader,
+                                                               frag_generator,
+                                                               generated_scaled_mask_image,
+                                                               generated_mask_scale,
+                                                               laplacian_threshold,
+                                                               slide_patch_size=2000,
+                                                               save_generated_image=not learn_threshold_and_log_cf_matrix_per_patch)
+                    for i in range(len(zarr_loaders_and_generators)):
+                        if zarr_loaders_and_generators[i]:
+                            generator = check_if_generator_is_empty(zarr_loaders_and_generators[i][2])
+                            if generator:
+                                zarr_loaders_and_generators[i][2] = generator
+                            else:
+                                zarr_loaders_and_generators[i] = None
 
-                for key, value in group_dict.items():
-                    whole_background_dict[key] = whole_background_dict.get(key, 0) + value
+                    for key, value in group_dict.items():
+                        whole_background_dict[key] = whole_background_dict.get(key, 0) + value
 
-            if learn_threshold_and_log_cf_matrix_per_patch:
-                e = .000001
-                total_preds = (sum(list(whole_background_dict.values())) + e)
-                acc = (whole_background_dict["TP"] + whole_background_dict["TN"]) / total_preds
-                positive_preds = (whole_background_dict["TP"] + whole_background_dict["FP"] + e)
-                precision = whole_background_dict["TP"] / positive_preds
-                next_score = score_calculator(acc, precision)
-                if threshold_score is None:
-                    threshold_score = next_score
-                elif len(none_empty_generators) >= 6:
-                    threshold_history.append(laplacian_threshold)
-                    score_history.append(next_score)
-                    if next_score > threshold_score:
+                if learn_threshold_and_log_cf_matrix_per_patch:
+                    e = .000001
+                    total_preds = (sum(list(whole_background_dict.values())) + e)
+                    acc = (whole_background_dict["TP"] + whole_background_dict["TN"]) / total_preds
+                    positive_preds = (whole_background_dict["TP"] + whole_background_dict["FP"] + e)
+                    precision = whole_background_dict["TP"] / positive_preds
+                    next_score = score_calculator(acc, precision)
+                    if threshold_score is None:
                         threshold_score = next_score
+                    else:
+                        threshold_history.append(laplacian_threshold)
+                        score_history.append(next_score)
+                        if next_score > threshold_score:
+                            threshold_score = next_score
 
-                        laplacian_threshold += threshold_jump_increase * threshold_jump_size
-                    elif next_score <= threshold_score:
-                        threshold_score = next_score
+                            laplacian_threshold += threshold_jump_increase * threshold_jump_size
+                        elif next_score <= threshold_score:
+                            threshold_score = next_score
 
-                        threshold_jump_increase *= -1
-                        threshold_jump_size *= decay_const
+                            threshold_jump_increase *= -1
+                            threshold_jump_size *= decay_const
 
-                        laplacian_threshold += threshold_jump_increase * threshold_jump_size
-                        decay_count += 1
-                    save_threshold_and_score_chart(threshold_history, score_history)
-                else:
-                    if not learning_done:
+                            laplacian_threshold += threshold_jump_increase * threshold_jump_size
+                            decay_count += 1
                         save_threshold_and_score_chart(threshold_history, score_history)
-                        break
 
-                    learning_done = True
-                acc = round(acc, 3)
-                precision = round(precision, 3)
-                threshold_score_rounded = round(threshold_score, 3)
-                print(
-                    f"\nacc:{acc},precision:{precision},score:{threshold_score_rounded},table:{whole_background_dict}" +
-                    f"thresh:{laplacian_threshold},jump_size:{threshold_jump_size}")
+                    acc = round(acc, 3)
+                    precision = round(precision, 3)
+                    threshold_score_rounded = round(threshold_score, 3)
+                    print(
+                        f"acc:{acc},precision:{precision},score:{threshold_score_rounded},table:{whole_background_dict}" +
+                        f"thresh:{laplacian_threshold},jump_size:{threshold_jump_size}")
+                else:
+                    print(f"table:{whole_background_dict}," +
+                          f"threshold:{laplacian_threshold},jump_size:{threshold_jump_size}")
             else:
-                print(f"\ntable:{whole_background_dict}," +
-                      f"threshold:{laplacian_threshold},jump_size:{threshold_jump_size}")
+                break
 
 
 def save_threshold_and_score_chart(threshold_history, score_history):
