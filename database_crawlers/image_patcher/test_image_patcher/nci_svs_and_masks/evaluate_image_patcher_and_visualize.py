@@ -124,8 +124,8 @@ def update_and_find_best_threshold(learn_threshold_and_log_cf_matrix_per_patch=T
 
     threshold_score = None
     # update after initial run
-    laplacian_threshold = 500
-    # laplacian_threshold = 780
+    # laplacian_threshold = 500
+    laplacian_threshold = 1480
 
     learning_done = False
 
@@ -255,3 +255,12 @@ if __name__ == '__main__':
     ]
 
     update_and_find_best_threshold(learn_threshold_and_log_cf_matrix_per_patch=True)
+# Initial laplacian threshold 500, patch size 200 epochs 20
+# acc:0.918,precision:0.992,score:0.985,table:{'TP': 1449, 'FP': 11, 'TN': 8011, 'FN': 834}thresh:1476.8221768244046,jump_size:6.787395282030355
+# acc:0.934,precision:0.993,score:0.987,table:{'TP': 1376, 'FP': 10, 'TN': 6551, 'FN': 546}thresh:1483.6095721064348,jump_size:6.787395282030355
+# acc:0.918,precision:0.994,score:0.987,table:{'TP': 1694, 'FP': 10, 'TN': 9323, 'FN': 973}thresh:1477.161546588506,jump_size:6.448025517928837
+# acc:0.915,precision:0.992,score:0.984,table:{'TP': 1599, 'FP': 13, 'TN': 9386, 'FN': 1002}thresh:1483.2871708305386,jump_size:6.125624242032395
+# acc:0.915,precision:0.996,score:0.988,table:{'TP': 1655, 'FP': 7, 'TN': 9320, 'FN': 1018}thresh:1489.412795072571,jump_size:6.125624242032395
+# acc:0.916,precision:0.995,score:0.987,table:{'TP': 1598, 'FP': 8, 'TN': 9397, 'FN': 997}thresh:1483.5934520426404,jump_size:5.819343029930775
+# acc:0.921,precision:0.993,score:0.986,table:{'TP': 1505, 'FP': 11, 'TN': 7990, 'FN': 799}thresh:1489.1218279210746,jump_size:5.528375878434236
+# acc:0.925,precision:0.996,score:0.989,table:{'TP': 1403, 'FP': 6, 'TN': 6447, 'FN': 627}thresh:1494.6502037995087,jump_size:5.528375878434236
