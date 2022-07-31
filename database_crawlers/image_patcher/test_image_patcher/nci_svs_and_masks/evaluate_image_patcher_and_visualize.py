@@ -263,5 +263,5 @@ if __name__ == '__main__':
         ),
     ]
 
-    update_and_find_best_threshold(260, learn_threshold_and_log_cf_matrix_per_patch=False)
     learned_threshold = update_and_find_best_threshold(500, learn_threshold_and_log_cf_matrix_per_patch=True)
+    update_and_find_best_threshold(learned_threshold, learn_threshold_and_log_cf_matrix_per_patch=False)
