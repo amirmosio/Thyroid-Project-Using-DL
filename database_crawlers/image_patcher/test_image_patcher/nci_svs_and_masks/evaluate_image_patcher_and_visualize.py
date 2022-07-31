@@ -90,7 +90,7 @@ def calculate_acc_and_sensitivity(image_path, zarr_loader_mask, zarr_loader, fra
     return background_dict
 
 
-def score_calculator(accuracy, specificity, acc_w=0.1):
+def score_calculator(accuracy, specificity, acc_w=0.25):
     return accuracy * acc_w + specificity * (1 - acc_w)
 
 
