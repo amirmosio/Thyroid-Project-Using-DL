@@ -124,7 +124,7 @@ def update_and_find_best_threshold(initial_thresh, learn_threshold_and_log_cf_ma
 
     threshold_score = None
     # update after initial run
-    laplacian_threshold = 500
+    laplacian_threshold = initial_thresh
 
     threshold_history = []
     score_history = []
