@@ -117,7 +117,7 @@ def get_zarr_loaders_and_generators():
 def update_and_find_best_threshold(learn_threshold_and_log_cf_matrix_per_patch=True):
     initial_threshold_jump_size_const = 120
     threshold_jump_size = initial_threshold_jump_size_const
-    decay_const = 0.95
+    decay_const = 0.85
     decay_count = 0
 
     threshold_jump_increase = 1
