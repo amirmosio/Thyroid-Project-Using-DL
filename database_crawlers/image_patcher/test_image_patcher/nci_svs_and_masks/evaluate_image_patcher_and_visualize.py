@@ -128,10 +128,11 @@ def update_and_find_best_threshold(learn_threshold_and_log_cf_matrix_per_patch=T
 
     learning_done = False
 
-    whole_background_dict = {}
     threshold_history = []
     score_history = []
     for epoch in range((Config.n_epoch_for_image_patcher if learn_threshold_and_log_cf_matrix_per_patch else 1)):
+        print("New Epoch")
+        whole_background_dict = {}
         zarr_loaders_and_generators = get_zarr_loaders_and_generators()
         while sum([item is not None for item in zarr_loaders_and_generators]) >= 1:
             none_empty_generators = [i for i in range(len(zarr_loaders_and_generators)) if
@@ -202,10 +203,11 @@ def update_and_find_best_threshold(learn_threshold_and_log_cf_matrix_per_patch=T
                 acc = round(acc, 3)
                 precision = round(precision, 3)
                 threshold_score_rounded = round(threshold_score, 3)
-                print(f"acc:{acc},precision:{precision},score:{threshold_score_rounded},table:{whole_background_dict}" +
-                      f"thresh:{laplacian_threshold},jump_size:{threshold_jump_size}")
+                print(
+                    f"\nacc:{acc},precision:{precision},score:{threshold_score_rounded},table:{whole_background_dict}" +
+                    f"thresh:{laplacian_threshold},jump_size:{threshold_jump_size}")
             else:
-                print(f"table:{whole_background_dict}," +
+                print(f"\ntable:{whole_background_dict}," +
                       f"threshold:{laplacian_threshold},jump_size:{threshold_jump_size}")
 
 
