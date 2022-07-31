@@ -20,13 +20,8 @@ from utils import show_and_wait
 
 class ThyroidFragmentFilters:
     @staticmethod
-    def func_laplacian_threshold_in_half_magnification(threshold=Config.laplacian_threshold, rescale=.5):
+    def func_laplacian_threshold(threshold=Config.laplacian_threshold):
         def wrapper(image_nd_array):
-            res, var = ThyroidFragmentFilters._empty_frag_with_laplacian_threshold(image_nd_array, threshold,
-                                                                                   return_variance=True)
-            if res or var * (1 / rescale) ** 2 < threshold:
-                return res
-            image_nd_array = cv2.resize(image_nd_array, dsize=(0, 0), fx=rescale, fy=rescale)
             res = ThyroidFragmentFilters._empty_frag_with_laplacian_threshold(image_nd_array, threshold)
             return res
 
@@ -196,7 +191,7 @@ class ImageAndSlidePatcher:
 
         if not os.path.isdir(slide_patch_dir):
             os.mkdir(slide_patch_dir)
-        filters = [ThyroidFragmentFilters.func_laplacian_threshold_in_half_magnification(Config.laplacian_threshold)]
+        filters = [ThyroidFragmentFilters.func_laplacian_threshold(Config.laplacian_threshold)]
         fragment_id = 0
         slide_progress_file_path = os.path.join(slide_patch_dir, "progress.txt")
         with open(slide_progress_file_path, "w") as file:

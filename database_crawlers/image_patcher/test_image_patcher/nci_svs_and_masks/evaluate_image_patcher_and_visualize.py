@@ -62,7 +62,7 @@ def calculate_acc_and_sensitivity(image_path, zarr_loader_mask, zarr_loader, fra
 
     mask_scale = zarr_loader_mask.shape[0] / zarr_loader.shape[0]
 
-    filter_func_list = [ThyroidFragmentFilters.func_laplacian_threshold_in_half_magnification(laplacian_threshold)]
+    filter_func_list = [ThyroidFragmentFilters.func_laplacian_threshold(laplacian_threshold)]
     background_dict = {"TP": 0, "FP": 0, "TN": 0, "FN": 0}
     total_frags = slide_patch_size if slide_patch_size else ImageAndSlidePatcher._get_number_of_initial_frags(
         zarr_loader)
@@ -124,8 +124,7 @@ def update_and_find_best_threshold(learn_threshold_and_log_cf_matrix_per_patch=T
 
     threshold_score = None
     # update after initial run
-    # laplacian_threshold = 500
-    laplacian_threshold = 1480
+    laplacian_threshold = 500
 
     learning_done = False
 
@@ -178,7 +177,7 @@ def update_and_find_best_threshold(learn_threshold_and_log_cf_matrix_per_patch=T
                 next_score = score_calculator(acc, precision)
                 if threshold_score is None:
                     threshold_score = next_score
-                elif len(none_empty_generators) >= 4:
+                elif len(none_empty_generators) >= 6:
                     threshold_history.append(laplacian_threshold)
                     score_history.append(next_score)
                     if next_score > threshold_score:
@@ -211,14 +210,14 @@ def update_and_find_best_threshold(learn_threshold_and_log_cf_matrix_per_patch=T
 
 
 def save_threshold_and_score_chart(threshold_history, score_history):
-    fig_save_path = "threshold_history_chart.jpeg"
+    fig_save_path = "laplacian_threshold_history_chart.jpeg"
     plt.plot(range(len(threshold_history)), threshold_history)
     plt.xlabel('Batch')
     plt.ylabel('Laplacian threshold')
     plt.savefig(fig_save_path)
     plt.clf()
 
-    fig_save_path = "score_history_chart.jpeg"
+    fig_save_path = "laplacian_threshold_score_history_chart.jpeg"
     plt.plot(range(len(score_history)), score_history)
     plt.xlabel('Batch')
     plt.ylabel('Objective function - Sore')
@@ -228,39 +227,38 @@ def save_threshold_and_score_chart(threshold_history, score_history):
 
 if __name__ == '__main__':
     image_lists = [
-        (
+        (  # "('0', '100', '0')"
             "./TCGA-BJ-A3F0-01A-01-TSA.728CE583-95BE-462B-AFDF-FC0B228DF3DE__3_masked.tiff",
             "./TCGA-BJ-A3F0-01A-01-TSA.728CE583-95BE-462B-AFDF-FC0B228DF3DE__3.svs"
         ),
-        (
+        (  # "('0', '100', '0')"
             "./TCGA-DJ-A1QG-01A-01-TSA.04c62c21-dd45-49ea-a74f-53822defe097__2000_masked.tiff",
             "./TCGA-DJ-A1QG-01A-01-TSA.04c62c21-dd45-49ea-a74f-53822defe097__2000.svs"
         ),
-        (
-            "./TCGA-EL-A3ZQ-01A-01-TS1.344610D2-AB50-41C6-916E-FF0F08940BF1__2000_masked.tiff",
-            "./TCGA-EL-A3ZQ-01A-01-TS1.344610D2-AB50-41C6-916E-FF0F08940BF1__2000.svs"
-        ),
-        (
+        # (  # "('0', '100', '0')"
+        #     "./TCGA-EL-A3ZQ-01A-01-TS1.344610D2-AB50-41C6-916E-FF0F08940BF1__2000_masked.tiff",
+        #     "./TCGA-EL-A3ZQ-01A-01-TS1.344610D2-AB50-41C6-916E-FF0F08940BF1__2000.svs"
+        # ),
+        (  # "('45', '55', '0')"
             "./TCGA-ET-A39N-01A-01-TSA.C38FCE19-9558-4035-9F0B-AD05B9BE321D___198_masked.tiff",
             "./TCGA-ET-A39N-01A-01-TSA.C38FCE19-9558-4035-9F0B-AD05B9BE321D___198.svs"
         ),
-        (
-            "./TCGA-J8-A42S-01A-01-TSA.7B80CBEB-7B85-417E-AA0C-11C79DE40250__0_masked.tiff",
-            "./TCGA-J8-A42S-01A-01-TSA.7B80CBEB-7B85-417E-AA0C-11C79DE40250__0.svs"
-        ),
-        (
+        # (  # "('0', '40', '60')"
+        #     "./TCGA-J8-A42S-01A-01-TSA.7B80CBEB-7B85-417E-AA0C-11C79DE40250__0_masked.tiff",
+        #     "./TCGA-J8-A42S-01A-01-TSA.7B80CBEB-7B85-417E-AA0C-11C79DE40250__0.svs"
+        # ),
+        (  # "('0', '90', '10')"
             "./TCGA-ET-A39O-01A-01-TSA.3829C900-7597-4EA9-AFC7-AA238221CE69_7000_masked.tiff",
             "./TCGA-ET-A39O-01A-01-TSA.3829C900-7597-4EA9-AFC7-AA238221CE69_7000.svs"
+        ),
+        (  # "('100', '0', '0')"
+            "./TCGA-EL-A4K7-11A-01-TS1.C08B59AA-87DF-4ABB-8B70-25FEF9893C7F__70_masked.tiff",
+            "./TCGA-EL-A4K7-11A-01-TS1.C08B59AA-87DF-4ABB-8B70-25FEF9893C7F__70.svs"
+        ),
+        (  # "('100', '0', '0')"
+            "./TCGA-EL-A3TB-11A-01-TS1.6E0966C9-1552-4B30-9008-8ACF737CA8C3__2000_masked.tiff",
+            "./TCGA-EL-A3TB-11A-01-TS1.6E0966C9-1552-4B30-9008-8ACF737CA8C3__2000.svs"
         ),
     ]
 
     update_and_find_best_threshold(learn_threshold_and_log_cf_matrix_per_patch=True)
-# Initial laplacian threshold 500, patch size 200 epochs 20
-# acc:0.918,precision:0.992,score:0.985,table:{'TP': 1449, 'FP': 11, 'TN': 8011, 'FN': 834}thresh:1476.8221768244046,jump_size:6.787395282030355
-# acc:0.934,precision:0.993,score:0.987,table:{'TP': 1376, 'FP': 10, 'TN': 6551, 'FN': 546}thresh:1483.6095721064348,jump_size:6.787395282030355
-# acc:0.918,precision:0.994,score:0.987,table:{'TP': 1694, 'FP': 10, 'TN': 9323, 'FN': 973}thresh:1477.161546588506,jump_size:6.448025517928837
-# acc:0.915,precision:0.992,score:0.984,table:{'TP': 1599, 'FP': 13, 'TN': 9386, 'FN': 1002}thresh:1483.2871708305386,jump_size:6.125624242032395
-# acc:0.915,precision:0.996,score:0.988,table:{'TP': 1655, 'FP': 7, 'TN': 9320, 'FN': 1018}thresh:1489.412795072571,jump_size:6.125624242032395
-# acc:0.916,precision:0.995,score:0.987,table:{'TP': 1598, 'FP': 8, 'TN': 9397, 'FN': 997}thresh:1483.5934520426404,jump_size:5.819343029930775
-# acc:0.921,precision:0.993,score:0.986,table:{'TP': 1505, 'FP': 11, 'TN': 7990, 'FN': 799}thresh:1489.1218279210746,jump_size:5.528375878434236
-# acc:0.925,precision:0.996,score:0.989,table:{'TP': 1403, 'FP': 6, 'TN': 6447, 'FN': 627}thresh:1494.6502037995087,jump_size:5.528375878434236
