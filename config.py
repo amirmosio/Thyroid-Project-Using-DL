@@ -22,7 +22,7 @@ class Config:
     workers = 1 if DEBUG else 40
 
     # learned from evaluate_image_patcher_and_visualize.py
-    laplacian_threshold = 750
+    laplacian_threshold = 298
 
     # RANDOM SEED
     seed = 115
