@@ -169,7 +169,8 @@ def update_and_find_best_threshold(initial_thresh, learn_threshold_and_log_cf_ma
 
                     for key, value in group_dict.items():
                         whole_background_dict[key] = whole_background_dict.get(key, 0) + value
-                        whole_background_dict_per_slide[slide_pick][key] = whole_background_dict_per_slide[slide_pick].get(key, 0) + value
+                        whole_background_dict_per_slide[slide_pick][key] = whole_background_dict_per_slide[
+                                                                               slide_pick].get(key, 0) + value
 
                 if learn_threshold_and_log_cf_matrix_per_patch:
                     e = .000001
@@ -265,3 +266,15 @@ if __name__ == '__main__':
 
     learned_threshold = update_and_find_best_threshold(500, learn_threshold_and_log_cf_matrix_per_patch=True)
     update_and_find_best_threshold(learned_threshold, learn_threshold_and_log_cf_matrix_per_patch=False)
+
+# Start with 500 with jump size 120 and decay 0.85
+# table:{'TP': 15018, 'FP': 412, 'TN': 66898, 'FN': 2389},
+# table_per_slide:[
+# {'TP': 460, 'FP': 0, 'TN': 19618, 'FN': 1426},
+# {'TP': 4624, 'FP': 126, 'TN': 14100, 'FN': 226},
+# {'TP': 1138, 'FP': 4, 'TN': 6671, 'FN': 492},
+# {'TP': 7615, 'FP': 92, 'TN': 20871, 'FN': 234},
+# {'TP': 78, 'FP': 18, 'TN': 1880, 'FN': 4},
+# {'TP': 1103, 'FP': 172, 'TN': 3758, 'FN': 7}
+# ]
+# threshold:298.86314585743395,jump_size:120
