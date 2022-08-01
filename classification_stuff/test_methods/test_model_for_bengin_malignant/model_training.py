@@ -98,8 +98,9 @@ def plot_and_save_model_per_epoch(epoch,
     plt.savefig(fig_save_path)
     plt.clf()
 
-    model_save_path = os.path.join(save_state_dir, "model.state")
-    model_to_save.save_model(model_save_path)
+    if model_to_save:
+        model_save_path = os.path.join(save_state_dir, "model.state")
+        model_to_save.save_model(model_save_path)
 
 
 def save_auc_roc_chart_for_test(test_fpr, test_tpr, test_auc_score, config_label, epoch):
@@ -186,17 +187,19 @@ def train_model(base_model, config_base_name, train_val_test_data_loaders, augme
                 val_acc = float(val_acc)
                 val_acc_history.append(val_acc)
                 logger.info(f'Val|E:{epoch}|Balanced Accuracy:{round(val_acc, 4)}%,\n{val_cf_matrix}')
+                save_model = False
                 if train_acc >= best_epoch_train_acc and val_acc >= best_epoch_val_acc and abs(
                         train_acc - val_acc) < Config.train_val_acc_max_distance_for_best_epoch:
                     best_epoch_val_acc = val_acc
                     best_epoch_train_acc = train_acc
-                    plot_and_save_model_per_epoch(epoch,
-                                                  image_model,
-                                                  val_acc_history,
-                                                  train_acc_history,
-                                                  [],
-                                                  [],
-                                                  config_label=config_name)
+                    save_model = True
+                plot_and_save_model_per_epoch(epoch,
+                                              image_model if save_model else None,
+                                              val_acc_history,
+                                              train_acc_history,
+                                              [],
+                                              [],
+                                              config_label=config_name)
                 my_lr_scheduler.step()
         else:
             # Load model from file
