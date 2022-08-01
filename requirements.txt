@@ -13,6 +13,7 @@ certifi==2021.10.8
 chardet==3.0.4
 charset-normalizer==2.0.12
 colorama==0.4.4
+configparser==5.2.0
 cycler==0.11.0
 Cython==0.29.28
 dill==0.3.5.1
@@ -42,8 +43,10 @@ networkx==2.8.2
 numcodecs==0.9.1
 numpy==1.22.3
 oauthlib==3.2.0
+opencv-contrib-python==4.6.0.66
 opencv-python==4.5.5.64
 opencv-python-headless==4.6.0.66
+openslide-python==1.2.0
 packaging==21.3
 pandas==1.4.2
 pathos==0.2.9
@@ -71,12 +74,15 @@ scikit-image==0.19.2
 scikit-learn==1.1.1
 scipy==1.8.1
 six==1.16.0
+slideio==1.0.3
 soupsieve==2.3.2.post1
 tensorboard==2.9.1
 tensorboard-data-server==0.6.1
 tensorboard-plugin-wit==1.8.1
 threadpoolctl==3.1.0
 tifffile==2022.4.8
+tifftools==1.3.4
+timm==0.6.7
 torch==1.11.0
 torchmetrics==0.9.1
 torchvision==0.12.0
