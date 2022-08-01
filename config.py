@@ -6,7 +6,7 @@ import torch
 class Config:
     DEBUG = False
 
-    batch_size = 48
+    batch_size = 32
     eval_batch_size = 64
     test_percent = 20
     val_percent = 10
