@@ -36,7 +36,6 @@ kiwisolver==1.4.2
 libtiff==0.4.2
 Markdown==3.3.7
 matplotlib==3.5.2
-mlassistant @ git+ssh://git@github.com/AIMed-Team/mlassistant.git@d3dd2928267674b2d3e152f43bbe3b7abbaeb5c2
 multidict==6.0.2
 multiprocess==0.70.13
 networkx==2.8.2
