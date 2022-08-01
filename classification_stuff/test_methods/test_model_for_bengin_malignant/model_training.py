@@ -235,7 +235,14 @@ if __name__ == '__main__':
     test_data_loader = DataLoader(test_ds, batch_size=Config.eval_batch_size, shuffle=True)
 
     for config_base_name, model, augmentations in [
-
+        (f"resnet101_{Config.learning_rate}*{Config.decay_rate}",
+         torchvision.models.resnet101(pretrained=True, progress=True), [
+             "jit",
+             "jit-nrs",
+             "fda",
+             "mixup",
+             "jit-fda-mixup"
+         ]),
         ("inception_v4_lr_decay", timm.create_model('inception_v4', pretrained=True), [
             "jit",
             "jit-nrs",
@@ -245,14 +252,6 @@ if __name__ == '__main__':
         ]),
         (f"resnet18_{Config.learning_rate}*{Config.decay_rate}",
          torchvision.models.resnet18(pretrained=True, progress=True), [
-             "jit",
-             "jit-nrs",
-             "fda",
-             "mixup",
-             "jit-fda-mixup"
-         ]),
-        (f"resnet101_{Config.learning_rate}*{Config.decay_rate}",
-         torchvision.models.resnet101(pretrained=True, progress=True), [
              "jit",
              "jit-nrs",
              "fda",
