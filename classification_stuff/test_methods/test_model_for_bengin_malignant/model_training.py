@@ -114,6 +114,15 @@ def save_auc_roc_chart_for_test(test_fpr, test_tpr, test_auc_score, config_label
     plt.clf()
 
 
+def calculate_test(image_model, epoch, test_data_loader, logger, config_name):
+    image_model.eval()
+    test_acc, test_c_acc, (test_FPR, test_TPR, test_auc_score) = validate(image_model, test_data_loader)
+    test_acc = float(test_acc)
+
+    save_auc_roc_chart_for_test(test_FPR, test_TPR, test_auc_score, config_name, epoch)
+    logger.info(f'Test|Epoch:{epoch}|Accuracy:{round(test_acc, 4)}, {test_c_acc}%')
+
+
 def train_model(base_model, config_base_name, train_val_test_data_loaders, augmentation,
                 load_model_from_epoch_and_run_test=None):
     config_name = f"{config_base_name}-{augmentation}-{','.join(Config.class_idx_dict.keys())}"
@@ -139,7 +148,6 @@ def train_model(base_model, config_base_name, train_val_test_data_loaders, augme
             train_acc_history = [0]
             train_y_preds = []
             train_y_targets = []
-            best_epoch_train_acc = 0
             best_epoch_val_acc = 0
 
             for epoch in range(Config.n_epoch):
@@ -188,12 +196,12 @@ def train_model(base_model, config_base_name, train_val_test_data_loaders, augme
                 val_acc_history.append(val_acc)
                 logger.info(f'Val|E:{epoch}|Balanced Accuracy:{round(val_acc, 4)}%,\n{val_cf_matrix}')
                 save_model = False
-                if train_acc >= best_epoch_train_acc and val_acc >= best_epoch_val_acc and abs(
-                        train_acc - val_acc) < Config.train_val_acc_max_distance_for_best_epoch:
+                if (val_acc >= best_epoch_val_acc and
+                        abs(train_acc - val_acc) < Config.train_val_acc_max_distance_for_best_epoch):
                     best_epoch_val_acc = val_acc
-                    best_epoch_train_acc = train_acc
                     save_model = True
-                plot_and_save_model_per_epoch(epoch,
+                    calculate_test(image_model, epoch, test_data_loader, logger, config_name)
+                plot_and_save_model_per_epoch(epoch if save_model else None,
                                               image_model if save_model else None,
                                               val_acc_history,
                                               train_acc_history,
@@ -206,22 +214,11 @@ def train_model(base_model, config_base_name, train_val_test_data_loaders, augme
             save_dir = get_save_state_dirs(config_name, load_model_from_epoch_and_run_test)[2]
             model_path = os.path.join(save_dir, 'model.state')
             image_model = ThyroidClassificationModel(base_model).load_model(model_path).to(Config.available_device)
+            calculate_test(image_model, load_model_from_epoch_and_run_test, test_data_loader, logger, config_name)
     except Exception as e:
         print(e)
         logger.error(str(e))
         raise e
-    else:
-        # Test acc
-        image_model.eval()
-        test_acc, test_c_acc, (test_FPR, test_TPR, test_auc_score) = validate(image_model, test_data_loader)
-        test_acc = float(test_acc)
-
-    if load_model_from_epoch_and_run_test is not None:
-        save_auc_roc_chart_for_test(test_FPR, test_TPR, test_auc_score, config_name, load_model_from_epoch_and_run_test)
-        logger.info(f'Test|Epoch:{load_model_from_epoch_and_run_test}|Accuracy:{round(test_acc, 4)}, {test_c_acc}%')
-    else:
-        save_auc_roc_chart_for_test(test_FPR, test_TPR, test_auc_score, config_name, epoch)
-        logger.info(f'Test|Epoch:{epoch}|Accuracy:{round(test_acc, 4)}, {test_c_acc}%')
 
 
 if __name__ == '__main__':
@@ -238,43 +235,51 @@ if __name__ == '__main__':
     test_data_loader = DataLoader(test_ds, batch_size=Config.eval_batch_size, shuffle=True)
 
     for config_base_name, model, augmentations in [
-        (f"inception_v4_{Config.learning_rate}*{Config.decay_rate}", timm.create_model('inception_v4', pretrained=True), [
-            "jit",
-            "jit-nrs",
-            "fda",
-            "mixup",
-            "jit-fda-mixup"
-        ]),
-        (f"resnet101_{Config.learning_rate}*{Config.decay_rate}",
+        (f"inception_v4_{Config.learning_rate}_{Config.decay_rate}", timm.create_model('inception_v4', pretrained=True),
+         [
+             "mixup",
+             "jit",
+             "jit-nrs",
+             "fda",
+             "jit-fda-mixup",
+             "jit-fda-mixup-nrs"
+         ]),
+        (f"resnet101_{Config.learning_rate}_{Config.decay_rate}",
          torchvision.models.resnet101(pretrained=True, progress=True), [
+             "mixup",
              "jit",
              "jit-nrs",
              "fda",
-             "mixup",
-             "jit-fda-mixup"
+             "jit-fda-mixup",
+             "jit-fda-mixup-nrs"
          ]),
-        (f"resnet18_{Config.learning_rate}*{Config.decay_rate}",
+        (f"resnet18_{Config.learning_rate}_{Config.decay_rate}",
          torchvision.models.resnet18(pretrained=True, progress=True), [
+             "mixup",
              "jit",
              "jit-nrs",
              "fda",
-             "mixup",
-             "jit-fda-mixup"
+             "jit-fda-mixup",
+             "jit-fda-mixup-nrs"
          ]),
-        (f"resnet34_{Config.learning_rate}*{Config.decay_rate}", torchvision.models.resnet34(pretrained=True, progress=True), [
-            "jit",
-            "jit-nrs",
-            "fda",
-            "mixup",
-            "jit-fda-mixup"
-        ]),
-        (f"inception_v3_{Config.learning_rate}*{Config.decay_rate}", torchvision.models.inception_v3(pretrained=True, progress=True), [
-            "jit",
-            "jit-nrs",
-            "fda",
-            "mixup",
-            "jit-fda-mixup"
-        ])
+        (f"resnet34_{Config.learning_rate}_{Config.decay_rate}",
+         torchvision.models.resnet34(pretrained=True, progress=True), [
+             "mixup",
+             "jit",
+             "jit-nrs",
+             "fda",
+             "jit-fda-mixup",
+             "jit-fda-mixup-nrs"
+         ]),
+        (f"inception_v3_{Config.learning_rate}_{Config.decay_rate}",
+         torchvision.models.inception_v3(pretrained=True, progress=True), [
+             "mixup",
+             "jit",
+             "jit-nrs",
+             "fda",
+             "jit-fda-mixup",
+             "jit-fda-mixup-nrs"
+         ])
     ]:
         for aug in augmentations:
             Config.reset_random_seeds()

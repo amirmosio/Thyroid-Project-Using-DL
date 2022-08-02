@@ -27,10 +27,13 @@ class Mixup(BasicTransform):
         img = params["image"]
         mixup = random.choice(self.mixups)
         mixup_image = self.read_fn(mixup[0])
-        vertical_pad = (img.shape[0] - mixup_image.shape[0]) // 2
-        horizontal_pad = (img.shape[1] - mixup_image.shape[1]) // 2
-        mixup_image = cv2.copyMakeBorder(mixup_image, vertical_pad, vertical_pad, horizontal_pad, horizontal_pad,
-                                         cv2.BORDER_REFLECT)
+        vertical_pad = max(0, (img.shape[0] - mixup_image.shape[0]) // 2)
+        horizontal_pad = max(0, (img.shape[1] - mixup_image.shape[1]) // 2)
+        try:
+            mixup_image = cv2.copyMakeBorder(mixup_image, vertical_pad, vertical_pad, horizontal_pad, horizontal_pad,
+                                             cv2.BORDER_REFLECT)
+        except Exception as e:
+            print(e)
         mixup_image = cv2.resize(mixup_image, dsize=(img.shape[1], img.shape[0]))
         return {"mixup_image": mixup_image, "mixup_target": mixup[1]}
 
