@@ -34,7 +34,7 @@ class ThyroidDataset(Dataset):
     def _make_dataset(self, image_paths_labels_list):
         images = []
         for image_path, label in image_paths_labels_list:
-            if not os.path.exists(image_path):
+            if not os.path.exists(os.path.abspath(image_path)):
                 raise (RuntimeError(f"{image_path} not found."))
             item = (image_path, self.class_to_idx_dict[label])
             images.append(item)

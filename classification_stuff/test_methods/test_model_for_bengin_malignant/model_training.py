@@ -237,51 +237,70 @@ if __name__ == '__main__':
     for config_base_name, model, augmentations in [
         (f"inception_v4_{Config.learning_rate}_{Config.decay_rate}", timm.create_model('inception_v4', pretrained=True),
          [
-             "mixup",
-             "jit",
-             "jit-nrs",
-             "fda",
+             "min",
              "jit-fda-mixup",
-             "jit-fda-mixup-nrs"
-         ]),
-        (f"resnet101_{Config.learning_rate}_{Config.decay_rate}",
-         torchvision.models.resnet101(pretrained=True, progress=True), [
-             "mixup",
-             "jit",
-             "jit-nrs",
-             "fda",
-             "jit-fda-mixup",
-             "jit-fda-mixup-nrs"
-         ]),
-        (f"resnet18_{Config.learning_rate}_{Config.decay_rate}",
-         torchvision.models.resnet18(pretrained=True, progress=True), [
-             "mixup",
-             "jit",
-             "jit-nrs",
-             "fda",
-             "jit-fda-mixup",
-             "jit-fda-mixup-nrs"
-         ]),
-        (f"resnet34_{Config.learning_rate}_{Config.decay_rate}",
-         torchvision.models.resnet34(pretrained=True, progress=True), [
-             "mixup",
-             "jit",
-             "jit-nrs",
-             "fda",
-             "jit-fda-mixup",
-             "jit-fda-mixup-nrs"
          ]),
         (f"inception_v3_{Config.learning_rate}_{Config.decay_rate}",
          torchvision.models.inception_v3(pretrained=True, progress=True), [
-             "mixup",
-             "jit",
-             "jit-nrs",
-             "fda",
+             "min",
              "jit-fda-mixup",
-             "jit-fda-mixup-nrs"
+         ]),
+        (f"resnet101_{Config.learning_rate}_{Config.decay_rate}",
+         torchvision.models.resnet101(pretrained=True, progress=True), [
+             "min",
+             "jit-fda-mixup",
+         ]),
+        (f"resnet18_{Config.learning_rate}_{Config.decay_rate}",
+         torchvision.models.resnet18(pretrained=True, progress=True), [
+             "min",
+             "jit-fda-mixup",
          ])
     ]:
         for aug in augmentations:
             Config.reset_random_seeds()
             train_model(model, config_base_name, (train_data_loader, val_data_loader, test_data_loader),
                         augmentation=aug)
+
+if __name__ == '__main__ignored_temporarily':
+    datasets_folder = ["national_cancer_institute"]
+    train, val, test = CustomFragmentLoader(datasets_folder).load_image_path_and_labels_and_split(
+        test_percent=100,
+        val_percent=0)
+    test_ds = ThyroidDataset(test, Config.class_idx_dict)
+
+    test_data_loader = DataLoader(test_ds, batch_size=Config.eval_batch_size, shuffle=True)
+    for config_base_name, model, aug_best_epoch_list in [
+        (f"inception_v4_{Config.learning_rate}_{Config.decay_rate}",
+         timm.create_model('inception_v4', pretrained=True), [
+             ("min", 0),
+             ("jit", 0), ("fda", 0),
+             ("mixup", 0),
+             ("jit-fda-mixup", 0)
+         ]),
+        (f"inception_v3_{Config.learning_rate}_{Config.decay_rate}",
+         torchvision.models.inception_v3(pretrained=True, progress=True), [
+             ("min", 0),
+             ("jit", 0), ("fda", 0),
+             ("mixup", 0),
+             ("jit-fda-mixup", 0)
+         ]),
+        (f"resnet101_{Config.learning_rate}_{Config.decay_rate}",
+         torchvision.models.resnet101(pretrained=True, progress=True), [
+             ("min", 0),
+             ("jit", 0), ("fda", 0),
+             ("mixup", 0),
+             ("jit-fda-mixup", 0)
+         ]),
+        (f"resnet18_{Config.learning_rate}_{Config.decay_rate}",
+         torchvision.models.resnet18(pretrained=True, progress=True), [
+             ("min", 0),
+             ("jit", 0), ("fda", 0),
+             ("mixup", 0),
+             ("jit-fda-mixup", 0)
+         ])
+
+    ]:
+        for aug, best_epoch in aug_best_epoch_list:
+            Config.reset_random_seeds()
+            train_model(model, config_base_name, (None, None, test_data_loader),
+                        augmentation=aug, load_model_from_epoch_and_run_test=best_epoch)
