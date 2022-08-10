@@ -19,7 +19,7 @@ from transformation import get_transformation
 
 
 @torch.no_grad()
-def validate(model, data_loader, loss_function=None):
+def validate(model, data_loader, loss_function=None, show_tqdm=False):
     class_set = sorted(data_loader.dataset.class_to_idx_dict.values())
 
     loss_values = []
@@ -27,7 +27,7 @@ def validate(model, data_loader, loss_function=None):
     y_targets = []
     y_positive_scores = []
 
-    for images, labels in data_loader:
+    for images, labels in (data_loader if not show_tqdm else tqdm(data_loader)):
         images = images.to(Config.available_device)
         labels = labels.to(Config.available_device)
         x = model(images, validate=True)
@@ -114,9 +114,11 @@ def save_auc_roc_chart_for_test(test_fpr, test_tpr, test_auc_score, config_label
     plt.clf()
 
 
-def calculate_test(image_model, epoch, test_data_loader, logger, config_name):
+def calculate_test(image_model, epoch, test_data_loader, logger, config_name, show_tqdm=False):
     image_model.eval()
-    test_acc, test_c_acc, (test_FPR, test_TPR, test_auc_score) = validate(image_model, test_data_loader)
+    test_acc, test_c_acc, (test_FPR, test_TPR, test_auc_score) = validate(image_model,
+                                                                          test_data_loader,
+                                                                          show_tqdm=show_tqdm)
     test_acc = float(test_acc)
 
     save_auc_roc_chart_for_test(test_FPR, test_TPR, test_auc_score, config_name, epoch)
@@ -198,7 +200,7 @@ def train_model(base_model, config_base_name, train_val_test_data_loaders, augme
                         abs(train_acc - val_acc) < Config.train_val_acc_max_distance_for_best_epoch):
                     best_epoch_val_acc = val_acc
                     save_model = True
-                    calculate_test(image_model, epoch, test_data_loader, logger, config_name)
+                    calculate_test(image_model, epoch, test_data_loader, logger, config_name, show_tqdm=False)
                 plot_and_save_model_per_epoch(epoch if save_model else None,
                                               image_model if save_model else None,
                                               val_acc_history,
@@ -212,7 +214,8 @@ def train_model(base_model, config_base_name, train_val_test_data_loaders, augme
             save_dir = get_save_state_dirs(config_name, load_model_from_epoch_and_run_test)[2]
             model_path = os.path.join(save_dir, 'model.state')
             image_model = ThyroidClassificationModel(base_model).load_model(model_path).to(Config.available_device)
-            calculate_test(image_model, load_model_from_epoch_and_run_test, test_data_loader, logger, config_name)
+            calculate_test(image_model, load_model_from_epoch_and_run_test, test_data_loader, logger, config_name,
+                           show_tqdm=True)
     except Exception as e:
         print(e)
         logger.error(str(e))
@@ -270,7 +273,7 @@ if __name__ == '__main__':
     for config_base_name, model, aug_best_epoch_list in [
         (f"inception_v4_{Config.learning_rate}_{Config.decay_rate}",
          timm.create_model('inception_v4', pretrained=True), [
-             ("min", 17),
+             ("min", 14),
              ("jit", 58),
              ("fda", 85),
              ("mixup", 85),
