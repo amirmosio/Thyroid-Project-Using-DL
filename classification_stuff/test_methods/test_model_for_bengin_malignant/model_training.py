@@ -131,13 +131,11 @@ def train_model(base_model, config_base_name, train_val_test_data_loaders, augme
     logger.info(f"training config: {config_name}")
     try:
         _is_inception = type(base_model) == torchvision.models.inception.Inception3
-
-        transformation = get_transformation(augmentation=augmentation, base_data_loader=train_ds)
-
         train_data_loader, val_data_loader, test_data_loader = train_val_test_data_loaders
-        cast(ThyroidDataset, train_data_loader.dataset).transform = transformation
-
         if load_model_from_epoch_and_run_test is None:
+            transformation = get_transformation(augmentation=augmentation, base_data_loader=train_ds)
+            cast(ThyroidDataset, train_data_loader.dataset).transform = transformation
+
             image_model = ThyroidClassificationModel(base_model).to(Config.available_device)
 
             cec = nn.CrossEntropyLoss(weight=torch.tensor(train_ds.class_weights).to(Config.available_device))
