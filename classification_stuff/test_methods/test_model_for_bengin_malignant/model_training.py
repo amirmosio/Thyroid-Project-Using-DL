@@ -221,7 +221,7 @@ def train_model(base_model, config_base_name, train_val_test_data_loaders, augme
         raise e
 
 
-if __name__ == '__main__':
+if __name__ == '__main__ignored_temporarily':
     datasets_folder = ["stanford_tissue_microarray", "papsociaty"]
     train, val, test = CustomFragmentLoader(datasets_folder).load_image_path_and_labels_and_split(
         test_percent=Config.test_percent,
@@ -261,7 +261,7 @@ if __name__ == '__main__':
             train_model(model, config_base_name, (train_data_loader, val_data_loader, test_data_loader),
                         augmentation=aug)
 
-if __name__ == '__main__ignored_temporarily':
+if __name__ == '__main__':
     datasets_folder = ["stanford_tissue_microarray", "papsociaty"]
     train, val, test = CustomFragmentLoader(datasets_folder).load_image_path_and_labels_and_split(
         test_percent=100,
