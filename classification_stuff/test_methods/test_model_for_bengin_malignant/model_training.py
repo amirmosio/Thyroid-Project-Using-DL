@@ -272,31 +272,39 @@ if __name__ == '__main__ignored_temporarily':
     for config_base_name, model, aug_best_epoch_list in [
         (f"inception_v4_{Config.learning_rate}_{Config.decay_rate}",
          timm.create_model('inception_v4', pretrained=True), [
-             ("min", 0),
-             ("jit", 0), ("fda", 0),
-             ("mixup", 0),
-             ("jit-fda-mixup", 0)
+             ("min", 17),
+             ("jit", 58),
+             ("fda", 85),
+             ("mixup", 85),
+             ("jit-fda-mixup", 3),
+             ("jit-fda-mixup-nrs", 27)
          ]),
         (f"inception_v3_{Config.learning_rate}_{Config.decay_rate}",
          torchvision.models.inception_v3(pretrained=True, progress=True), [
-             ("min", 0),
-             ("jit", 0), ("fda", 0),
-             ("mixup", 0),
-             ("jit-fda-mixup", 0)
+             ("min", 56),
+             ("jit", 2),
+             ("fda", 10),
+             ("mixup", 81),
+             ("jit-fda-mixup", 75),
+             # ("jit-fda-mixup-nrs", 0)
          ]),
         (f"resnet101_{Config.learning_rate}_{Config.decay_rate}",
          torchvision.models.resnet101(pretrained=True, progress=True), [
-             ("min", 0),
-             ("jit", 0), ("fda", 0),
-             ("mixup", 0),
-             ("jit-fda-mixup", 0)
+             ("min", 55),
+             ("jit", 99),
+             ("fda", 40),
+             ("mixup", 84),
+             ("jit-fda-mixup", 48),
+             ("jit-fda-mixup-nrs", 25)
          ]),
         (f"resnet18_{Config.learning_rate}_{Config.decay_rate}",
          torchvision.models.resnet18(pretrained=True, progress=True), [
-             ("min", 0),
-             ("jit", 0), ("fda", 0),
-             ("mixup", 0),
-             ("jit-fda-mixup", 0)
+             ("min", 14),
+             ("jit", 94),
+             ("fda", 48),
+             ("mixup", 7),
+             ("jit-fda-mixup", 63),
+             ("jit-fda-mixup-nrs", 13)
          ])
 
     ]:

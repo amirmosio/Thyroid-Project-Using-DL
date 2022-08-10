@@ -54,20 +54,22 @@ def get_transformation(augmentation, crop_size=299, base_data_loader=None):
             Mixup(mixups=mixups, p=0.5, beta_limit=(0.1)),
         ])
     elif augmentation == "jit-fda-mixup":
+        p = 0.16
         fda_image_paths = [sample[0] for sample in base_data_loader.samples]
         mixups = [sample[0:2] for sample in base_data_loader.samples]
         trans = get_flip_rotate__custom__noise_transform([
-            A.domain_adaptation.FDA(fda_image_paths, beta_limit=0.1, p=0.16),
-            Mixup(mixups=mixups, p=0.16, beta_limit=(0.1)),
-            A.ColorJitter(p=0.5, hue=.16)
+            A.domain_adaptation.FDA(fda_image_paths, beta_limit=0.1, p=p),
+            Mixup(mixups=mixups, p=p, beta_limit=(0.1)),
+            A.ColorJitter(p=p, hue=.5)
         ])
     elif augmentation == "jit-fda-mixup-nrs":
+        p = 0.16
         fda_image_paths = [sample[0] for sample in base_data_loader.samples]
         mixups = [sample[0:2] for sample in base_data_loader.samples]
         trans = get_flip_rotate__custom__noise_transform([
-            A.domain_adaptation.FDA(fda_image_paths, beta_limit=0.1, p=0.16),
-            Mixup(mixups=mixups, p=0.16, beta_limit=(0.1)),
-            A.ColorJitter(p=0.16, hue=.5)
+            A.domain_adaptation.FDA(fda_image_paths, beta_limit=0.1, p=p),
+            Mixup(mixups=mixups, p=p, beta_limit=(0.1)),
+            A.ColorJitter(p=p, hue=.5)
         ], random_scale=False)
 
 
