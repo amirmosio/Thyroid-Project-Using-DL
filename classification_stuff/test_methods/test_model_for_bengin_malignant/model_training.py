@@ -262,7 +262,7 @@ if __name__ == '__main__':
                         augmentation=aug)
 
 if __name__ == '__main__ignored_temporarily':
-    datasets_folder = ["national_cancer_institute"]
+    datasets_folder = ["stanford_tissue_microarray", "papsociaty"]
     train, val, test = CustomFragmentLoader(datasets_folder).load_image_path_and_labels_and_split(
         test_percent=100,
         val_percent=0)
