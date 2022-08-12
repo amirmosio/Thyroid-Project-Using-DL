@@ -222,7 +222,7 @@ def train_model(base_model, config_base_name, train_val_test_data_loaders, augme
         raise e
 
 
-if __name__ == '__main__ignored_temporarily':
+if __name__ == '__main__':
     datasets_folder = ["stanford_tissue_microarray", "papsociaty"]
     train, val, test = CustomFragmentLoader(datasets_folder).load_image_path_and_labels_and_split(
         test_percent=Config.test_percent,
@@ -238,23 +238,23 @@ if __name__ == '__main__ignored_temporarily':
     for config_base_name, model, augmentations in [
         (f"inception_v4_{Config.learning_rate}_{Config.decay_rate}", timm.create_model('inception_v4', pretrained=True),
          [
-             "min",
-             "jit-fda-mixup",
+             "std",
+             "shear"
          ]),
         (f"inception_v3_{Config.learning_rate}_{Config.decay_rate}",
          torchvision.models.inception_v3(pretrained=True, progress=True), [
-             "min",
-             "jit-fda-mixup",
+             "std",
+             "shear"
          ]),
         (f"resnet101_{Config.learning_rate}_{Config.decay_rate}",
          torchvision.models.resnet101(pretrained=True, progress=True), [
-             "min",
-             "jit-fda-mixup",
+             "std",
+             "shear"
          ]),
         (f"resnet18_{Config.learning_rate}_{Config.decay_rate}",
          torchvision.models.resnet18(pretrained=True, progress=True), [
-             "min",
-             "jit-fda-mixup",
+             "std",
+             "shear"
          ])
     ]:
         for aug in augmentations:
@@ -262,7 +262,7 @@ if __name__ == '__main__ignored_temporarily':
             train_model(model, config_base_name, (train_data_loader, val_data_loader, test_data_loader),
                         augmentation=aug)
 
-if __name__ == '__main__':
+if __name__ == '__main__' and False:
     datasets_folder = ["national_cancer_institute"]
     train, val, test = CustomFragmentLoader(datasets_folder).load_image_path_and_labels_and_split(
         test_percent=100,
@@ -284,7 +284,7 @@ if __name__ == '__main__':
          torchvision.models.inception_v3(pretrained=True, progress=True), [
              ("min", 56),
              ("jit", 2),
-             ("fda", 10),
+             ("fda", 90),
              ("mixup", 81),
              ("jit-fda-mixup", 75),
              # ("jit-fda-mixup-nrs", 0)

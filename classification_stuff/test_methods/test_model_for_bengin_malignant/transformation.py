@@ -71,6 +71,10 @@ def get_transformation(augmentation, crop_size=299, base_data_loader=None):
             Mixup(mixups=mixups, p=p, beta_limit=(0.1)),
             A.ColorJitter(p=p, hue=.5)
         ], random_scale=False)
+    elif augmentation == "shear":
+        trans = get_flip_rotate__custom__noise_transform([
+            A.Affine(shear={"x": (-10, 10), "y": (-10, 10)}, p=0.5)
+        ], random_scale=False)
 
 
     else:
