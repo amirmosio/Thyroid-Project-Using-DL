@@ -195,10 +195,12 @@ def train_model(base_model, config_base_name, train_val_test_data_loaders, augme
                 val_acc = float(val_acc)
                 val_acc_history.append(val_acc)
                 logger.info(f'Val|E:{epoch}|Balanced Accuracy:{round(val_acc, 4)}%,\n{val_cf_matrix}')
+
                 save_model = False
-                if (val_acc >= best_epoch_val_acc and
-                        abs(train_acc - val_acc) < Config.train_val_acc_max_distance_for_best_epoch):
-                    best_epoch_val_acc = val_acc
+                is_last_epoch = epoch == Config.n_epoch
+                is_a_better_epoch = val_acc >= best_epoch_val_acc
+                is_a_better_epoch &= abs(train_acc - val_acc) < Config.train_val_acc_max_distance_for_best_epoch
+                if is_a_better_epoch or is_last_epoch:
                     save_model = True
                     calculate_test(image_model, epoch, test_data_loader, logger, config_name, show_tqdm=False)
                 plot_and_save_model_per_epoch(epoch if save_model else None,
@@ -223,7 +225,7 @@ def train_model(base_model, config_base_name, train_val_test_data_loaders, augme
 
 
 if __name__ == '__main__':
-    datasets_folder = ["stanford_tissue_microarray", "papsociaty"]
+    datasets_folder = ["national_cancer_institute"]
     train, val, test = CustomFragmentLoader(datasets_folder).load_image_path_and_labels_and_split(
         test_percent=Config.test_percent,
         val_percent=Config.val_percent)
@@ -236,25 +238,18 @@ if __name__ == '__main__':
     test_data_loader = DataLoader(test_ds, batch_size=Config.eval_batch_size, shuffle=True)
 
     for config_base_name, model, augmentations in [
-        (f"inception_v4_{Config.learning_rate}_{Config.decay_rate}", timm.create_model('inception_v4', pretrained=True),
+        (f"inception_v4_{Config.learning_rate}_{Config.decay_rate}_nci",
+         timm.create_model('inception_v4', pretrained=True),
          [
-             "std",
-             "shear"
+             "mixup",
          ]),
-        (f"inception_v3_{Config.learning_rate}_{Config.decay_rate}",
-         torchvision.models.inception_v3(pretrained=True, progress=True), [
-             "std",
-             "shear"
-         ]),
-        (f"resnet101_{Config.learning_rate}_{Config.decay_rate}",
+        (f"resnet101_{Config.learning_rate}_{Config.decay_rate}_nci",
          torchvision.models.resnet101(pretrained=True, progress=True), [
-             "std",
-             "shear"
+             "mixup",
          ]),
-        (f"resnet18_{Config.learning_rate}_{Config.decay_rate}",
+        (f"resnet18_{Config.learning_rate}_{Config.decay_rate}_nci",
          torchvision.models.resnet18(pretrained=True, progress=True), [
-             "std",
-             "shear"
+             "mixup",
          ])
     ]:
         for aug in augmentations:
@@ -263,7 +258,7 @@ if __name__ == '__main__':
                         augmentation=aug)
 
 if __name__ == '__main__' and False:
-    datasets_folder = ["national_cancer_institute"]
+    datasets_folder = ["stanford_tissue_microarray", "papsociaty"]
     train, val, test = CustomFragmentLoader(datasets_folder).load_image_path_and_labels_and_split(
         test_percent=100,
         val_percent=0)
