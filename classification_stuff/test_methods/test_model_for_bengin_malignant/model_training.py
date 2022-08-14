@@ -161,25 +161,26 @@ def train_model(base_model, config_base_name, train_val_test_data_loaders, augme
                 class_set = sorted(train_data_loader.dataset.class_to_idx_dict.values())
 
                 for images, labels in tqdm(train_data_loader, colour="#0000ff"):
-                    image_model.train()
-                    images = images.to(Config.available_device)
-                    labels = labels.to(Config.available_device)
-                    optimizer.zero_grad()
-                    pred = image_model(images)
-                    # pred label: torch.max(pred, 1)[1], labels
-                    if _is_inception:
-                        pred, aux_pred = pred
-                        loss, aux_loss = cec(pred, labels), cec(aux_pred, labels)
-                        loss = loss + 0.4 * aux_loss
-                    else:
-                        loss = cec(pred, labels)
-                    loss.backward()
-                    optimizer.step()
+                    if len(images) >= Config.batch_size // 2:
+                        image_model.train()
+                        images = images.to(Config.available_device)
+                        labels = labels.to(Config.available_device)
+                        optimizer.zero_grad()
+                        pred = image_model(images)
+                        # pred label: torch.max(pred, 1)[1], labels
+                        if _is_inception:
+                            pred, aux_pred = pred
+                            loss, aux_loss = cec(pred, labels), cec(aux_pred, labels)
+                            loss = loss + 0.4 * aux_loss
+                        else:
+                            loss = cec(pred, labels)
+                        loss.backward()
+                        optimizer.step()
 
-                    # train preds and labels
-                    values, preds = torch.max(pred, 1)
-                    train_y_preds.extend(preds.cpu())
-                    train_y_targets.extend(labels.cpu())
+                        # train preds and labels
+                        values, preds = torch.max(pred, 1)
+                        train_y_preds.extend(preds.cpu())
+                        train_y_targets.extend(labels.cpu())
 
                 # Epoch level
                 # validation data
@@ -237,9 +238,9 @@ if __name__ == '__main__':
         val_percent=Config.val_percent)
 
     sample_percent = 0.5
-    train = random.choices(train, k=int(0.5 * len(train)))
-    val = random.choices(val, k=int(0.5 * len(val)))
-    test = random.choices(test, k=int(0.5 * len(train)))
+    train = random.choices(train, k=int(sample_percent * len(train)))
+    val = random.choices(val, k=int(sample_percent * len(val)))
+    test = random.choices(test, k=int(sample_percent * len(train)))
 
     test_ds = ThyroidDataset(test, Config.class_idx_dict)
     val_ds = ThyroidDataset(val, Config.class_idx_dict)
