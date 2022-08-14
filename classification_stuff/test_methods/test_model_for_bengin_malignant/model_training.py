@@ -1,4 +1,5 @@
 import os
+import random
 from typing import cast
 
 import matplotlib.pyplot as plt
@@ -149,8 +150,8 @@ def train_model(base_model, config_base_name, train_val_test_data_loaders, augme
             optimizer = optim.Adam(image_model.parameters(), lr=Config.learning_rate)
             my_lr_scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer=optimizer, gamma=Config.decay_rate)
 
-            val_acc_history = [0]
-            train_acc_history = [0]
+            val_acc_history = []
+            train_acc_history = []
             train_y_preds = []
             train_y_targets = []
             best_epoch_val_acc = 0
@@ -234,6 +235,12 @@ if __name__ == '__main__':
     train, val, test = CustomFragmentLoader(datasets_folder).load_image_path_and_labels_and_split(
         test_percent=Config.test_percent,
         val_percent=Config.val_percent)
+
+    sample_percent = 0.5
+    train = random.choices(int(0.5 * len(train)), train)
+    val = random.choices(int(0.5 * len(val)), val)
+    test = random.choices(int(0.5 * len(train)), test)
+
     test_ds = ThyroidDataset(test, Config.class_idx_dict)
     val_ds = ThyroidDataset(val, Config.class_idx_dict)
     train_ds = ThyroidDataset(train, Config.class_idx_dict)
@@ -246,15 +253,24 @@ if __name__ == '__main__':
         (f"inception_v4_{Config.learning_rate}_{Config.decay_rate}_nci",
          timm.create_model('inception_v4', pretrained=True),
          [
-             "mixup",
+             # "mixup",
+             "jit",
+             "fda",
+             "jit-fda-mixup"
          ]),
         (f"resnet101_{Config.learning_rate}_{Config.decay_rate}_nci",
          torchvision.models.resnet101(pretrained=True, progress=True), [
              "mixup",
+             "jit",
+             "fda",
+             "jit-fda-mixup"
          ]),
         (f"resnet18_{Config.learning_rate}_{Config.decay_rate}_nci",
          torchvision.models.resnet18(pretrained=True, progress=True), [
              "mixup",
+             "jit",
+             "fda",
+             "jit-fda-mixup"
          ])
     ]:
         for aug in augmentations:
