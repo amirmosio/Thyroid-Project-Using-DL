@@ -237,9 +237,9 @@ if __name__ == '__main__':
         val_percent=Config.val_percent)
 
     sample_percent = 0.5
-    train = random.choices(train, int(0.5 * len(train)))
-    val = random.choices(val, int(0.5 * len(val)))
-    test = random.choices(test, int(0.5 * len(train)))
+    train = random.choices(train, k=int(0.5 * len(train)))
+    val = random.choices(val, k=int(0.5 * len(val)))
+    test = random.choices(test, k=int(0.5 * len(train)))
 
     test_ds = ThyroidDataset(test, Config.class_idx_dict)
     val_ds = ThyroidDataset(val, Config.class_idx_dict)
