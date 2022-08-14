@@ -126,7 +126,7 @@ def calculate_test(image_model, epoch, test_data_loader, logger, config_name, sh
     logger.info(f'Test|Epoch:{epoch}|Accuracy:{round(test_acc, 4)}, {test_c_acc}%')
 
 
-def train_model(base_model, config_base_name, train_val_test_data_loaders, augmentation,
+def train_model(base_model, config_base_name, train_val_test_data_loaders, augmentation, adaptation_sample_dataset,
                 load_model_from_epoch_and_run_test=None):
     config_name = f"{config_base_name}-{augmentation}-{','.join(Config.class_idx_dict.keys())}"
 
@@ -141,7 +141,7 @@ def train_model(base_model, config_base_name, train_val_test_data_loaders, augme
                 f" {len(train_data_loader.dataset.samples)}," +
                 f" {len(val_data_loader.dataset.samples)}," +
                 f" {len(test_data_loader.dataset.samples)}")
-            transformation = get_transformation(augmentation=augmentation, base_data_loader=train_ds)
+            transformation = get_transformation(augmentation=augmentation, base_data_loader=adaptation_sample_dataset)
             cast(ThyroidDataset, train_data_loader.dataset).transform = transformation
 
             image_model = ThyroidClassificationModel(base_model).to(Config.available_device)
@@ -249,6 +249,13 @@ if __name__ == '__main__':
     val_data_loader = DataLoader(val_ds, batch_size=Config.eval_batch_size, shuffle=True)
     test_data_loader = DataLoader(test_ds, batch_size=Config.eval_batch_size, shuffle=True)
 
+    # Domain adaptation dataset on small real datasets
+    # domain_sample_databases = ["stanford_tissue_microarray", "papsociaty"]
+    # _, _, domain_sample_test_data = CustomFragmentLoader(domain_sample_databases).load_image_path_and_labels_and_split(
+    #     test_percent=100,
+    #     val_percent=0)
+    # domain_sample_test_dataset = ThyroidDataset(domain_sample_test_data, Config.class_idx_dict)
+
     for config_base_name, model, augmentations in [
         (f"inception_v4_{Config.learning_rate}_{Config.decay_rate}_nci",
          timm.create_model('inception_v4', pretrained=True),
@@ -276,7 +283,7 @@ if __name__ == '__main__':
         for aug in augmentations:
             Config.reset_random_seeds()
             train_model(model, config_base_name, (train_data_loader, val_data_loader, test_data_loader),
-                        augmentation=aug)
+                        augmentation=aug, adaptation_sample_dataset=train_ds)
 
 if __name__ == '__main__' and False:
     datasets_folder = ["stanford_tissue_microarray", "papsociaty"]
