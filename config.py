@@ -14,7 +14,7 @@ class Config:
 
     learning_rate = 0.0001
     decay_rate = 1  # 0.99**50=0.6, 0.99**100=0.36
-    n_epoch = 2 if DEBUG else 4
+    n_epoch = 2 if DEBUG else 6
 
     available_device = "cuda" if torch.cuda.is_available() and not DEBUG else "cpu"
     print(f"Device: {available_device}")

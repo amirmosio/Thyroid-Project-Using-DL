@@ -262,23 +262,29 @@ if __name__ == '__main__':
          timm.create_model('inception_v4', pretrained=True),
          [
              # "mixup",
-             "jit",
-             "fda",
-             "jit-fda-mixup"
+             # "jit",
+             # "fda",
+             # "jit-fda-mixup",
+             "shear",
+             "std",
          ]),
         (f"resnet101_{Config.learning_rate}_{Config.decay_rate}_nci",
          torchvision.models.resnet101(pretrained=True, progress=True), [
-             "mixup",
-             "jit",
-             "fda",
-             "jit-fda-mixup"
+             # "mixup",
+             # "jit",
+             # "fda",
+             # "jit-fda-mixup"
+             "shear",
+             "std"
          ]),
         (f"resnet18_{Config.learning_rate}_{Config.decay_rate}_nci",
          torchvision.models.resnet18(pretrained=True, progress=True), [
-             "mixup",
-             "jit",
-             "fda",
-             "jit-fda-mixup"
+             # "mixup",
+             # "jit",
+             # "fda",
+             # "jit-fda-mixup"
+             "shear",
+             "std"
          ])
     ]:
         for aug in augmentations:
