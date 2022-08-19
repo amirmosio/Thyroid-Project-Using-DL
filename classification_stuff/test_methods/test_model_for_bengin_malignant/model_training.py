@@ -301,14 +301,12 @@ if __name__ == '__main__':
         test_percent=100,
         val_percent=0)
     sample_source_domain_test_ds = ThyroidDataset(sample_source_domain_test, Config.class_idx_dict)
-    sample_source_domain_test_data_loader = DataLoader(sample_source_domain_test_ds, batch_size=Config.eval_batch_size,
-                                                       shuffle=True)
     datasets_folder = ["stanford_tissue_microarray", "papsociaty"]
     _, _, test = CustomFragmentLoader(datasets_folder).load_image_path_and_labels_and_split(
         test_percent=100,
         val_percent=0)
 
-    domain_shift_transformation = get_transformation("fda", base_data_loader=sample_source_domain_test_data_loader)
+    domain_shift_transformation = get_transformation("fda", base_data_loader=sample_source_domain_test_ds)
 
     test_ds_domain_shifted = ThyroidDataset(test,
                                             Config.class_idx_dict,
