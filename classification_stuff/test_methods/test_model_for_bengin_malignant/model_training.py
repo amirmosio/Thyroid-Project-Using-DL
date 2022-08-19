@@ -1,5 +1,6 @@
 import os
 import random
+import time
 from typing import cast
 
 import matplotlib.pyplot as plt
@@ -106,7 +107,7 @@ def plot_and_save_model_per_epoch(epoch,
 
 def save_auc_roc_chart_for_test(test_fpr, test_tpr, test_auc_score, config_label, epoch):
     trains_state_dir, config_train_dir, save_dir = get_save_state_dirs(config_label, epoch)
-    fig_save_path = os.path.join(save_dir, "test_roc.jpeg")
+    fig_save_path = os.path.join(save_dir, f"test_roc_{time.time()}.jpeg")
     plt.plot(test_fpr, test_tpr, label="test, auc=" + str(test_auc_score))
     plt.legend(loc="lower right")
     plt.xlabel('FPR')
@@ -126,7 +127,8 @@ def calculate_test(image_model, epoch, test_data_loader, logger, config_name, sh
     logger.info(f'Test|Epoch:{epoch}|Accuracy:{round(test_acc, 4)}, {test_c_acc}%')
 
 
-def train_model(base_model, config_base_name, train_val_test_data_loaders, augmentation, adaptation_sample_dataset,
+def train_model(base_model, config_base_name, train_val_test_data_loaders, augmentation,
+                adaptation_sample_dataset=None,
                 load_model_from_epoch_and_run_test=None):
     config_name = f"{config_base_name}-{augmentation}-{','.join(Config.class_idx_dict.keys())}"
 
@@ -231,7 +233,7 @@ def train_model(base_model, config_base_name, train_val_test_data_loaders, augme
         raise e
 
 
-if __name__ == '__main__':
+if __name__ == '__main__' and False:
     datasets_folder = ["national_cancer_institute"]
     train, val, test = CustomFragmentLoader(datasets_folder).load_image_path_and_labels_and_split(
         test_percent=Config.test_percent,
@@ -257,7 +259,7 @@ if __name__ == '__main__':
     #     val_percent=0)
     # domain_sample_test_dataset = ThyroidDataset(domain_sample_test_data, Config.class_idx_dict)
 
-    for config_base_name, model, augmentations in [
+    for c_base_name, model, augmentations in [
         (f"inception_v4_{Config.learning_rate}_{Config.decay_rate}_nci",
          timm.create_model('inception_v4', pretrained=True),
          [
@@ -289,57 +291,66 @@ if __name__ == '__main__':
     ]:
         for aug in augmentations:
             Config.reset_random_seeds()
-            train_model(model, config_base_name, (train_data_loader, val_data_loader, test_data_loader),
+            train_model(model, c_base_name, (train_data_loader, val_data_loader, test_data_loader),
                         augmentation=aug, adaptation_sample_dataset=train_ds)
 
-if __name__ == '__main__' and False:
-    datasets_folder = ["stanford_tissue_microarray", "papsociaty"]
-    train, val, test = CustomFragmentLoader(datasets_folder).load_image_path_and_labels_and_split(
+if __name__ == '__main__':
+    sample_source_domain_datasets_folder = ["national_cancer_institute"]
+    _, _, sample_source_domain_test = CustomFragmentLoader(
+        sample_source_domain_datasets_folder).load_image_path_and_labels_and_split(
         test_percent=100,
         val_percent=0)
-    test_ds = ThyroidDataset(test, Config.class_idx_dict)
+    sample_source_domain_test_ds = ThyroidDataset(sample_source_domain_test, Config.class_idx_dict)
+    sample_source_domain_test_data_loader = DataLoader(sample_source_domain_test_ds, batch_size=Config.eval_batch_size,
+                                                       shuffle=True)
+    datasets_folder = ["stanford_tissue_microarray", "papsociaty"]
+    _, _, test = CustomFragmentLoader(datasets_folder).load_image_path_and_labels_and_split(
+        test_percent=100,
+        val_percent=0)
 
-    test_data_loader = DataLoader(test_ds, batch_size=Config.eval_batch_size, shuffle=True)
-    for config_base_name, model, aug_best_epoch_list in [
-        (f"inception_v4_{Config.learning_rate}_{Config.decay_rate}",
+    domain_shift_transformation = get_transformation("fda", base_data_loader=sample_source_domain_test_data_loader)
+
+    test_ds_domain_shifted = ThyroidDataset(test,
+                                            Config.class_idx_dict,
+                                            transform=domain_shift_transformation
+                                            )
+    test_ds = ThyroidDataset(test,
+                             Config.class_idx_dict,
+                             )
+
+    test_data_domain_shifted_loader = DataLoader(test_ds_domain_shifted,
+                                                 batch_size=Config.eval_batch_size,
+                                                 shuffle=True)
+    test_data_loader = DataLoader(test_ds,
+                                  batch_size=Config.eval_batch_size,
+                                  shuffle=True)
+    for c_base_name, model, aug_best_epoch_list in [
+        (f"inception_v4_{Config.learning_rate}_{Config.decay_rate}_nci",
          timm.create_model('inception_v4', pretrained=True), [
-             ("min", 14),
-             ("jit", 58),
-             ("fda", 85),
-             ("mixup", 85),
-             ("jit-fda-mixup", 3),
-             ("jit-fda-mixup-nrs", 27)
-         ]),
-        (f"inception_v3_{Config.learning_rate}_{Config.decay_rate}",
-         torchvision.models.inception_v3(pretrained=True, progress=True), [
-             ("min", 56),
-             ("jit", 2),
-             ("fda", 90),
-             ("mixup", 81),
-             ("jit-fda-mixup", 75),
-             # ("jit-fda-mixup-nrs", 0)
-         ]),
-        (f"resnet101_{Config.learning_rate}_{Config.decay_rate}",
-         torchvision.models.resnet101(pretrained=True, progress=True), [
-             ("min", 55),
-             ("jit", 99),
-             ("fda", 40),
-             ("mixup", 84),
-             ("jit-fda-mixup", 48),
-             ("jit-fda-mixup-nrs", 25)
-         ]),
-        (f"resnet18_{Config.learning_rate}_{Config.decay_rate}",
-         torchvision.models.resnet18(pretrained=True, progress=True), [
-             ("min", 14),
-             ("jit", 94),
-             ("fda", 48),
+             ("jit", 3),
+             ("fda", 2),
              ("mixup", 7),
-             ("jit-fda-mixup", 63),
-             ("jit-fda-mixup-nrs", 13)
+             ("jit-fda-mixup", 3),
+         ]),
+        (f"resnet101_{Config.learning_rate}_{Config.decay_rate}_nci",
+         torchvision.models.resnet101(pretrained=True, progress=True), [
+             ("jit", 3),
+             ("fda", 3),
+             ("mixup", 3),
+             ("jit-fda-mixup", 3),
+         ]),
+        (f"resnet18_{Config.learning_rate}_{Config.decay_rate}_nci",
+         torchvision.models.resnet18(pretrained=True, progress=True), [
+             ("jit", 3),
+             ("fda", 3),
+             ("mixup", 3),
+             ("jit-fda-mixup", 3),
          ])
 
     ]:
         for aug, best_epoch in aug_best_epoch_list:
             Config.reset_random_seeds()
-            train_model(model, config_base_name, (None, None, test_data_loader),
-                        augmentation=aug, load_model_from_epoch_and_run_test=best_epoch)
+            train_model(model, c_base_name, (None, None, test_data_domain_shifted_loader),
+                        augmentation=aug, load_model_from_epoch_and_run_test=best_epoch, adaptation_sample_dataset=None)
+            train_model(model, c_base_name, (None, None, test_data_loader),
+                        augmentation=aug, load_model_from_epoch_and_run_test=best_epoch, adaptation_sample_dataset=None)
