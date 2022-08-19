@@ -58,7 +58,8 @@ class CustomFragmentLoader:
                 else:
                     class_name = item[2]
                 if class_name in Config.class_names:
-                    class_slides_dict[class_name] = class_slides_dict.get(class_name, []) + [(item[0], item[1], class_name)]
+                    class_slides_dict[class_name] = class_slides_dict.get(class_name, []) + [
+                        (item[0], item[1], class_name)]
 
             # split test val train because they must not share same slide id fragment
 
@@ -83,8 +84,7 @@ class CustomFragmentLoader:
 
 
 if __name__ == '__main__':
-
-    datasets_folder = ["stanford_tissue_microarray", "papsociaty", "national_cancer_institute"]
+    datasets_folder = ["national_cancer_institute"]
     train, val, test = CustomFragmentLoader(datasets_folder).load_image_path_and_labels_and_split(
         val_percent=Config.val_percent,
         test_percent=Config.test_percent)
@@ -97,3 +97,6 @@ if __name__ == '__main__':
     benign_test = [i for i in test if i[1] == "BENIGN"]
     mal_test = [i for i in test if i[1] == "MALIGNANT"]
     print(f"test: {len(test)}={len(benign_test)}+{len(mal_test)}")
+
+    print(set(train) & set(test))
+    print(set(train) & set(val))
