@@ -100,3 +100,5 @@ if __name__ == '__main__':
 
     print(set(train) & set(test))
     print(set(train) & set(val))
+    print(set(test) & set(val))
+    print(set(val) & set(val))
