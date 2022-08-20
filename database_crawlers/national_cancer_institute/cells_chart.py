@@ -9,7 +9,6 @@ if __name__ == '__main__':
     slide_infos = {}
     for xml_path in pathlib.Path(data_dir).glob("**/*.xml"):
         slide_infos.update(get_slide_info_from_bcr_xml(str(xml_path)))
-    print(slide_infos)
     cell_percents = [int(item[1]) for item in slide_infos.values()]
-    plt.hist(cell_percents, bins=100)
+    plt.hist(cell_percents, bins=1000)
     plt.savefig("cell_distribution.jpeg")

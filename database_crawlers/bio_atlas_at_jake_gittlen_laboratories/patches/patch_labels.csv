@@ -1,5 +1,0 @@
-database_name,image_id,image_web_label,image_class_label,report,stain_type,is_wsi
-BioAtlasThyroidSlideProvider,7345142770200142430,: Papillary carcinoma,PAPILLARY_CARCINOMA,,H&E,True
-BioAtlasThyroidSlideProvider,-8032115443438779981,": Hashimoto thyroiditis, papillary carcinoma",PAPILLARY_CARCINOMA,,H&E,True
-BioAtlasThyroidSlideProvider,-2696861430169582359,: Papillary thyroid carcinoma,PAPILLARY_CARCINOMA,,H&E,True
-BioAtlasThyroidSlideProvider,3985015664720084581,: Normal,NORMAL,,H&E,True
