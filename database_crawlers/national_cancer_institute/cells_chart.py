@@ -12,7 +12,7 @@ if __name__ == '__main__':
     cell_percents = [int(item[1]) for item in slide_infos.values() if int(item[2]) == 0]
     print("tumor:", len([i for i in cell_percents if i == 100]))
     print("normal", len([i for i in cell_percents if i == 0]))
-    print(len([i for i in cell_percents if i != 0 and i != 100]))
+    print([i for i in cell_percents if i != 0 and i != 100])
     print(len(cell_percents))
     plt.hist(cell_percents, bins=150)
     plt.savefig("tumor_cell_distribution.jpeg")
