@@ -137,12 +137,13 @@ def train_model(base_model, config_base_name, train_val_test_data_loaders, augme
     try:
         _is_inception = type(base_model) == torchvision.models.inception.Inception3
         train_data_loader, val_data_loader, test_data_loader = train_val_test_data_loaders
+        logger.info(
+            f"train valid test splits:" +
+            f" {len(train_data_loader.dataset.samples) if train_data_loader else None}," +
+            f" {len(val_data_loader.dataset.samples) if val_data_loader else None}," +
+            f" {len(test_data_loader.dataset.samples) if test_data_loader else None}")
         if load_model_from_epoch_and_run_test is None:
-            logger.info(
-                f"train valid test splits:" +
-                f" {len(train_data_loader.dataset.samples)}," +
-                f" {len(val_data_loader.dataset.samples)}," +
-                f" {len(test_data_loader.dataset.samples)}")
+
             transformation = get_transformation(augmentation=augmentation, base_data_loader=adaptation_sample_dataset)
             cast(ThyroidDataset, train_data_loader.dataset).transform = transformation
 
