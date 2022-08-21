@@ -301,7 +301,7 @@ if __name__ == '__main__':
         test_percent=100,
         val_percent=0)
     sample_source_domain_test_ds = ThyroidDataset(sample_source_domain_test, Config.class_idx_dict)
-    datasets_folder = ["stanford_tissue_microarray", "papsociaty"]
+    datasets_folder = ["bio_atlas_at_jake_gittlen_laboratories"]
     _, _, test = CustomFragmentLoader(datasets_folder).load_image_path_and_labels_and_split(
         test_percent=100,
         val_percent=0)
