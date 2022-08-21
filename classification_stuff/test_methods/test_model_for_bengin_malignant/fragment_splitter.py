@@ -34,13 +34,13 @@ class CustomFragmentLoader:
                         image_paths = glob.glob(os.path.join(slide_path, "*.jpeg"))
                         if image_paths:
                             d = self._database_slide_dict.get(database_id, {})
-                            d[image_id] = [image_paths] + [row[3]]
+                            d[image_id] = [image_paths] + [row[3], row[2]]
                             self._database_slide_dict[database_id] = d
 
     def load_image_path_and_labels_and_split(self, test_percent=20, val_percent=10):
         train_images, val_images, test_images = [], [], []
         for database_name, slides_dict in self._database_slide_dict.items():
-            image_paths_by_slide = [(len(v[0]), v[0], v[1]) for v in slides_dict.values()]
+            image_paths_by_slide = [(len(v[0]), v[0], v[1], v[2]) for v in slides_dict.values()]
             random.shuffle(image_paths_by_slide)
             # image_paths_by_slide.sort()
             class_slides_dict = {}
@@ -54,7 +54,13 @@ class CustomFragmentLoader:
                         class_name = "BENIGN"
                     else:
                         class_name = item[2]
-
+                elif database_name == "BioAtlasThyroidSlideProvider":
+                    if "papillary" in item[3].lower():
+                        class_name = "MALIGNANT"
+                    elif "normal" in item[3].lower():
+                        class_name = "BENIGN"
+                    else:
+                        class_name = item[3]
                 else:
                     class_name = item[2]
                 if class_name in Config.class_names:
@@ -86,7 +92,8 @@ class CustomFragmentLoader:
 if __name__ == '__main__':
     # datasets_folder = ["national_cancer_institute"]
     # datasets_folder = ["papsociaty"]
-    datasets_folder = ["stanford_tissue_microarray"]
+    # datasets_folder = ["stanford_tissue_microarray"]
+    datasets_folder = ["bio_atlas_at_jake_gittlen_laboratories"]
     train, val, test = CustomFragmentLoader(datasets_folder).load_image_path_and_labels_and_split(
         val_percent=Config.val_percent,
         test_percent=Config.test_percent)
