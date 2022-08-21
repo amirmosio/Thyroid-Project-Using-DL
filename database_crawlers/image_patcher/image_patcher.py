@@ -173,8 +173,6 @@ class ImageAndSlidePatcher:
     @classmethod
     def save_image_patches_and_update_csv(cls, thyroid_type, thyroid_desired_classes, csv_writer, web_details,
                                           image_path, slide_patch_dir, slide_id):
-        if thyroid_desired_classes is not None and thyroid_type not in thyroid_desired_classes:
-            return
         csv_writer.writerow(list(web_details.values()))
 
         if cls._get_extension_from_path(image_path) in [".tiff", ".tif", ".svs"]:
@@ -205,7 +203,7 @@ class ImageAndSlidePatcher:
     @classmethod
     def save_patches_in_folders(cls, database_directory, dataset_dir=None):
         thyroid_desired_classes = [ThyroidCancerLevel.MALIGNANT, ThyroidCancerLevel.BENIGN]
-        datasets_dirs = os.listdir(database_directory) if dataset_dir is None else dataset_dir
+        datasets_dirs = os.listdir(database_directory) if dataset_dir is None else [dataset_dir]
         list_dir = [os.path.join(database_directory, o) for o in datasets_dirs
                     if os.path.isdir(os.path.join(database_directory, o, "data"))]
         for database_path in list_dir:

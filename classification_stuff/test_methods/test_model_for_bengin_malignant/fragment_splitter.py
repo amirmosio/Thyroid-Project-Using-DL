@@ -84,7 +84,9 @@ class CustomFragmentLoader:
 
 
 if __name__ == '__main__':
-    datasets_folder = ["national_cancer_institute"]
+    # datasets_folder = ["national_cancer_institute"]
+    # datasets_folder = ["papsociaty"]
+    datasets_folder = ["stanford_tissue_microarray"]
     train, val, test = CustomFragmentLoader(datasets_folder).load_image_path_and_labels_and_split(
         val_percent=Config.val_percent,
         test_percent=Config.test_percent)
