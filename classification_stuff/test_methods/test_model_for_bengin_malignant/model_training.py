@@ -308,7 +308,7 @@ if __name__ == '__main__':
         test_percent=100,
         val_percent=0)
 
-    sample_percent = 0.02
+    sample_percent = 0.1
     test = random.choices(test, k=int(sample_percent * len(test)))
     test[-1] = (test[-1][0], "BENIGN")
 
