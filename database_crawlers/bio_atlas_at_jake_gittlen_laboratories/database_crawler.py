@@ -55,11 +55,7 @@ class BioAtlasThyroidSlideProvider:
 
 if __name__ == '__main__':
     bio_atlas_provider = BioAtlasThyroidSlideProvider()
-    slide_error_id = "1066"
-    start = False
     for slide in bio_atlas_provider.get_web_stain_samples():
-        if slide.image_id == slide_error_id:
-            start = True
-        if start:
+        if slide.image_id == "687":
             print(slide.image_id, slide.image_web_label, slide.get_slide_view_url())
             slide.crawl_image_save_jpeg_and_json()
