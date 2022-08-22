@@ -237,7 +237,7 @@ def train_model(base_model, config_base_name, train_val_test_data_loaders, augme
 ## Runs###
 ##########
 
-if __name__ == '__main__' and False:
+if __name__ == '__main__':
     datasets_folder = ["national_cancer_institute"]
     train, val, test = CustomFragmentLoader(datasets_folder).load_image_path_and_labels_and_split(
         test_percent=Config.test_percent,
@@ -313,7 +313,7 @@ if __name__ == '__main__':
         test_percent=100,
         val_percent=0)
 
-    sample_percent = 0.1
+    sample_percent = 0.3
     test = random.choices(test, k=int(sample_percent * len(test)))
     test[-1] = (test[-1][0], "BENIGN")
 
