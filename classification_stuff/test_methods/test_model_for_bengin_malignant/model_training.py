@@ -49,7 +49,7 @@ def validate(model, data_loader, loss_function=None, show_tqdm=False):
     # TN|FN
     # FP|TP
     fpr, tpr, _ = roc_curve(y_targets, y_positive_scores)
-    print(set(y_targets), set(y_positive_scores))
+    print(set(y_targets))
     auc = roc_auc_score(y_targets, y_positive_scores)
     if loss_function:
         loss = sum(loss_values)
@@ -310,7 +310,6 @@ if __name__ == '__main__':
 
     sample_percent = 0.02
     test = random.choices(test, k=int(sample_percent * len(test)))
-    print(len(test))
 
     domain_shift_transformation = get_transformation("fda", base_data_loader=sample_source_domain_test_ds)
 
