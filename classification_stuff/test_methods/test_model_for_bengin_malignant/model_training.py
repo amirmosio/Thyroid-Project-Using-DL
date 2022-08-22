@@ -234,7 +234,7 @@ def train_model(base_model, config_base_name, train_val_test_data_loaders, augme
         raise e
 
 
-if __name__ == '__main__':
+if __name__ == '__main__' and False:
     datasets_folder = ["national_cancer_institute"]
     train, val, test = CustomFragmentLoader(datasets_folder).load_image_path_and_labels_and_split(
         test_percent=Config.test_percent,
@@ -295,7 +295,7 @@ if __name__ == '__main__':
             train_model(model, c_base_name, (train_data_loader, val_data_loader, test_data_loader),
                         augmentation=aug, adaptation_sample_dataset=train_ds)
 
-if __name__ == '__main__' and False:
+if __name__ == '__main__':
     sample_source_domain_datasets_folder = ["national_cancer_institute"]
     _, _, sample_source_domain_test = CustomFragmentLoader(
         sample_source_domain_datasets_folder).load_image_path_and_labels_and_split(
@@ -328,32 +328,33 @@ if __name__ == '__main__' and False:
                                   batch_size=Config.eval_batch_size,
                                   shuffle=True)
     for c_base_name, model, aug_best_epoch_list in [
-        (f"inception_v4_{Config.learning_rate}_{Config.decay_rate}_nci",
-         timm.create_model('inception_v4', pretrained=True), [
-             ("jit", 3),
-             ("fda", 2),
-             ("mixup", 7),
-             ("jit-fda-mixup", 3),
-         ]),
+        # (f"inception_v4_{Config.learning_rate}_{Config.decay_rate}_nci",
+        #  timm.create_model('inception_v4', pretrained=True), [
+        #      ("jit", 3),
+        #      ("fda", 2),
+        #      ("mixup", 7),
+        #      ("jit-fda-mixup", 3),
+        #  ]),
         (f"resnet101_{Config.learning_rate}_{Config.decay_rate}_nci",
          torchvision.models.resnet101(pretrained=True, progress=True), [
-             ("jit", 3),
-             ("fda", 3),
-             ("mixup", 3),
-             ("jit-fda-mixup", 3),
+             # ("jit", 3),
+             # ("fda", 3),
+             # ("mixup", 3),
+             # ("jit-fda-mixup", 3),
+             ("std", 5)
          ]),
-        (f"resnet18_{Config.learning_rate}_{Config.decay_rate}_nci",
-         torchvision.models.resnet18(pretrained=True, progress=True), [
-             ("jit", 3),
-             ("fda", 3),
-             ("mixup", 3),
-             ("jit-fda-mixup", 3),
-         ])
+        # (f"resnet18_{Config.learning_rate}_{Config.decay_rate}_nci",
+        #  torchvision.models.resnet18(pretrained=True, progress=True), [
+        #      ("jit", 3),
+        #      ("fda", 3),
+        #      ("mixup", 3),
+        #      ("jit-fda-mixup", 3),
+        #  ])
 
     ]:
         for aug, best_epoch in aug_best_epoch_list:
             Config.reset_random_seeds()
-            train_model(model, c_base_name, (None, None, test_data_domain_shifted_loader),
-                        augmentation=aug, load_model_from_epoch_and_run_test=best_epoch, adaptation_sample_dataset=None)
+            # train_model(model, c_base_name, (None, None, test_data_domain_shifted_loader),
+            #             augmentation=aug, load_model_from_epoch_and_run_test=best_epoch, adaptation_sample_dataset=None)
             train_model(model, c_base_name, (None, None, test_data_loader),
                         augmentation=aug, load_model_from_epoch_and_run_test=best_epoch, adaptation_sample_dataset=None)
