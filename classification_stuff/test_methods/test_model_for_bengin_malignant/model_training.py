@@ -279,7 +279,7 @@ if __name__ == '__main__':
              # "mixup",
              # "jit",
              # "fda",
-             "jit-fda-mixup"
+             "jit-fda-mixup",
              # "shear",
              "std"
          ]),

@@ -78,5 +78,5 @@ def get_transformation(augmentation, crop_size=299, base_data_loader=None):
 
 
     else:
-        raise ValueError("Augmentation unknown")
+        raise ValueError(f"Augmentation unknown: {augmentation}")
     return trans
