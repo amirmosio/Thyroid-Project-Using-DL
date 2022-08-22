@@ -1,9 +1,11 @@
+import ssl
 import time
 from urllib.parse import urlparse
 from urllib.request import urlopen
+
 from bs4 import BeautifulSoup
+
 from database_crawlers.web_stain_sample import StainType, WebStainWSIOneDIndex
-import ssl
 
 ssl._create_default_https_context = ssl._create_unverified_context
 
@@ -59,3 +61,4 @@ if __name__ == '__main__':
         if slide.image_id == "687":
             print(slide.image_id, slide.image_web_label, slide.get_slide_view_url())
             slide.crawl_image_save_jpeg_and_json()
+            break
