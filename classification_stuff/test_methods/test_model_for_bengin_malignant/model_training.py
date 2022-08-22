@@ -305,7 +305,10 @@ if __name__ == '__main__':
         test_percent=100,
         val_percent=0)
     sample_source_domain_test_ds = ThyroidDataset(sample_source_domain_test, Config.class_idx_dict)
-    datasets_folder = ["bio_atlas_at_jake_gittlen_laboratories", "papsociaty", "stanford_tissue_microarray"]
+    datasets_folder = ["bio_atlas_at_jake_gittlen_laboratories",
+                       # "papsociaty",
+                       # "stanford_tissue_microarray"
+                       ]
     _, _, test = CustomFragmentLoader(datasets_folder).load_image_path_and_labels_and_split(
         test_percent=100,
         val_percent=0)
@@ -344,7 +347,7 @@ if __name__ == '__main__':
              # ("fda", 3),
              # ("mixup", 3),
              # ("jit-fda-mixup", 3),
-             ("std", 4)
+             ("std", 5)
          ]),
         # (f"resnet18_{Config.learning_rate}_{Config.decay_rate}_nci",
         #  torchvision.models.resnet18(pretrained=True, progress=True), [
