@@ -237,13 +237,13 @@ def train_model(base_model, config_base_name, train_val_test_data_loaders, augme
 ## Runs###
 ##########
 
-if __name__ == '__main__' and False:
+if __name__ == '__main__':
     datasets_folder = ["national_cancer_institute"]
     train, val, test = CustomFragmentLoader(datasets_folder).load_image_path_and_labels_and_split(
         test_percent=Config.test_percent,
         val_percent=Config.val_percent)
 
-    sample_percent = 0.03
+    sample_percent = 0.1
     train = random.choices(train, k=int(sample_percent * len(train)))
     val = random.choices(val, k=int(sample_percent * len(val)))
     test = random.choices(test, k=int(sample_percent * len(train)))
@@ -279,7 +279,7 @@ if __name__ == '__main__' and False:
              # "mixup",
              # "jit",
              # "fda",
-             # "jit-fda-mixup"
+             "jit-fda-mixup"
              # "shear",
              "std"
          ]),
@@ -313,9 +313,8 @@ if __name__ == '__main__':
         test_percent=100,
         val_percent=0)
 
-    sample_percent = 0.4
+    sample_percent = 1
     test = random.choices(test, k=int(sample_percent * len(test)))
-    test[-1] = (test[-1][0], "BENIGN")
 
     domain_shift_transformation = get_transformation("fda", base_data_loader=sample_source_domain_test_ds)
 
@@ -346,7 +345,7 @@ if __name__ == '__main__':
              # ("jit", 3),
              # ("fda", 3),
              # ("mixup", 3),
-             # ("jit-fda-mixup", 3),
+             ("jit-fda-mixup", 4),
              ("std", 4)
          ]),
         # (f"resnet18_{Config.learning_rate}_{Config.decay_rate}_nci",
