@@ -237,7 +237,7 @@ def train_model(base_model, config_base_name, train_val_test_data_loaders, augme
 ## Runs###
 ##########
 
-if __name__ == '__main__':
+if __name__ == '__main__' and False:
     datasets_folder = ["national_cancer_institute"]
     train, val, test = CustomFragmentLoader(datasets_folder).load_image_path_and_labels_and_split(
         test_percent=Config.test_percent,
