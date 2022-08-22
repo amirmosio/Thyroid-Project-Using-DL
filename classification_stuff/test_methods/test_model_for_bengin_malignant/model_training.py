@@ -237,7 +237,7 @@ def train_model(base_model, config_base_name, train_val_test_data_loaders, augme
 ## Runs###
 ##########
 
-if __name__ == '__main__':
+if __name__ == '__main__' and False:
     datasets_folder = ["national_cancer_institute"]
     train, val, test = CustomFragmentLoader(datasets_folder).load_image_path_and_labels_and_split(
         test_percent=Config.test_percent,
@@ -360,7 +360,7 @@ if __name__ == '__main__':
     ]:
         for aug, best_epoch in aug_best_epoch_list:
             Config.reset_random_seeds()
-            # train_model(model, c_base_name, (None, None, test_data_domain_shifted_loader),
-            #             augmentation=aug, load_model_from_epoch_and_run_test=best_epoch, adaptation_sample_dataset=None)
             train_model(model, c_base_name, (None, None, test_data_loader),
+                        augmentation=aug, load_model_from_epoch_and_run_test=best_epoch, adaptation_sample_dataset=None)
+            train_model(model, c_base_name, (None, None, test_data_domain_shifted_loader),
                         augmentation=aug, load_model_from_epoch_and_run_test=best_epoch, adaptation_sample_dataset=None)
