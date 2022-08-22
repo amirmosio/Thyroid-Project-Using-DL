@@ -4,7 +4,6 @@ import time
 from typing import cast
 
 import matplotlib.pyplot as plt
-import timm
 import torch
 import torchvision
 from sklearn.metrics import confusion_matrix, roc_curve, roc_auc_score
@@ -234,7 +233,11 @@ def train_model(base_model, config_base_name, train_val_test_data_loaders, augme
         raise e
 
 
-if __name__ == '__main__' and False:
+##########
+## Runs###
+##########
+
+if __name__ == '__main__':
     datasets_folder = ["national_cancer_institute"]
     train, val, test = CustomFragmentLoader(datasets_folder).load_image_path_and_labels_and_split(
         test_percent=Config.test_percent,
@@ -302,14 +305,14 @@ if __name__ == '__main__':
         test_percent=100,
         val_percent=0)
     sample_source_domain_test_ds = ThyroidDataset(sample_source_domain_test, Config.class_idx_dict)
-    datasets_folder = ["bio_atlas_at_jake_gittlen_laboratories"]
+    datasets_folder = ["bio_atlas_at_jake_gittlen_laboratories", "papsociaty", "stanford_tissue_microarray"]
     _, _, test = CustomFragmentLoader(datasets_folder).load_image_path_and_labels_and_split(
         test_percent=100,
         val_percent=0)
 
     sample_percent = 0.1
     test = random.choices(test, k=int(sample_percent * len(test)))
-    test[-1] = (test[-1][0], "BENIGN")
+    # test[-1] = (test[-1][0], "BENIGN")
 
     domain_shift_transformation = get_transformation("fda", base_data_loader=sample_source_domain_test_ds)
 
