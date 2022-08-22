@@ -315,7 +315,7 @@ if __name__ == '__main__':
 
     sample_percent = 0.1
     test = random.choices(test, k=int(sample_percent * len(test)))
-    # test[-1] = (test[-1][0], "BENIGN")
+    test[-1] = (test[-1][0], "BENIGN")
 
     domain_shift_transformation = get_transformation("fda", base_data_loader=sample_source_domain_test_ds)
 
