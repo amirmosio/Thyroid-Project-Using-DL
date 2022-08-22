@@ -49,7 +49,6 @@ def validate(model, data_loader, loss_function=None, show_tqdm=False):
     # TN|FN
     # FP|TP
     fpr, tpr, _ = roc_curve(y_targets, y_positive_scores)
-    print(set(y_targets))
     auc = roc_auc_score(y_targets, y_positive_scores)
     if loss_function:
         loss = sum(loss_values)
@@ -235,13 +234,13 @@ def train_model(base_model, config_base_name, train_val_test_data_loaders, augme
         raise e
 
 
-if __name__ == '__main__' and False:
+if __name__ == '__main__':
     datasets_folder = ["national_cancer_institute"]
     train, val, test = CustomFragmentLoader(datasets_folder).load_image_path_and_labels_and_split(
         test_percent=Config.test_percent,
         val_percent=Config.val_percent)
 
-    sample_percent = 0.5
+    sample_percent = 0.3
     train = random.choices(train, k=int(sample_percent * len(train)))
     val = random.choices(val, k=int(sample_percent * len(val)))
     test = random.choices(test, k=int(sample_percent * len(train)))
@@ -262,41 +261,41 @@ if __name__ == '__main__' and False:
     # domain_sample_test_dataset = ThyroidDataset(domain_sample_test_data, Config.class_idx_dict)
 
     for c_base_name, model, augmentations in [
-        (f"inception_v4_{Config.learning_rate}_{Config.decay_rate}_nci",
-         timm.create_model('inception_v4', pretrained=True),
-         [
-             # "mixup",
-             # "jit",
-             # "fda",
-             # "jit-fda-mixup",
-             "shear",
-             "std",
-         ]),
+        # (f"inception_v4_{Config.learning_rate}_{Config.decay_rate}_nci",
+        #  timm.create_model('inception_v4', pretrained=True),
+        #  [
+        #      # "mixup",
+        #      # "jit",
+        #      # "fda",
+        #      # "jit-fda-mixup",
+        #      "shear",
+        #      "std",
+        #  ]),
         (f"resnet101_{Config.learning_rate}_{Config.decay_rate}_nci",
          torchvision.models.resnet101(pretrained=True, progress=True), [
              # "mixup",
              # "jit",
              # "fda",
              # "jit-fda-mixup"
-             "shear",
+             # "shear",
              "std"
          ]),
-        (f"resnet18_{Config.learning_rate}_{Config.decay_rate}_nci",
-         torchvision.models.resnet18(pretrained=True, progress=True), [
-             # "mixup",
-             # "jit",
-             # "fda",
-             # "jit-fda-mixup"
-             "shear",
-             "std"
-         ])
+        # (f"resnet18_{Config.learning_rate}_{Config.decay_rate}_nci",
+        #  torchvision.models.resnet18(pretrained=True, progress=True), [
+        #      # "mixup",
+        #      # "jit",
+        #      # "fda",
+        #      # "jit-fda-mixup"
+        #      "shear",
+        #      "std"
+        #  ])
     ]:
         for aug in augmentations:
             Config.reset_random_seeds()
             train_model(model, c_base_name, (train_data_loader, val_data_loader, test_data_loader),
                         augmentation=aug, adaptation_sample_dataset=train_ds)
 
-if __name__ == '__main__':
+if __name__ == '__main__' and False:
     sample_source_domain_datasets_folder = ["national_cancer_institute"]
     _, _, sample_source_domain_test = CustomFragmentLoader(
         sample_source_domain_datasets_folder).load_image_path_and_labels_and_split(

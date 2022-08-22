@@ -46,12 +46,14 @@ class CustomFragmentLoader:
             class_slides_dict = {}
             for item in image_paths_by_slide:
                 if database_name == "NationalCancerInstitute":
-                    normal_percent = item[2].strip(r"(|)|\'").split("\', \'")[0]
-                    tumor_percent = item[2].strip(r"(|)|\'").split("\', \'")[1]
-                    if normal_percent == "0" and tumor_percent == "100":
-                        class_name = "MALIGNANT"
-                    elif normal_percent == "100" and tumor_percent == "0":
-                        class_name = "BENIGN"
+                    normal_percent = int(item[2].strip(r"(|)|\'").split("\', \'")[0])
+                    tumor_percent = int(item[2].strip(r"(|)|\'").split("\', \'")[1])
+                    stormal_percent = int(item[2].strip(r"(|)|\'").split("\', \'")[2])
+                    if stormal_percent < 5:
+                        if tumor_percent > 10:
+                            class_name = "MALIGNANT"
+                        else:
+                            class_name = "BENIGN"
                     else:
                         class_name = item[2]
                 elif database_name == "BioAtlasThyroidSlideProvider":
