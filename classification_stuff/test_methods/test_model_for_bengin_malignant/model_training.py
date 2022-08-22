@@ -243,7 +243,7 @@ if __name__ == '__main__':
         test_percent=Config.test_percent,
         val_percent=Config.val_percent)
 
-    sample_percent = 0.3
+    sample_percent = 0.03
     train = random.choices(train, k=int(sample_percent * len(train)))
     val = random.choices(val, k=int(sample_percent * len(val)))
     test = random.choices(test, k=int(sample_percent * len(train)))
