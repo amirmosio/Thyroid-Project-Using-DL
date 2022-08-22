@@ -344,7 +344,7 @@ if __name__ == '__main__':
              # ("fda", 3),
              # ("mixup", 3),
              # ("jit-fda-mixup", 3),
-             ("std", 5)
+             ("std", 4)
          ]),
         # (f"resnet18_{Config.learning_rate}_{Config.decay_rate}_nci",
         #  torchvision.models.resnet18(pretrained=True, progress=True), [
