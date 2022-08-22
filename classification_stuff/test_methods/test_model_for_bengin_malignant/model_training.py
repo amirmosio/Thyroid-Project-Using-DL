@@ -307,8 +307,10 @@ if __name__ == '__main__':
     _, _, test = CustomFragmentLoader(datasets_folder).load_image_path_and_labels_and_split(
         test_percent=100,
         val_percent=0)
+
     sample_percent = 0.1
     test = random.choices(test, k=int(sample_percent * len(test)))
+    print(len(test))
 
     domain_shift_transformation = get_transformation("fda", base_data_loader=sample_source_domain_test_ds)
 
