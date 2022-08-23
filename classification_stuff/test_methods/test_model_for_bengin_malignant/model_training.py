@@ -257,39 +257,39 @@ if __name__ == '__main__' and False:
     test_data_loader = DataLoader(test_ds, batch_size=Config.eval_batch_size, shuffle=True)
 
     # Domain adaptation dataset on small real datasets
-    domain_sample_databases = ["stanford_tissue_microarray", "papsociaty", "bio_atlas_at_jake_gittlen_laboratories"]
-    _, _, domain_sample_test_data = CustomFragmentLoader(domain_sample_databases).load_image_path_and_labels_and_split(
-        test_percent=100,
-        val_percent=0)
-    sample_percent = 0.5
-    domain_sample_test_data = random.choices(domain_sample_test_data,
-                                             k=int(sample_percent * len(domain_sample_test_data)))
-    domain_sample_test_dataset = ThyroidDataset(domain_sample_test_data, Config.class_idx_dict)
+    # domain_sample_databases = ["stanford_tissue_microarray", "papsociaty", "bio_atlas_at_jake_gittlen_laboratories"]
+    # _, _, domain_sample_test_data = CustomFragmentLoader(domain_sample_databases).load_image_path_and_labels_and_split(
+    #     test_percent=100,
+    #     val_percent=0)
+    # sample_percent = 0.5
+    # domain_sample_test_data = random.choices(domain_sample_test_data,
+    #                                          k=int(sample_percent * len(domain_sample_test_data)))
+    # domain_sample_test_dataset = ThyroidDataset(domain_sample_test_data, Config.class_idx_dict)
 
     for c_base_name, model, augmentations in [
         (f"resnet101_{Config.learning_rate}_{Config.decay_rate}_nci",
          torchvision.models.resnet101(pretrained=True, progress=True), [
              "mixup",
              # "jit",
-             "fda",
+             # "fda",
              # "jit-fda-mixup",
              # "shear",
-             # "std"
+             "std"
          ]),
-        (f"resnet18_{Config.learning_rate}_{Config.decay_rate}_nci",
-         torchvision.models.resnet18(pretrained=True, progress=True), [
-             "mixup",
-             # "jit",
-             "fda",
-             # "jit-fda-mixup"
-             # "shear",
-             # "std"
-         ])
+        # (f"resnet18_{Config.learning_rate}_{Config.decay_rate}_nci",
+        #  torchvision.models.resnet18(pretrained=True, progress=True), [
+        #      "mixup",
+        #      # "jit",
+        #      "fda",
+        #      # "jit-fda-mixup"
+        #      # "shear",
+        #      # "std"
+        #  ])
     ]:
         for aug in augmentations:
             Config.reset_random_seeds()
             train_model(model, c_base_name, (train_data_loader, val_data_loader, test_data_loader),
-                        augmentation=aug, adaptation_sample_dataset=domain_sample_test_dataset)
+                        augmentation=aug, adaptation_sample_dataset=train_ds)
 
 if __name__ == '__main__':
     sample_source_domain_datasets_folder = ["national_cancer_institute"]
@@ -326,21 +326,21 @@ if __name__ == '__main__':
                                   batch_size=Config.eval_batch_size,
                                   shuffle=True)
     for c_base_name, model, aug_best_epoch_list in [
-        (f"resnet101_{Config.learning_rate}_{Config.decay_rate}_nci",
+        (f"resnet101_{Config.learning_rate}_{Config.decay_rate}",
          torchvision.models.resnet101(pretrained=True, progress=True), [
              # ("jit", 3),
-             ("fda", 6),
-             ("mixup", 6),
+             # ("fda", 6),
+             # ("mixup", 6),
              # ("jit-fda-mixup", 4),
-             # ("std", 5)
+             ("std", 56)
          ]),
-        (f"resnet18_{Config.learning_rate}_{Config.decay_rate}_nci",
-         torchvision.models.resnet18(pretrained=True, progress=True), [
-             # ("jit", 3),
-             ("fda", 6),
-             ("mixup", 6),
-             # ("jit-fda-mixup", 3),
-         ])
+        # (f"resnet18_{Config.learning_rate}_{Config.decay_rate}_nci",
+        #  torchvision.models.resnet18(pretrained=True, progress=True), [
+        #      # ("jit", 3),
+        #      ("fda", 6),
+        #      ("mixup", 6),
+        #      # ("jit-fda-mixup", 3),
+        #  ])
 
     ]:
         for aug, best_epoch in aug_best_epoch_list:
