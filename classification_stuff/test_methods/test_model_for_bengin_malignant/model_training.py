@@ -237,7 +237,7 @@ def train_model(base_model, config_base_name, train_val_test_data_loaders, augme
 ## Runs###
 ##########
 
-if __name__ == '__main__':
+if __name__ == '__main__' and False:
     datasets_folder = ["national_cancer_institute"]
     train, val, test = CustomFragmentLoader(datasets_folder).load_image_path_and_labels_and_split(
         test_percent=Config.test_percent,
@@ -257,11 +257,11 @@ if __name__ == '__main__':
     test_data_loader = DataLoader(test_ds, batch_size=Config.eval_batch_size, shuffle=True)
 
     # Domain adaptation dataset on small real datasets
-    # domain_sample_databases = ["stanford_tissue_microarray", "papsociaty"]
-    # _, _, domain_sample_test_data = CustomFragmentLoader(domain_sample_databases).load_image_path_and_labels_and_split(
-    #     test_percent=100,
-    #     val_percent=0)
-    # domain_sample_test_dataset = ThyroidDataset(domain_sample_test_data, Config.class_idx_dict)
+    domain_sample_databases = ["stanford_tissue_microarray", "papsociaty"]
+    _, _, domain_sample_test_data = CustomFragmentLoader(domain_sample_databases).load_image_path_and_labels_and_split(
+        test_percent=100,
+        val_percent=0)
+    domain_sample_test_dataset = ThyroidDataset(domain_sample_test_data, Config.class_idx_dict)
 
     for c_base_name, model, augmentations in [
         # (f"inception_v4_{Config.learning_rate}_{Config.decay_rate}_nci",
@@ -276,9 +276,9 @@ if __name__ == '__main__':
         #  ]),
         (f"resnet101_{Config.learning_rate}_{Config.decay_rate}_nci",
          torchvision.models.resnet101(pretrained=True, progress=True), [
-             # "mixup",
+             "mixup",
              # "jit",
-             # "fda",
+             "fda",
              # "jit-fda-mixup",
              # "shear",
              "std"
@@ -296,7 +296,7 @@ if __name__ == '__main__':
         for aug in augmentations:
             Config.reset_random_seeds()
             train_model(model, c_base_name, (train_data_loader, val_data_loader, test_data_loader),
-                        augmentation=aug, adaptation_sample_dataset=train_ds)
+                        augmentation=aug, adaptation_sample_dataset=domain_sample_test_dataset)
 
 if __name__ == '__main__':
     sample_source_domain_datasets_folder = ["national_cancer_institute"]
@@ -346,7 +346,7 @@ if __name__ == '__main__':
              # ("fda", 3),
              # ("mixup", 3),
              # ("jit-fda-mixup", 4),
-             ("std", 4)
+             ("std", 5)
          ]),
         # (f"resnet18_{Config.learning_rate}_{Config.decay_rate}_nci",
         #  torchvision.models.resnet18(pretrained=True, progress=True), [
