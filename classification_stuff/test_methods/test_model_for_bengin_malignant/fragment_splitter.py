@@ -49,7 +49,7 @@ class CustomFragmentLoader:
                     normal_percent = int(item[2].strip(r"(|)|\'").split("\', \'")[0])
                     tumor_percent = int(item[2].strip(r"(|)|\'").split("\', \'")[1])
                     stormal_percent = int(item[2].strip(r"(|)|\'").split("\', \'")[2])
-                    if stormal_percent < 5:
+                    if stormal_percent <= 0:
                         if tumor_percent > 5:
                             class_name = "MALIGNANT"
                         else:

@@ -279,7 +279,7 @@ if __name__ == '__main__':
              # "mixup",
              # "jit",
              # "fda",
-             "jit-fda-mixup",
+             # "jit-fda-mixup",
              # "shear",
              "std"
          ]),
@@ -345,7 +345,7 @@ if __name__ == '__main__':
              # ("jit", 3),
              # ("fda", 3),
              # ("mixup", 3),
-             ("jit-fda-mixup", 4),
+             # ("jit-fda-mixup", 4),
              ("std", 4)
          ]),
         # (f"resnet18_{Config.learning_rate}_{Config.decay_rate}_nci",
