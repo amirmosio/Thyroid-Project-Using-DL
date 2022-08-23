@@ -237,7 +237,7 @@ def train_model(base_model, config_base_name, train_val_test_data_loaders, augme
 ## Runs###
 ##########
 
-if __name__ == '__main__':
+if __name__ == '__main__' and False:
     datasets_folder = ["national_cancer_institute"]
     train, val, test = CustomFragmentLoader(datasets_folder).load_image_path_and_labels_and_split(
         test_percent=Config.test_percent,
@@ -329,16 +329,16 @@ if __name__ == '__main__':
         (f"resnet101_{Config.learning_rate}_{Config.decay_rate}_nci",
          torchvision.models.resnet101(pretrained=True, progress=True), [
              # ("jit", 3),
-             ("fda", 5),
-             ("mixup", 5),
+             ("fda", 6),
+             ("mixup", 6),
              # ("jit-fda-mixup", 4),
              # ("std", 5)
          ]),
         (f"resnet18_{Config.learning_rate}_{Config.decay_rate}_nci",
          torchvision.models.resnet18(pretrained=True, progress=True), [
              # ("jit", 3),
-             ("fda", 3),
-             ("mixup", 3),
+             ("fda", 6),
+             ("mixup", 6),
              # ("jit-fda-mixup", 3),
          ])
 
