@@ -257,23 +257,16 @@ if __name__ == '__main__' and False:
     test_data_loader = DataLoader(test_ds, batch_size=Config.eval_batch_size, shuffle=True)
 
     # Domain adaptation dataset on small real datasets
-    domain_sample_databases = ["stanford_tissue_microarray", "papsociaty"]
+    domain_sample_databases = ["stanford_tissue_microarray", "papsociaty", "bio_atlas_at_jake_gittlen_laboratories"]
     _, _, domain_sample_test_data = CustomFragmentLoader(domain_sample_databases).load_image_path_and_labels_and_split(
         test_percent=100,
         val_percent=0)
+    sample_percent = 0.5
+    domain_sample_test_data = random.choices(domain_sample_test_data,
+                                             k=int(sample_percent * len(domain_sample_test_data)))
     domain_sample_test_dataset = ThyroidDataset(domain_sample_test_data, Config.class_idx_dict)
 
     for c_base_name, model, augmentations in [
-        # (f"inception_v4_{Config.learning_rate}_{Config.decay_rate}_nci",
-        #  timm.create_model('inception_v4', pretrained=True),
-        #  [
-        #      # "mixup",
-        #      # "jit",
-        #      # "fda",
-        #      # "jit-fda-mixup",
-        #      "shear",
-        #      "std",
-        #  ]),
         (f"resnet101_{Config.learning_rate}_{Config.decay_rate}_nci",
          torchvision.models.resnet101(pretrained=True, progress=True), [
              "mixup",
@@ -281,17 +274,17 @@ if __name__ == '__main__' and False:
              "fda",
              # "jit-fda-mixup",
              # "shear",
-             "std"
+             # "std"
          ]),
-        # (f"resnet18_{Config.learning_rate}_{Config.decay_rate}_nci",
-        #  torchvision.models.resnet18(pretrained=True, progress=True), [
-        #      # "mixup",
-        #      # "jit",
-        #      # "fda",
-        #      # "jit-fda-mixup"
-        #      "shear",
-        #      "std"
-        #  ])
+        (f"resnet18_{Config.learning_rate}_{Config.decay_rate}_nci",
+         torchvision.models.resnet18(pretrained=True, progress=True), [
+             "mixup",
+             # "jit",
+             "fda",
+             # "jit-fda-mixup"
+             # "shear",
+             # "std"
+         ])
     ]:
         for aug in augmentations:
             Config.reset_random_seeds()
@@ -333,28 +326,21 @@ if __name__ == '__main__':
                                   batch_size=Config.eval_batch_size,
                                   shuffle=True)
     for c_base_name, model, aug_best_epoch_list in [
-        # (f"inception_v4_{Config.learning_rate}_{Config.decay_rate}_nci",
-        #  timm.create_model('inception_v4', pretrained=True), [
-        #      ("jit", 3),
-        #      ("fda", 2),
-        #      ("mixup", 7),
-        #      ("jit-fda-mixup", 3),
-        #  ]),
         (f"resnet101_{Config.learning_rate}_{Config.decay_rate}_nci",
          torchvision.models.resnet101(pretrained=True, progress=True), [
              # ("jit", 3),
-             # ("fda", 3),
-             # ("mixup", 3),
+             ("fda", 5),
+             ("mixup", 5),
              # ("jit-fda-mixup", 4),
-             ("std", 5)
+             # ("std", 5)
          ]),
-        # (f"resnet18_{Config.learning_rate}_{Config.decay_rate}_nci",
-        #  torchvision.models.resnet18(pretrained=True, progress=True), [
-        #      ("jit", 3),
-        #      ("fda", 3),
-        #      ("mixup", 3),
-        #      ("jit-fda-mixup", 3),
-        #  ])
+        (f"resnet18_{Config.learning_rate}_{Config.decay_rate}_nci",
+         torchvision.models.resnet18(pretrained=True, progress=True), [
+             # ("jit", 3),
+             ("fda", 3),
+             ("mixup", 3),
+             # ("jit-fda-mixup", 3),
+         ])
 
     ]:
         for aug, best_epoch in aug_best_epoch_list:
