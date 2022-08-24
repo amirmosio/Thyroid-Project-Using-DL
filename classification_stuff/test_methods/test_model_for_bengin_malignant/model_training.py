@@ -128,7 +128,8 @@ def calculate_test(image_model, epoch, test_data_loader, logger, config_name, sh
 
 def train_model(base_model, config_base_name, train_val_test_data_loaders, augmentation,
                 adaptation_sample_dataset=None,
-                load_model_from_epoch_and_run_test=None):
+                train_model_flag=True,
+                load_model_from_dir=None):
     config_name = f"{config_base_name}-{augmentation}-{','.join(Config.class_idx_dict.keys())}"
 
     logger = set_config_for_logger(config_name)
@@ -141,12 +142,19 @@ def train_model(base_model, config_base_name, train_val_test_data_loaders, augme
             f" {len(train_data_loader.dataset.samples) if train_data_loader else None}," +
             f" {len(val_data_loader.dataset.samples) if val_data_loader else None}," +
             f" {len(test_data_loader.dataset.samples) if test_data_loader else None}")
-        if load_model_from_epoch_and_run_test is None:
 
+        # MODEL
+        if load_model_from_dir:
+            # Load model from file
+            model_path = os.path.join(load_model_from_dir, 'model.state')
+            image_model = ThyroidClassificationModel(base_model).load_model(model_path).to(Config.available_device)
+        else:
+            image_model = ThyroidClassificationModel(base_model).to(Config.available_device)
+
+        if train_model_flag:
+            # TRAIN
             transformation = get_transformation(augmentation=augmentation, base_data_loader=adaptation_sample_dataset)
             cast(ThyroidDataset, train_data_loader.dataset).transform = transformation
-
-            image_model = ThyroidClassificationModel(base_model).to(Config.available_device)
 
             cec = nn.CrossEntropyLoss(weight=torch.tensor(train_ds.class_weights).to(Config.available_device))
             optimizer = optim.Adam(image_model.parameters(), lr=Config.learning_rate)
@@ -221,11 +229,8 @@ def train_model(base_model, config_base_name, train_val_test_data_loaders, augme
                                               config_label=config_name)
                 my_lr_scheduler.step()
         else:
-            # Load model from file
-            save_dir = get_save_state_dirs(config_name, load_model_from_epoch_and_run_test)[2]
-            model_path = os.path.join(save_dir, 'model.state')
-            image_model = ThyroidClassificationModel(base_model).load_model(model_path).to(Config.available_device)
-            calculate_test(image_model, load_model_from_epoch_and_run_test, test_data_loader, logger, config_name,
+            # JUST EVALUATE
+            calculate_test(image_model, 0, test_data_loader, logger, config_name,
                            show_tqdm=True)
     except Exception as e:
         print(e)
@@ -233,38 +238,41 @@ def train_model(base_model, config_base_name, train_val_test_data_loaders, augme
         raise e
 
 
-##########
-## Runs###
-##########
-
-if __name__ == '__main__' and False:
-    datasets_folder = ["national_cancer_institute"]
-    train, val, test = CustomFragmentLoader(datasets_folder).load_image_path_and_labels_and_split(
+def load_datasets(datasets_folders, test_percent=Config.test_percent, val_percent=Config.val_percent, sample_percent=1):
+    train, val, test = CustomFragmentLoader(datasets_folders).load_image_path_and_labels_and_split(
         test_percent=Config.test_percent,
         val_percent=Config.val_percent)
 
-    sample_percent = 0.02
     train = random.choices(train, k=int(sample_percent * len(train)))
     val = random.choices(val, k=int(sample_percent * len(val)))
-    test = random.choices(test, k=int(sample_percent * len(train)))
+    test = random.choices(test, k=int(sample_percent * len(test)))
 
-    test_ds = ThyroidDataset(test, Config.class_idx_dict)
-    val_ds = ThyroidDataset(val, Config.class_idx_dict)
     train_ds = ThyroidDataset(train, Config.class_idx_dict)
+    val_ds = ThyroidDataset(val, Config.class_idx_dict)
+    test_ds = ThyroidDataset(test, Config.class_idx_dict)
 
     train_data_loader = DataLoader(train_ds, batch_size=Config.batch_size, shuffle=True)
     val_data_loader = DataLoader(val_ds, batch_size=Config.eval_batch_size, shuffle=True)
     test_data_loader = DataLoader(test_ds, batch_size=Config.eval_batch_size, shuffle=True)
 
+    return (train, val, test), (train_ds, val_ds, test_ds), (train_data_loader, val_data_loader, test_data_loader)
+
+
+##########
+## Runs###
+##########
+
+if __name__ == '__main__' and False:
+    _, (train_ds, _, _), (train_data_loader, val_data_loader, test_data_loader) = load_datasets(
+        ["national_cancer_institute"],
+        sample_percent=0.1)
+
     # Domain adaptation dataset on small real datasets
-    # domain_sample_databases = ["stanford_tissue_microarray", "papsociaty", "bio_atlas_at_jake_gittlen_laboratories"]
-    # _, _, domain_sample_test_data = CustomFragmentLoader(domain_sample_databases).load_image_path_and_labels_and_split(
-    #     test_percent=100,
-    #     val_percent=0)
-    # sample_percent = 0.5
-    # domain_sample_test_data = random.choices(domain_sample_test_data,
-    #                                          k=int(sample_percent * len(domain_sample_test_data)))
-    # domain_sample_test_dataset = ThyroidDataset(domain_sample_test_data, Config.class_idx_dict)
+    _, (_, _, domain_sample_test_dataset), _ = load_datasets(["stanford_tissue_microarray",
+                                                              "papsociaty"],
+                                                             sample_percent=0.5,
+                                                             test_percent=100,
+                                                             val_percent=0)
 
     for c_base_name, model, augmentations in [
         (f"resnet101_{Config.learning_rate}_{Config.decay_rate}_nci",
@@ -276,15 +284,6 @@ if __name__ == '__main__' and False:
              # "shear",
              "std"
          ]),
-        # (f"resnet18_{Config.learning_rate}_{Config.decay_rate}_nci",
-        #  torchvision.models.resnet18(pretrained=True, progress=True), [
-        #      "mixup",
-        #      # "jit",
-        #      "fda",
-        #      # "jit-fda-mixup"
-        #      # "shear",
-        #      # "std"
-        #  ])
     ]:
         for aug in augmentations:
             Config.reset_random_seeds()
@@ -292,60 +291,37 @@ if __name__ == '__main__' and False:
                         augmentation=aug, adaptation_sample_dataset=train_ds)
 
 if __name__ == '__main__':
-    sample_source_domain_datasets_folder = ["national_cancer_institute"]
-    _, _, sample_source_domain_test = CustomFragmentLoader(
-        sample_source_domain_datasets_folder).load_image_path_and_labels_and_split(
-        test_percent=100,
-        val_percent=0)
-    sample_source_domain_test_ds = ThyroidDataset(sample_source_domain_test, Config.class_idx_dict)
-    datasets_folder = ["bio_atlas_at_jake_gittlen_laboratories",
-                       # "papsociaty",
-                       # "stanford_tissue_microarray"
-                       ]
-    _, _, test = CustomFragmentLoader(datasets_folder).load_image_path_and_labels_and_split(
-        test_percent=100,
-        val_percent=0)
+    # Main data
+    _, (_, _, _), (train_data_loader, val_data_loader, test_data_loader) = load_datasets(["papsociaty",
+                                                                                          "stanford_tissue_microarray"
+                                                                                          ],
+                                                                                         sample_percent=1)
+    #  Domain shifted data
+    # _, (_, _, sample_source_domain_test_ds), _ = load_datasets(["national_cancer_institute"],
+    #                                                            sample_percent=1,
+    #                                                            test_percent=100, val_percent=0)
+    # _, (_, _, test_ds_domain_shifted), (_, _, test_data_domain_shifted_loader) = load_datasets(["papsociaty",
+    #                                                                                             "stanford_tissue_microarray"
+    #                                                                                             ],
+    #                                                                                            sample_percent=1,
+    #                                                                                            test_percent=100,
+    #                                                                                            val_percent=0)
+    # domain_shift_transformation = get_transformation("fda", base_data_loader=sample_source_domain_test_ds)
+    # test_ds_domain_shifted.transform = domain_shift_transformation
 
-    sample_percent = 1
-    test = random.choices(test, k=int(sample_percent * len(test)))
-
-    domain_shift_transformation = get_transformation("fda", base_data_loader=sample_source_domain_test_ds)
-
-    test_ds_domain_shifted = ThyroidDataset(test,
-                                            Config.class_idx_dict,
-                                            transform=domain_shift_transformation
-                                            )
-    test_ds = ThyroidDataset(test,
-                             Config.class_idx_dict,
-                             )
-
-    test_data_domain_shifted_loader = DataLoader(test_ds_domain_shifted,
-                                                 batch_size=Config.eval_batch_size,
-                                                 shuffle=True)
-    test_data_loader = DataLoader(test_ds,
-                                  batch_size=Config.eval_batch_size,
-                                  shuffle=True)
     for c_base_name, model, aug_best_epoch_list in [
-        (f"resnet101_{Config.learning_rate}_{Config.decay_rate}",
+        (f"resnet101_{Config.learning_rate}_{Config.decay_rate}_nci_few_shot_on_pap_Stan",
          torchvision.models.resnet101(pretrained=True, progress=True), [
-             # ("jit", 3),
-             # ("fda", 6),
-             # ("mixup", 6),
-             # ("jit-fda-mixup", 4),
-             ("std", 56)
+             ("jit", "resnet101_0.0001_1_nci-jit-BENIGN,MALIGNANT/epoch-3/"),
          ]),
-        # (f"resnet18_{Config.learning_rate}_{Config.decay_rate}_nci",
-        #  torchvision.models.resnet18(pretrained=True, progress=True), [
-        #      # ("jit", 3),
-        #      ("fda", 6),
-        #      ("mixup", 6),
-        #      # ("jit-fda-mixup", 3),
-        #  ])
 
     ]:
         for aug, best_epoch in aug_best_epoch_list:
             Config.reset_random_seeds()
             train_model(model, c_base_name, (None, None, test_data_loader),
-                        augmentation=aug, load_model_from_epoch_and_run_test=best_epoch, adaptation_sample_dataset=None)
-            train_model(model, c_base_name, (None, None, test_data_domain_shifted_loader),
-                        augmentation=aug, load_model_from_epoch_and_run_test=best_epoch, adaptation_sample_dataset=None)
+                        augmentation=aug,
+                        load_model_from_dir="./train_state/runs_0.0001_1_nic_test_benign_mal/" + best_epoch,
+                        train_model_flag=True,
+                        adaptation_sample_dataset=None)
+            # train_model(model, c_base_name, (None, None, test_data_domain_shifted_loader),
+            #             augmentation=aug, load_model_from_dir=best_epoch, adaptation_sample_dataset=None)

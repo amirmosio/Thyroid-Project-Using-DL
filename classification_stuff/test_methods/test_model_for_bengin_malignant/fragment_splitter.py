@@ -45,26 +45,22 @@ class CustomFragmentLoader:
             # image_paths_by_slide.sort()
             class_slides_dict = {}
             for item in image_paths_by_slide:
+                class_name = None
                 if database_name == "NationalCancerInstitute":
                     normal_percent = int(item[2].strip(r"(|)|\'").split("\', \'")[0])
                     tumor_percent = int(item[2].strip(r"(|)|\'").split("\', \'")[1])
                     stormal_percent = int(item[2].strip(r"(|)|\'").split("\', \'")[2])
-                    if stormal_percent <= 0:
-                        if tumor_percent > 90:
+                    if stormal_percent == 0:
+                        if tumor_percent == 100:
                             class_name = "MALIGNANT"
-                        else:
+                        elif normal_percent == 100:
                             class_name = "BENIGN"
-                    else:
-                        class_name = item[2]
                 elif database_name == "BioAtlasThyroidSlideProvider":
                     if "papillary" in item[3].lower():
                         class_name = "MALIGNANT"
                     elif "normal" in item[3].lower():
                         class_name = "BENIGN"
-                    else:
-                        class_name = item[3]
-                else:
-                    class_name = item[2]
+                class_name = class_name if class_name else item[2]
                 if class_name in Config.class_names:
                     class_slides_dict[class_name] = class_slides_dict.get(class_name, []) + [
                         (item[0], item[1], class_name)]
@@ -93,9 +89,9 @@ class CustomFragmentLoader:
 
 if __name__ == '__main__':
     # datasets_folder = ["national_cancer_institute"]
-    # datasets_folder = ["papsociaty"]
+    datasets_folder = ["papsociaty"]
     # datasets_folder = ["stanford_tissue_microarray"]
-    datasets_folder = ["bio_atlas_at_jake_gittlen_laboratories"]
+    # datasets_folder = ["bio_atlas_at_jake_gittlen_laboratories"]
     train, val, test = CustomFragmentLoader(datasets_folder).load_image_path_and_labels_and_split(
         val_percent=Config.val_percent,
         test_percent=Config.test_percent)
