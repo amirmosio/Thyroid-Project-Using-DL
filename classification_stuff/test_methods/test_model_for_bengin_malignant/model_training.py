@@ -298,9 +298,9 @@ if __name__ == '__main__':
                                                                                           ],
                                                                                          sample_percent=1)
     #  Domain shifted data
-    # _, (_, _, sample_source_domain_test_ds), _ = load_datasets(["national_cancer_institute"],
-    #                                                            sample_percent=1,
-    #                                                            test_percent=100, val_percent=0)
+    _, (_, _, sample_source_domain_test_ds), _ = load_datasets(["national_cancer_institute"],
+                                                               sample_percent=1,
+                                                               test_percent=100, val_percent=0)
     # _, (_, _, test_ds_domain_shifted), (_, _, test_data_domain_shifted_loader) = load_datasets(["papsociaty",
     #                                                                                             "stanford_tissue_microarray"
     #                                                                                             ],
@@ -313,7 +313,10 @@ if __name__ == '__main__':
     for c_base_name, model, aug_best_epoch_list in [
         (f"resnet101_{Config.learning_rate}_{Config.decay_rate}_nci_few_shot_on_pap_stan",
          torchvision.models.resnet101(pretrained=True, progress=True), [
+             ("fda", "resnet101_0.0001_1_nci-fda-BENIGN,MALIGNANT/epoch-3/"),
+             ("mixup", "resnet101_0.0001_1_nci-jit-fda-mixup-BENIGN,MALIGNANT/epoch-3/"),
              ("jit", "resnet101_0.0001_1_nci-jit-BENIGN,MALIGNANT/epoch-3/"),
+             ("jit-fda-mixup", "resnet101_0.0001_1_nci-jit-BENIGN,MALIGNANT/epoch-3/"),
          ]),
 
     ]:
@@ -323,6 +326,6 @@ if __name__ == '__main__':
                         augmentation=aug,
                         load_model_from_dir="./train_state/runs_0.0001_1_nic_test_benign_mal/" + best_epoch,
                         train_model_flag=True,
-                        adaptation_sample_dataset=None)
+                        adaptation_sample_dataset=sample_source_domain_test_ds)
             # train_model(model, c_base_name, (None, None, test_data_domain_shifted_loader),
             #             augmentation=aug, load_model_from_dir=best_epoch, adaptation_sample_dataset=None)
