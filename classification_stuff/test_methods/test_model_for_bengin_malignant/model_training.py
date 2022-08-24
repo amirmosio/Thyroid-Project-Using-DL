@@ -153,7 +153,7 @@ def train_model(base_model, config_base_name, train_val_test_data_loaders, augme
 
         if train_model_flag:
             # TRAIN
-            transformation = get_transformation(augmentation=augmentation, base_data_loader=adaptation_sample_dataset)
+            transformation = get_transformation(augmentation=augmentation, base_dataset=adaptation_sample_dataset)
             cast(ThyroidDataset, train_data_loader.dataset).transform = transformation
 
             cec = nn.CrossEntropyLoss(weight=torch.tensor(train_ds.class_weights).to(Config.available_device))
@@ -318,7 +318,7 @@ if __name__ == '__main__':
     ]:
         for aug, best_epoch in aug_best_epoch_list:
             Config.reset_random_seeds()
-            train_model(model, c_base_name, (None, None, test_data_loader),
+            train_model(model, c_base_name, (train_data_loader, val_data_loader, test_data_loader),
                         augmentation=aug,
                         load_model_from_dir="./train_state/runs_0.0001_1_nic_test_benign_mal/" + best_epoch,
                         train_model_flag=True,

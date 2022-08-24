@@ -4,7 +4,7 @@ from albumentations.pytorch import ToTensorV2
 from albumentations_mixup import Mixup
 
 
-def get_transformation(augmentation, crop_size=299, base_data_loader=None):
+def get_transformation(augmentation, crop_size=299, base_dataset=None):
     scaled_center_crop_size = int(crop_size * 1.25)
 
     def random_crop_transformation(x):
@@ -44,19 +44,19 @@ def get_transformation(augmentation, crop_size=299, base_data_loader=None):
             A.ColorJitter(p=0.5, hue=.5)
         ])
     elif augmentation == "fda":
-        fda_image_paths = [sample[0] for sample in base_data_loader.samples]
+        fda_image_paths = [sample[0] for sample in base_dataset.samples]
         trans = get_flip_rotate__custom__noise_transform([
             A.domain_adaptation.FDA(fda_image_paths, beta_limit=0.1, p=0.5)
         ])
     elif augmentation == "mixup":
-        mixups = [sample[0:2] for sample in base_data_loader.samples]
+        mixups = [sample[0:2] for sample in base_dataset.samples]
         trans = get_flip_rotate__custom__noise_transform([
             Mixup(mixups=mixups, p=0.5, beta_limit=(0.1)),
         ])
     elif augmentation == "jit-fda-mixup":
         p = 0.16
-        fda_image_paths = [sample[0] for sample in base_data_loader.samples]
-        mixups = [sample[0:2] for sample in base_data_loader.samples]
+        fda_image_paths = [sample[0] for sample in base_dataset.samples]
+        mixups = [sample[0:2] for sample in base_dataset.samples]
         trans = get_flip_rotate__custom__noise_transform([
             A.domain_adaptation.FDA(fda_image_paths, beta_limit=0.1, p=p),
             Mixup(mixups=mixups, p=p, beta_limit=(0.1)),
@@ -64,8 +64,8 @@ def get_transformation(augmentation, crop_size=299, base_data_loader=None):
         ])
     elif augmentation == "jit-fda-mixup-nrs":
         p = 0.16
-        fda_image_paths = [sample[0] for sample in base_data_loader.samples]
-        mixups = [sample[0:2] for sample in base_data_loader.samples]
+        fda_image_paths = [sample[0] for sample in base_dataset.samples]
+        mixups = [sample[0:2] for sample in base_dataset.samples]
         trans = get_flip_rotate__custom__noise_transform([
             A.domain_adaptation.FDA(fda_image_paths, beta_limit=0.1, p=p),
             Mixup(mixups=mixups, p=p, beta_limit=(0.1)),
