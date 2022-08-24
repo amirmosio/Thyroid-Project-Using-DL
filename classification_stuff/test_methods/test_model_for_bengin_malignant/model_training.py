@@ -310,7 +310,7 @@ if __name__ == '__main__':
     # test_ds_domain_shifted.transform = domain_shift_transformation
 
     for c_base_name, model, aug_best_epoch_list in [
-        (f"resnet101_{Config.learning_rate}_{Config.decay_rate}_nci_few_shot_on_pap_Stan",
+        (f"resnet101_{Config.learning_rate}_{Config.decay_rate}_nci_few_shot_on_pap_stan",
          torchvision.models.resnet101(pretrained=True, progress=True), [
              ("jit", "resnet101_0.0001_1_nci-jit-BENIGN,MALIGNANT/epoch-3/"),
          ]),
