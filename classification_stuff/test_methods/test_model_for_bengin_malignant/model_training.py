@@ -154,9 +154,10 @@ def train_model(base_model, config_base_name, train_val_test_data_loaders, augme
         if train_model_flag:
             # TRAIN
             transformation = get_transformation(augmentation=augmentation, base_dataset=adaptation_sample_dataset)
-            cast(ThyroidDataset, train_data_loader.dataset).transform = transformation
+            train_dataset = cast(ThyroidDataset, train_data_loader.dataset)
+            train_dataset.transform = transformation
 
-            cec = nn.CrossEntropyLoss(weight=torch.tensor(train_ds.class_weights).to(Config.available_device))
+            cec = nn.CrossEntropyLoss(weight=torch.tensor(train_dataset.class_weights).to(Config.available_device))
             optimizer = optim.Adam(image_model.parameters(), lr=Config.learning_rate)
             my_lr_scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer=optimizer, gamma=Config.decay_rate)
 
