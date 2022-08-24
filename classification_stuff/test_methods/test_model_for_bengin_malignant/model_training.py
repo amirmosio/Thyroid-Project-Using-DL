@@ -293,14 +293,14 @@ if __name__ == '__main__' and False:
 
 if __name__ == '__main__':
     # Main data
-    _, (_, _, _), (train_data_loader, val_data_loader, test_data_loader) = load_datasets(["papsociaty",
-                                                                                          "stanford_tissue_microarray"
-                                                                                          ],
-                                                                                         sample_percent=1)
+    _, (train_ds, _, _), (train_data_loader, val_data_loader, test_data_loader) = load_datasets(["papsociaty",
+                                                                                                 "stanford_tissue_microarray"
+                                                                                                 ],
+                                                                                                sample_percent=1)
     #  Domain shifted data
-    _, (_, _, sample_source_domain_test_ds), _ = load_datasets(["national_cancer_institute"],
-                                                               sample_percent=1,
-                                                               test_percent=100, val_percent=0)
+    # _, (_, _, sample_source_domain_test_ds), _ = load_datasets(["national_cancer_institute"],
+    #                                                            sample_percent=1,
+    #                                                            test_percent=100, val_percent=0)
     # _, (_, _, test_ds_domain_shifted), (_, _, test_data_domain_shifted_loader) = load_datasets(["papsociaty",
     #                                                                                             "stanford_tissue_microarray"
     #                                                                                             ],
@@ -326,6 +326,6 @@ if __name__ == '__main__':
                         augmentation=aug,
                         load_model_from_dir="./train_state/runs_0.0001_1_nic_test_benign_mal/" + best_epoch,
                         train_model_flag=True,
-                        adaptation_sample_dataset=sample_source_domain_test_ds)
+                        adaptation_sample_dataset=train_ds)
             # train_model(model, c_base_name, (None, None, test_data_domain_shifted_loader),
             #             augmentation=aug, load_model_from_dir=best_epoch, adaptation_sample_dataset=None)
