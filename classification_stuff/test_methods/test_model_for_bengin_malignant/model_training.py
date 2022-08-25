@@ -313,10 +313,17 @@ if __name__ == '__main__':
     for c_base_name, model, aug_best_epoch_list in [
         (f"resnet101_{Config.learning_rate}_{Config.decay_rate}_nci_few_shot_on_pap_stan",
          torchvision.models.resnet101(pretrained=True, progress=True), [
-             ("fda", "resnet101_0.0001_1_nci-fda-BENIGN,MALIGNANT/epoch-3/"),
-             ("mixup", "resnet101_0.0001_1_nci-jit-fda-mixup-BENIGN,MALIGNANT/epoch-3/"),
-             ("jit", "resnet101_0.0001_1_nci-jit-BENIGN,MALIGNANT/epoch-3/"),
-             ("jit-fda-mixup", "resnet101_0.0001_1_nci-jit-BENIGN,MALIGNANT/epoch-3/"),
+             # ("fda", "resnet101_0.0001_1_nci-fda-BENIGN,MALIGNANT/epoch-3/"),
+             ("mixup", "resnet101_0.0001_1_nci-mixup-BENIGN,MALIGNANT/epoch-3/"),
+             # ("jit", "resnet101_0.0001_1_nci-jit-BENIGN,MALIGNANT/epoch-3/"),
+             ("jit-fda-mixup", "resnet101_0.0001_1_nci-jit-fda-mixup-BENIGN,MALIGNANT/epoch-3/"),
+         ]),
+        (f"inception_v4_{Config.learning_rate}_{Config.decay_rate}_nci_few_shot_on_pap_stan",
+         torchvision.models.resnet101(pretrained=True, progress=True), [
+             ("fda", "inception_v4_0.0001_1_nci-fda-BENIGN,MALIGNANT/epoch-2/"),
+             ("mixup", "inception_v4_0.0001_1_nci-mixup-BENIGN,MALIGNANT/epoch-7/"),
+             ("jit", "inception_v4_0.0001_1_nci-jit-BENIGN,MALIGNANT/epoch-3/"),
+             ("jit-fda-mixup", "inception_v4_0.0001_1_nci-jit-fda-mixup-BENIGN,MALIGNANT/epoch-3/"),
          ]),
 
     ]:
