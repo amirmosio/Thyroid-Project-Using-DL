@@ -4,6 +4,7 @@ import time
 from typing import cast
 
 import matplotlib.pyplot as plt
+import timm
 import torch
 import torchvision
 from sklearn.metrics import confusion_matrix, roc_curve, roc_auc_score
@@ -311,15 +312,15 @@ if __name__ == '__main__':
     # test_ds_domain_shifted.transform = domain_shift_transformation
 
     for c_base_name, model, aug_best_epoch_list in [
-        (f"resnet101_{Config.learning_rate}_{Config.decay_rate}_nci_few_shot_on_pap_stan",
-         torchvision.models.resnet101(pretrained=True, progress=True), [
-             # ("fda", "resnet101_0.0001_1_nci-fda-BENIGN,MALIGNANT/epoch-3/"),
-             ("mixup", "resnet101_0.0001_1_nci-mixup-BENIGN,MALIGNANT/epoch-3/"),
-             # ("jit", "resnet101_0.0001_1_nci-jit-BENIGN,MALIGNANT/epoch-3/"),
-             ("jit-fda-mixup", "resnet101_0.0001_1_nci-jit-fda-mixup-BENIGN,MALIGNANT/epoch-3/"),
-         ]),
+        # (f"resnet101_{Config.learning_rate}_{Config.decay_rate}_nci_few_shot_on_pap_stan",
+        #  torchvision.models.resnet101(pretrained=True, progress=True), [
+        #      # ("fda", "resnet101_0.0001_1_nci-fda-BENIGN,MALIGNANT/epoch-3/"),
+        #      ("mixup", "resnet101_0.0001_1_nci-mixup-BENIGN,MALIGNANT/epoch-3/"),
+        #      # ("jit", "resnet101_0.0001_1_nci-jit-BENIGN,MALIGNANT/epoch-3/"),
+        #      ("jit-fda-mixup", "resnet101_0.0001_1_nci-jit-fda-mixup-BENIGN,MALIGNANT/epoch-3/"),
+        #  ]),
         (f"inception_v4_{Config.learning_rate}_{Config.decay_rate}_nci_few_shot_on_pap_stan",
-         torchvision.models.resnet101(pretrained=True, progress=True), [
+         timm.create_model('inception_v4', pretrained=True), [
              ("fda", "inception_v4_0.0001_1_nci-fda-BENIGN,MALIGNANT/epoch-2/"),
              ("mixup", "inception_v4_0.0001_1_nci-mixup-BENIGN,MALIGNANT/epoch-7/"),
              ("jit", "inception_v4_0.0001_1_nci-jit-BENIGN,MALIGNANT/epoch-3/"),
