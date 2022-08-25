@@ -241,50 +241,51 @@ def train_model(base_model, config_base_name, train_val_test_data_loaders, augme
 
 
 def load_datasets(datasets_folders, test_percent=Config.test_percent, val_percent=Config.val_percent, sample_percent=1):
-    train, val, test = CustomFragmentLoader(datasets_folders).load_image_path_and_labels_and_split(
+    l_train, l_val, l_test = CustomFragmentLoader(datasets_folders).load_image_path_and_labels_and_split(
         test_percent=Config.test_percent,
         val_percent=Config.val_percent)
 
-    train = random.choices(train, k=int(sample_percent * len(train)))
-    val = random.choices(val, k=int(sample_percent * len(val)))
-    test = random.choices(test, k=int(sample_percent * len(test)))
+    l_train = random.choices(l_train, k=int(sample_percent * len(l_train)))
+    l_val = random.choices(l_val, k=int(sample_percent * len(l_val)))
+    l_test = random.choices(l_test, k=int(sample_percent * len(l_test)))
 
-    train_ds = ThyroidDataset(train, Config.class_idx_dict)
-    val_ds = ThyroidDataset(val, Config.class_idx_dict)
-    test_ds = ThyroidDataset(test, Config.class_idx_dict)
+    l_train_ds = ThyroidDataset(l_train, Config.class_idx_dict)
+    l_val_ds = ThyroidDataset(l_val, Config.class_idx_dict)
+    l_test_ds = ThyroidDataset(l_test, Config.class_idx_dict)
 
-    train_data_loader = DataLoader(train_ds, batch_size=Config.batch_size, shuffle=True)
-    val_data_loader = DataLoader(val_ds, batch_size=Config.eval_batch_size, shuffle=True)
-    test_data_loader = DataLoader(test_ds, batch_size=Config.eval_batch_size, shuffle=True)
+    l_train_data_loader = DataLoader(l_train_ds, batch_size=Config.batch_size, shuffle=True)
+    l_val_data_loader = DataLoader(l_val_ds, batch_size=Config.eval_batch_size, shuffle=True)
+    l_test_data_loader = DataLoader(l_test_ds, batch_size=Config.eval_batch_size, shuffle=True)
 
-    return (train, val, test), (train_ds, val_ds, test_ds), (train_data_loader, val_data_loader, test_data_loader)
+    return (l_train, l_val, l_test), (l_train_ds, l_val_ds, l_test_ds), (
+    l_train_data_loader, l_val_data_loader, l_test_data_loader)
 
 
 ##########
 ## Runs###
 ##########
 
-if __name__ == '__main__' and False:
+if __name__ == '__main__':
     _, (train_ds, _, _), (train_data_loader, val_data_loader, test_data_loader) = load_datasets(
         ["national_cancer_institute"],
-        sample_percent=0.1)
+        sample_percent=1)
 
     # Domain adaptation dataset on small real datasets
-    _, (_, _, domain_sample_test_dataset), _ = load_datasets(["stanford_tissue_microarray",
-                                                              "papsociaty"],
-                                                             sample_percent=0.5,
-                                                             test_percent=100,
-                                                             val_percent=0)
+    # _, (_, _, domain_sample_test_dataset), _ = load_datasets(["stanford_tissue_microarray",
+    #                                                           "papsociaty"],
+    #                                                          sample_percent=0.5,
+    #                                                          test_percent=100,
+    #                                                          val_percent=0)
 
     for c_base_name, model, augmentations in [
-        (f"resnet101_{Config.learning_rate}_{Config.decay_rate}_nci",
+        (f"resnet101_{Config.learning_rate}_{Config.decay_rate}_nci_final",
          torchvision.models.resnet101(pretrained=True, progress=True), [
              "mixup",
              # "jit",
              # "fda",
              # "jit-fda-mixup",
              # "shear",
-             "std"
+             # "std"
          ]),
     ]:
         for aug in augmentations:
@@ -292,7 +293,7 @@ if __name__ == '__main__' and False:
             train_model(model, c_base_name, (train_data_loader, val_data_loader, test_data_loader),
                         augmentation=aug, adaptation_sample_dataset=train_ds)
 
-if __name__ == '__main__':
+if __name__ == '__main__' and False:
     # Main data
     _, (train_ds, _, _), (train_data_loader, val_data_loader, test_data_loader) = load_datasets(["papsociaty",
                                                                                                  "stanford_tissue_microarray"
