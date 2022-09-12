@@ -25,7 +25,7 @@ class ThyroidDataset(Dataset):
             class_counts[label] = class_counts.get(label, 0) + 1
 
         class_weights = [
-            (self.class_to_idx_dict[c], len(image_paths_labels_list) / (len(class_counts) * v)) for c, v
+            (self.class_to_idx_dict.get(c, None), len(image_paths_labels_list) / (len(class_counts) * v)) for c, v
             in
             class_counts.items()]
         class_weights.sort()
@@ -36,7 +36,7 @@ class ThyroidDataset(Dataset):
         for image_path, label in image_paths_labels_list:
             if not os.path.exists(os.path.abspath(image_path)):
                 raise (RuntimeError(f"{image_path} not found."))
-            item = (image_path, self.class_to_idx_dict[label])
+            item = (image_path, self.class_to_idx_dict.get(label, None))
             images.append(item)
         return images
 

@@ -55,6 +55,8 @@ class CustomFragmentLoader:
                             class_name = "MALIGNANT"
                         elif normal_percent == 100:
                             class_name = "BENIGN"
+                        else:
+                            class_name = str(tumor_percent)
                 elif database_name == "BioAtlasThyroidSlideProvider":
                     if "papillary" in item[3].lower():
                         class_name = "MALIGNANT"
@@ -83,6 +85,52 @@ class CustomFragmentLoader:
                 train_images += [(i, thyroid_class) for i in dataset_train_images]
                 val_images += [(i, thyroid_class) for i in dataset_val_images]
                 test_images += [(i, thyroid_class) for i in dataset_test_images]
+
+        return train_images, val_images, test_images
+
+    def national_cancer_image_and_labels_splitter_per_slide(self, test_percent=20, val_percent=10):
+        train_images, val_images, test_images = [], [], []
+        for database_name, slides_dict in self._database_slide_dict.items():
+            image_paths_by_slide = [(len(v[0]), v[0], v[1], v[2], k) for k, v in slides_dict.items()]
+            random.shuffle(image_paths_by_slide)
+            # image_paths_by_slide.sort()
+            class_slides_dict = {}
+            for item in image_paths_by_slide:
+                class_name = None
+                normal_percent = int(item[2].strip(r"(|)|\'").split("\', \'")[0])
+                tumor_percent = int(item[2].strip(r"(|)|\'").split("\', \'")[1])
+                stormal_percent = int(item[2].strip(r"(|)|\'").split("\', \'")[2])
+                if stormal_percent == 0:
+                    if tumor_percent == 100:
+                        class_name = "MALIGNANT"
+                    elif normal_percent == 100:
+                        class_name = "BENIGN"
+                    else:
+                        class_name = str(tumor_percent)
+                class_name = class_name if class_name else item[2]
+                if class_name in Config.class_names or True:
+                    class_slides_dict[class_name] = class_slides_dict.get(class_name, []) + [
+                        (item[0], item[1], class_name, item[4])]
+
+            # split test val train because they must not share same slide id fragment
+
+            for thyroid_class, slide_frags in class_slides_dict.items():
+                dataset_train_images, dataset_val_images, dataset_test_images = [], [], []
+                total_counts = sum([item[0] for item in slide_frags])
+                test_counts = total_counts * test_percent // 100
+                val_counts = total_counts * val_percent // 100
+                train_counts = total_counts - test_counts - val_counts
+                for i, slide_frags_item in enumerate(slide_frags):
+                    items_paths = [(item_path, slide_frags_item[3]) for item_path in slide_frags_item[1]]
+                    if len(dataset_train_images) + slide_frags_item[0] <= train_counts:
+                        dataset_train_images += items_paths
+                    elif len(dataset_val_images) + slide_frags_item[0] <= val_counts:
+                        dataset_val_images += items_paths
+                    else:
+                        dataset_test_images += items_paths
+                train_images += [(i, (thyroid_class, j)) for i, j in dataset_train_images]
+                val_images += [(i, (thyroid_class, j)) for i, j in dataset_val_images]
+                test_images += [(i, (thyroid_class, j)) for i, j in dataset_test_images]
 
         return train_images, val_images, test_images
 

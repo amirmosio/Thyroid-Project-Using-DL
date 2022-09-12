@@ -240,10 +240,17 @@ def train_model(base_model, config_base_name, train_val_test_data_loaders, augme
         raise e
 
 
-def load_datasets(datasets_folders, test_percent=Config.test_percent, val_percent=Config.val_percent, sample_percent=1):
-    l_train, l_val, l_test = CustomFragmentLoader(datasets_folders).load_image_path_and_labels_and_split(
-        test_percent=Config.test_percent,
-        val_percent=Config.val_percent)
+def load_datasets(datasets_folders, test_percent=Config.test_percent, val_percent=Config.val_percent, sample_percent=1,
+                  is_nci_per_slide=False):
+    if is_nci_per_slide:
+        l_train, l_val, l_test = CustomFragmentLoader(
+            datasets_folders).national_cancer_image_and_labels_splitter_per_slide(
+            test_percent=test_percent,
+            val_percent=val_percent)
+    else:
+        l_train, l_val, l_test = CustomFragmentLoader(datasets_folders).load_image_path_and_labels_and_split(
+            test_percent=test_percent,
+            val_percent=val_percent)
 
     l_train = random.choices(l_train, k=int(sample_percent * len(l_train)))
     l_val = random.choices(l_val, k=int(sample_percent * len(l_val)))
@@ -253,19 +260,68 @@ def load_datasets(datasets_folders, test_percent=Config.test_percent, val_percen
     l_val_ds = ThyroidDataset(l_val, Config.class_idx_dict)
     l_test_ds = ThyroidDataset(l_test, Config.class_idx_dict)
 
-    l_train_data_loader = DataLoader(l_train_ds, batch_size=Config.batch_size, shuffle=True)
-    l_val_data_loader = DataLoader(l_val_ds, batch_size=Config.eval_batch_size, shuffle=True)
-    l_test_data_loader = DataLoader(l_test_ds, batch_size=Config.eval_batch_size, shuffle=True)
+    l_train_data_loader = None
+    if l_train:
+        l_train_data_loader = DataLoader(l_train_ds, batch_size=Config.batch_size, shuffle=True)
+    l_val_data_loader = None
+    if l_val:
+        l_val_data_loader = DataLoader(l_val_ds, batch_size=Config.eval_batch_size, shuffle=True)
+    l_test_data_loader = None
+    if l_test:
+        l_test_data_loader = DataLoader(l_test_ds, batch_size=Config.eval_batch_size, shuffle=True)
 
     return (l_train, l_val, l_test), (l_train_ds, l_val_ds, l_test_ds), (
-    l_train_data_loader, l_val_data_loader, l_test_data_loader)
+        l_train_data_loader, l_val_data_loader, l_test_data_loader)
+
+
+def evaluate_nci_dataset_per_slide(config_base_name, augmentation, base_model, data_loader,
+                                   load_model_from_dir):
+    config_name = f"{config_base_name}-{augmentation}-{','.join(Config.class_idx_dict.keys())}"
+
+    logger = set_config_for_logger(config_name)
+    logger.info(f"training config: {config_name}")
+    _is_inception = type(base_model) == torchvision.models.inception.Inception3
+    logger.info(
+        f"val:" +
+        f" {len(data_loader.dataset.samples) if data_loader else None}")
+
+    # MODEL
+    # Load model from file
+    model_path = os.path.join(load_model_from_dir, 'model.state')
+    model = ThyroidClassificationModel(base_model).load_model(model_path).to(Config.available_device)
+    class_set = sorted(data_loader.dataset.class_to_idx_dict.values())
+
+    y_preds = []
+    y_targets = []
+    y_positive_scores = []
+
+    for images, labels in tqdm(data_loader):
+        images = images.to(Config.available_device)
+        labels = labels.to(Config.available_device)
+        x = model(images, validate=True)
+        values, preds = torch.max(x, 1)
+
+        y_positive_scores += x[:, 1].cpu()
+        y_preds += preds.cpu()
+        y_targets += labels.cpu()
+
+    cf_matrix = confusion_matrix(y_targets, y_preds, normalize="true")
+
+    class_accuracies = [cf_matrix[c][c] for c in class_set]
+    acc = sum(class_accuracies)
+    acc /= len(class_set)
+    # TN|FN
+    # FP|TP
+    fpr, tpr, _ = roc_curve(y_targets, y_positive_scores)
+    auc = roc_auc_score(y_targets, y_positive_scores)
+    return acc * 100, cf_matrix, (fpr, tpr, auc)
 
 
 ##########
 ## Runs###
 ##########
 
-if __name__ == '__main__':
+if __name__ == '__main__' and False:
     _, (train_ds, _, _), (train_data_loader, val_data_loader, test_data_loader) = load_datasets(
         ["national_cancer_institute"],
         sample_percent=1)
@@ -293,48 +349,25 @@ if __name__ == '__main__':
             train_model(model, c_base_name, (train_data_loader, val_data_loader, test_data_loader),
                         augmentation=aug, adaptation_sample_dataset=train_ds)
 
-if __name__ == '__main__' and False:
+if __name__ == '__main__':
     # Main data
-    _, (train_ds, _, _), (train_data_loader, val_data_loader, test_data_loader) = load_datasets(["papsociaty",
-                                                                                                 "stanford_tissue_microarray"
-                                                                                                 ],
-                                                                                                sample_percent=1)
-    #  Domain shifted data
-    # _, (_, _, sample_source_domain_test_ds), _ = load_datasets(["national_cancer_institute"],
-    #                                                            sample_percent=1,
-    #                                                            test_percent=100, val_percent=0)
-    # _, (_, _, test_ds_domain_shifted), (_, _, test_data_domain_shifted_loader) = load_datasets(["papsociaty",
-    #                                                                                             "stanford_tissue_microarray"
-    #                                                                                             ],
-    #                                                                                            sample_percent=1,
-    #                                                                                            test_percent=100,
-    #                                                                                            val_percent=0)
-    # domain_shift_transformation = get_transformation("fda", base_data_loader=sample_source_domain_test_ds)
-    # test_ds_domain_shifted.transform = domain_shift_transformation
+    Config.class_names = ["10", "20", "30", "40", "50", "60", "70", "80", "90"]
+    _, (train_ds, _, _), (_, _, test_data_loader) = load_datasets(
+        ["national_cancer_institute",
+         ],
+        sample_percent=1, test_percent=100, val_percent=0, is_nci_per_slide=True)
 
     for c_base_name, model, aug_best_epoch_list in [
-        # (f"resnet101_{Config.learning_rate}_{Config.decay_rate}_nci_few_shot_on_pap_stan",
-        #  torchvision.models.resnet101(pretrained=True, progress=True), [
-        #      # ("fda", "resnet101_0.0001_1_nci-fda-BENIGN,MALIGNANT/epoch-3/"),
-        #      ("mixup", "resnet101_0.0001_1_nci-mixup-BENIGN,MALIGNANT/epoch-3/"),
-        #      # ("jit", "resnet101_0.0001_1_nci-jit-BENIGN,MALIGNANT/epoch-3/"),
-        #      ("jit-fda-mixup", "resnet101_0.0001_1_nci-jit-fda-mixup-BENIGN,MALIGNANT/epoch-3/"),
-        #  ]),
-        (f"inception_v4_{Config.learning_rate}_{Config.decay_rate}_nci_few_shot_on_pap_stan",
-         timm.create_model('inception_v4', pretrained=True), [
-             ("fda", "inception_v4_0.0001_1_nci-fda-BENIGN,MALIGNANT/epoch-2/"),
-             ("mixup", "inception_v4_0.0001_1_nci-mixup-BENIGN,MALIGNANT/epoch-7/"),
-             ("jit", "inception_v4_0.0001_1_nci-jit-BENIGN,MALIGNANT/epoch-3/"),
-             ("jit-fda-mixup", "inception_v4_0.0001_1_nci-jit-fda-mixup-BENIGN,MALIGNANT/epoch-3/"),
+        (f"resnet101_{Config.learning_rate}_{Config.decay_rate}_nci_few_shot_on_pap_stan_eval",
+         torchvision.models.resnet101(pretrained=True, progress=True), [
+             # ("fda", "resnet101_0.0001_1_nci-fda-BENIGN,MALIGNANT/epoch-3/"),
+             ("mixup", "resnet101_0.0001_1_nci-mixup-BENIGN,MALIGNANT/epoch-3/"),
+             # ("jit", "resnet101_0.0001_1_nci-jit-BENIGN,MALIGNANT/epoch-3/"),
+             ("jit-fda-mixup", "resnet101_0.0001_1_nci-jit-fda-mixup-BENIGN,MALIGNANT/epoch-3/"),
          ]),
 
     ]:
         for aug, best_epoch in aug_best_epoch_list:
             Config.reset_random_seeds()
-            train_model(model, c_base_name, (train_data_loader, val_data_loader, test_data_loader),
-                        augmentation=aug,
-                        load_model_from_dir="./train_state/runs_0.0001_1_nic_test_benign_mal/" + best_epoch,
-                        train_model_flag=True,
-                        adaptation_sample_dataset=train_ds)
-            # train_model(model, c_base_name, (None, None, test_data_domain_shifted_loader),
-            #             augmentation=aug, load_model_from_dir=best_epoch, adaptation_sample_dataset=None)
+            evaluate_nci_dataset_per_slide(c_base_name, aug, model, (None, None, test_data_loader),
+                                           load_model_from_dir=best_epoch)
