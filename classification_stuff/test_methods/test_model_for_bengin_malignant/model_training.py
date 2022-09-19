@@ -307,7 +307,7 @@ def evaluate_nci_dataset_per_slide(config_base_name, augmentation, base_model, d
 
     y_targets = []
     y_preds = []
-    print(slides_preds)
+    print(slides_preds, slide_labels)
     for key, value in slides_preds.items():
         slides_preds[key] = int(sum(slides_preds[key]) / len(slides_preds[key]) * 10) * 10
         y_preds.append(slides_preds[key])
