@@ -59,6 +59,7 @@ class ThyroidDataset(Dataset):
 
             image = transform(image=image)['image']
 
+        print(image, target)
         return image, target
 
     def add_margin(self, pil_img):
