@@ -273,7 +273,7 @@ def load_datasets(datasets_folders, test_percent=Config.test_percent, val_percen
     return (l_train, l_val, l_test), (l_train_ds, l_val_ds, l_test_ds), (
         l_train_data_loader, l_val_data_loader, l_test_data_loader)
 
-
+@torch.no_grad()
 def evaluate_nci_dataset_per_slide(config_base_name, augmentation, base_model, data_loader,
                                    load_model_from_dir):
     config_name = f"{config_base_name}-{augmentation}-{','.join(Config.class_idx_dict.keys())}"
