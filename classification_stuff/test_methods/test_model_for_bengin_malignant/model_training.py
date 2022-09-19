@@ -290,6 +290,7 @@ def evaluate_nci_dataset_per_slide(config_base_name, augmentation, base_model, d
     model_path = os.path.join(load_model_from_dir, 'model.state')
     model = ThyroidClassificationModel(base_model).load_model(model_path).to(Config.available_device)
     class_set = sorted(data_loader.dataset.class_to_idx_dict.values())
+    logger.info(f"class_set:{class_set}")
 
     y_positive_scores = []
     slides_preds = {}
