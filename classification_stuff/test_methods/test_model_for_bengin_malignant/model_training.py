@@ -367,7 +367,7 @@ if __name__ == '__main__':
         (f"resnet101_{Config.learning_rate}_{Config.decay_rate}_nci_eval",
          torchvision.models.resnet101(pretrained=True, progress=True), [
              # ("fda", "resnet101_0.0001_1_nci-fda-BENIGN,MALIGNANT/epoch-3/"),
-             ("mixup", "resnet101_0.0001_1_nci_final-mixup-BENIGN,MALIGNANT/epoch-19/"),
+             ("mixup", "train_state/resnet101_0.0001_1_nci_final-mixup-BENIGN,MALIGNANT/epoch-19/"),
              # ("jit", "resnet101_0.0001_1_nci-jit-BENIGN,MALIGNANT/epoch-3/"),
              # ("jit-fda-mixup", "resnet101_0.0001_1_nci-jit-fda-mixup-BENIGN,MALIGNANT/epoch-3/"),
          ]),
