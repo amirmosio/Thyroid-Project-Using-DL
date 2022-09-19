@@ -3,6 +3,8 @@ import glob
 import os
 import random
 
+from tqdm import tqdm
+
 from config import Config
 
 
@@ -95,7 +97,7 @@ class CustomFragmentLoader:
             random.shuffle(image_paths_by_slide)
             # image_paths_by_slide.sort()
             class_slides_dict = {}
-            for item in image_paths_by_slide:
+            for item in tqdm(image_paths_by_slide):
                 class_name = None
                 normal_percent = int(item[2].strip(r"(|)|\'").split("\', \'")[0])
                 tumor_percent = int(item[2].strip(r"(|)|\'").split("\', \'")[1])
