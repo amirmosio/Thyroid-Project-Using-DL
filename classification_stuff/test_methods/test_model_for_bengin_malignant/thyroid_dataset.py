@@ -21,7 +21,7 @@ class ThyroidDataset(Dataset):
 
     def _calculate_class_weights(self, image_paths_labels_list):
         class_counts = {}
-        for image_path, label in image_paths_labels_list:
+        for image_path, (label, slide) in image_paths_labels_list:
             class_counts[label] = class_counts.get(label, 0) + 1
 
         class_weights = [
@@ -33,7 +33,7 @@ class ThyroidDataset(Dataset):
 
     def _make_dataset(self, image_paths_labels_list):
         images = []
-        for image_path, label in image_paths_labels_list:
+        for image_path, (label, slide) in image_paths_labels_list:
             if not os.path.exists(os.path.abspath(image_path)):
                 raise (RuntimeError(f"{image_path} not found."))
             print(label)
