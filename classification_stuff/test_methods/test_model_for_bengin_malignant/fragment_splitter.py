@@ -93,6 +93,7 @@ class CustomFragmentLoader:
     def national_cancer_image_and_labels_splitter_per_slide(self, test_percent=20, val_percent=10):
         train_images, val_images, test_images = [], [], []
         for database_name, slides_dict in self._database_slide_dict.items():
+            print(database_name)
             image_paths_by_slide = [(len(v[0]), v[0], v[1], v[2], k) for k, v in slides_dict.items()]
             random.shuffle(image_paths_by_slide)
             # image_paths_by_slide.sort()
