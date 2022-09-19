@@ -291,20 +291,26 @@ def evaluate_nci_dataset_per_slide(config_base_name, augmentation, base_model, d
     model = ThyroidClassificationModel(base_model).load_model(model_path).to(Config.available_device)
     class_set = sorted(data_loader.dataset.class_to_idx_dict.values())
 
-    y_preds = []
-    y_targets = []
     y_positive_scores = []
-
+    slides_preds = {}
+    slide_labels = {}
     for images, labels in tqdm(data_loader):
         images = images.to(Config.available_device)
         labels = labels.to(Config.available_device)
         x = model(images, validate=True)
-        values, preds = torch.max(x, 1)
+        _, preds = torch.max(x, 1)
 
+        for row_index in range(len(labels)):
+            slide_labels[labels[row_index][1]] = labels[row_index][0]
+            slides_preds[labels[row_index][1]] = slides_preds.get(labels[row_index][1], []) + preds[row_index]
         y_positive_scores += x[:, 1].cpu()
-        y_preds += preds.cpu()
-        y_targets += labels.cpu()
 
+    y_targets = []
+    y_preds = []
+    for key, value in slides_preds.items():
+        slides_preds[key] = sum(slides_preds[key]) / len(slides_preds[key]) * 100
+        y_preds.append(slides_preds[key])
+        y_targets.append(slide_labels[key])
     cf_matrix = confusion_matrix(y_targets, y_preds, normalize="true")
 
     class_accuracies = [cf_matrix[c][c] for c in class_set]
@@ -355,7 +361,7 @@ if __name__ == '__main__':
     _, (train_ds, _, _), (_, _, test_data_loader) = load_datasets(
         ["national_cancer_institute",
          ],
-        sample_percent=1, test_percent=100, val_percent=0, is_nci_per_slide=True)
+        sample_percent=0.1, test_percent=100, val_percent=0, is_nci_per_slide=True)
 
     for c_base_name, model, aug_best_epoch_list in [
         (f"resnet101_{Config.learning_rate}_{Config.decay_rate}_nci_few_shot_on_pap_stan_eval",
@@ -369,5 +375,5 @@ if __name__ == '__main__':
     ]:
         for aug, best_epoch in aug_best_epoch_list:
             Config.reset_random_seeds()
-            evaluate_nci_dataset_per_slide(c_base_name, aug, model, (None, None, test_data_loader),
+            evaluate_nci_dataset_per_slide(c_base_name, aug, model, test_data_loader,
                                            load_model_from_dir=best_epoch)
