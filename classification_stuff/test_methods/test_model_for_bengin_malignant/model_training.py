@@ -307,12 +307,13 @@ def evaluate_nci_dataset_per_slide(config_base_name, augmentation, base_model, d
 
     y_targets = []
     y_preds = []
+    print(slide_labels)
     for key, value in slides_preds.items():
         slides_preds[key] = int(sum(slides_preds[key]) / len(slides_preds[key]) * 10) * 10
         y_preds.append(slides_preds[key])
         y_targets.append(int(slide_labels[key]))
 
-    print(y_preds, y_targets)
+
     cf_matrix = confusion_matrix(y_targets, y_preds, normalize="true")
 
     class_accuracies = [cf_matrix[c][c] for c in class_set]
