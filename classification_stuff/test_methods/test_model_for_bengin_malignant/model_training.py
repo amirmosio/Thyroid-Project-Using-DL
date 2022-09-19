@@ -358,6 +358,7 @@ if __name__ == '__main__' and False:
 if __name__ == '__main__':
     # Main data
     Config.class_names = ["10", "20", "30", "40", "50", "60", "70", "80", "90"]
+    Config.class_idx_dict = {i: int(i) for i in Config.class_names}
     _, (train_ds, _, _), (_, _, test_data_loader) = load_datasets(
         ["national_cancer_institute",
          ],
