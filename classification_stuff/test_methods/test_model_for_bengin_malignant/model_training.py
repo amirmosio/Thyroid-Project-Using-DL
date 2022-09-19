@@ -296,7 +296,7 @@ def evaluate_nci_dataset_per_slide(config_base_name, augmentation, base_model, d
     slide_labels = {}
     for images, labels in tqdm(data_loader):
         images = images.to(Config.available_device)
-        labels = labels.to(Config.available_device)
+
         x = model(images, validate=True)
         _, preds = torch.max(x, 1)
 
