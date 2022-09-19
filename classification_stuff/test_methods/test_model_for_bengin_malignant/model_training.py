@@ -273,6 +273,7 @@ def load_datasets(datasets_folders, test_percent=Config.test_percent, val_percen
     return (l_train, l_val, l_test), (l_train_ds, l_val_ds, l_test_ds), (
         l_train_data_loader, l_val_data_loader, l_test_data_loader)
 
+
 @torch.no_grad()
 def evaluate_nci_dataset_per_slide(config_base_name, augmentation, base_model, data_loader,
                                    load_model_from_dir):
@@ -307,9 +308,11 @@ def evaluate_nci_dataset_per_slide(config_base_name, augmentation, base_model, d
     y_targets = []
     y_preds = []
     for key, value in slides_preds.items():
-        slides_preds[key] = sum(slides_preds[key]) / len(slides_preds[key]) * 100
+        slides_preds[key] = int(sum(slides_preds[key]) / len(slides_preds[key]) * 10) * 10
         y_preds.append(slides_preds[key])
-        y_targets.append(slide_labels[key])
+        y_targets.append(int(slide_labels[key]))
+
+    print(y_preds, y_targets)
     cf_matrix = confusion_matrix(y_targets, y_preds, normalize="true")
 
     class_accuracies = [cf_matrix[c][c] for c in class_set]
