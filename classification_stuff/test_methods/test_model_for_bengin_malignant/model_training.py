@@ -277,7 +277,7 @@ def load_datasets(datasets_folders, test_percent=Config.test_percent, val_percen
 @torch.no_grad()
 def evaluate_nci_dataset_per_slide(config_base_name, augmentation, base_model, data_loader,
                                    load_model_from_dir):
-    config_name = f"{config_base_name}-{augmentation}-{','.join(Config.class_idx_dict.keys())}"
+    config_name = f"{config_base_name}-{augmentation}-{','.join(map(lambda x: str(x), Config.class_idx_dict.keys()))}"
 
     logger = set_config_for_logger(config_name)
     logger.info(f"training config: {config_name}")
