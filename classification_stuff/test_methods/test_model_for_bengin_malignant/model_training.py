@@ -300,6 +300,7 @@ def evaluate_nci_dataset_per_slide(config_base_name, augmentation, base_model, d
 
         x = model(images, validate=True)
         _, preds = torch.max(x, 1)
+        print(labels)
         for row_index in range(len(labels)):
             slide_id = labels[row_index][1]
             print("slide id:")
