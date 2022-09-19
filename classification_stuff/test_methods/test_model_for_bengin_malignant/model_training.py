@@ -301,13 +301,14 @@ def evaluate_nci_dataset_per_slide(config_base_name, augmentation, base_model, d
         x = model(images, validate=True)
         _, preds = torch.max(x, 1)
         for row_index in range(len(labels)):
-            slide_labels[labels[row_index][1]] = labels[row_index][0]
-            slides_preds[labels[row_index][1]] = slides_preds.get(labels[row_index][1], []) + [preds[row_index].item()]
+            slide_id = labels[row_index][1]
+            print(slide_id)
+            slide_labels[slide_id] = labels[row_index][0]
+            slides_preds[slide_id] = slides_preds.get(slide_id, []) + [preds[row_index].item()]
         y_positive_scores += x[:, 1].cpu()
 
     y_targets = []
     y_preds = []
-    print(slides_preds, slide_labels)
     for key, value in slides_preds.items():
         slides_preds[key] = int(sum(slides_preds[key]) / len(slides_preds[key]) * 10) * 10
         y_preds.append(slides_preds[key])
