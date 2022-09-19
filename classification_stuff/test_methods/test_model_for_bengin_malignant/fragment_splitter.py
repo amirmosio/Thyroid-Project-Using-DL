@@ -109,7 +109,7 @@ class CustomFragmentLoader:
                     elif normal_percent == 100:
                         class_name = "BENIGN"
                     else:
-                        class_name = str(tumor_percent)
+                        class_name = tumor_percent
                 class_name = class_name if class_name else item[2]
                 if class_name in Config.class_names:
                     class_slides_dict[class_name] = class_slides_dict.get(class_name, []) + [

@@ -313,7 +313,6 @@ def evaluate_nci_dataset_per_slide(config_base_name, augmentation, base_model, d
         y_preds.append(slides_preds[key])
         y_targets.append(int(slide_labels[key]))
 
-
     cf_matrix = confusion_matrix(y_targets, y_preds, normalize="true")
 
     class_accuracies = [cf_matrix[c][c] for c in class_set]
@@ -360,8 +359,8 @@ if __name__ == '__main__' and False:
 
 if __name__ == '__main__':
     # Main data
-    Config.class_names = ["10", "20", "30", "40", "50", "60", "70", "80", "90"]
-    Config.class_idx_dict = {i: int(i) for i in Config.class_names}
+    Config.class_names = [i for i in range(101)]
+    Config.class_idx_dict = {i: i for i in range(101)}
     _, (train_ds, _, _), (_, _, test_data_loader) = load_datasets(
         ["national_cancer_institute",
          ],

@@ -36,6 +36,7 @@ class ThyroidDataset(Dataset):
         for image_path, label in image_paths_labels_list:
             if not os.path.exists(os.path.abspath(image_path)):
                 raise (RuntimeError(f"{image_path} not found."))
+            print(label)
             item = (image_path, self.class_to_idx_dict.get(label, "Unknown label"))
             images.append(item)
         return images
