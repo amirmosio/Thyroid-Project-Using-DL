@@ -283,7 +283,7 @@ def evaluate_nci_dataset_per_slide(config_base_name, augmentation, base_model, d
     logger.info(f"training config: {config_name}")
     _is_inception = type(base_model) == torchvision.models.inception.Inception3
     logger.info(
-        f"val:" +
+        f"test:" +
         f" {len(data_loader.dataset.samples) if data_loader else None}")
 
     # MODEL
@@ -327,7 +327,7 @@ def evaluate_nci_dataset_per_slide(config_base_name, augmentation, base_model, d
     # FP|TP
     # fpr, tpr, _ = roc_curve(y_targets, y_positive_scores)
     # auc = roc_auc_score(y_targets, y_positive_scores)
-    logger.info(f"Results| acc:{acc * 100} cf:{cf_matrix}")
+    logger.info(f"Results| acc:{acc * 100}\ncf:{cf_matrix}")
     return acc * 100, cf_matrix
 
 
@@ -370,7 +370,7 @@ if __name__ == '__main__':
     _, (train_ds, _, _), (_, _, test_data_loader) = load_datasets(
         ["national_cancer_institute",
          ],
-        sample_percent=0.1, test_percent=100, val_percent=0, is_nci_per_slide=True)
+        sample_percent=1, test_percent=100, val_percent=0, is_nci_per_slide=True)
 
     for c_base_name, model, aug_best_epoch_list in [
         (f"resnet101_{Config.learning_rate}_{Config.decay_rate}_nci_eval",
