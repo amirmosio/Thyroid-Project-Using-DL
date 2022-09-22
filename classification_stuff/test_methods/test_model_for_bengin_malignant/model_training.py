@@ -313,8 +313,8 @@ def evaluate_nci_dataset_per_slide(config_base_name, augmentation, base_model, d
         y_preds.append(slides_preds[key])
         y_targets.append(int(slide_labels[key]))
 
-    y_targets_rounded = [int(round(x, 1) * 100) for x in y_targets]
-    y_preds_rounded = [int(round(x, 1) * 100) for x in y_preds]
+    y_targets_rounded = [int(round(x/100, 1) * 100) for x in y_targets]
+    y_preds_rounded = [int(round(x/100, 1) * 100) for x in y_preds]
     print(y_targets_rounded, y_preds_rounded)
     cf_matrix = confusion_matrix(y_targets_rounded, y_preds_rounded,
                                  normalize="true")
