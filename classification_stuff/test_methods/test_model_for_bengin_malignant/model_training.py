@@ -290,7 +290,6 @@ def evaluate_nci_dataset_per_slide(config_base_name, augmentation, base_model, d
     # Load model from file
     model_path = os.path.join(load_model_from_dir, 'model.state')
     model = ThyroidClassificationModel(base_model).load_model(model_path).to(Config.available_device)
-    class_set = sorted(data_loader.dataset.class_to_idx_dict.values())
 
     y_positive_scores = []
     slides_preds = {}
@@ -317,6 +316,8 @@ def evaluate_nci_dataset_per_slide(config_base_name, augmentation, base_model, d
     cf_matrix = confusion_matrix([int(round(x, 1) * 100) for x in y_targets], [int(round(x, 1) * 100) for x in y_preds],
                                  normalize="true")
 
+    print(cf_matrix)
+    class_set = []
     class_accuracies = [cf_matrix[c][c] for c in class_set]
     acc = sum(class_accuracies)
     acc /= len(class_set)
@@ -367,7 +368,7 @@ if __name__ == '__main__':
     _, (train_ds, _, _), (_, _, test_data_loader) = load_datasets(
         ["national_cancer_institute",
          ],
-        sample_percent=0.1, test_percent=100, val_percent=0, is_nci_per_slide=True)
+        sample_percent=0.02, test_percent=100, val_percent=0, is_nci_per_slide=True)
 
     for c_base_name, model, aug_best_epoch_list in [
         (f"resnet101_{Config.learning_rate}_{Config.decay_rate}_nci_eval",
