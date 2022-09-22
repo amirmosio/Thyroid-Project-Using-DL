@@ -325,6 +325,8 @@ def evaluate_nci_dataset_per_slide(config_base_name, augmentation, base_model, d
     # FP|TP
     # fpr, tpr, _ = roc_curve(y_targets, y_positive_scores)
     # auc = roc_auc_score(y_targets, y_positive_scores)
+    logger.info(f"target rounded:{y_targets_rounded}")
+    logger.info(f"pred rounded:{y_preds_rounded}")
     logger.info(f"Results| acc:{acc * 100}\ncf:{cf_matrix}")
     return acc * 100, cf_matrix
 
@@ -368,15 +370,23 @@ if __name__ == '__main__':
     _, (train_ds, _, _), (_, _, test_data_loader) = load_datasets(
         ["national_cancer_institute",
          ],
-        sample_percent=1, test_percent=100, val_percent=0, is_nci_per_slide=True)
+        sample_percent=0.01, test_percent=100, val_percent=0, is_nci_per_slide=True)
 
     for c_base_name, model, aug_best_epoch_list in [
         (f"resnet101_{Config.learning_rate}_{Config.decay_rate}_nci_eval",
          torchvision.models.resnet101(pretrained=True, progress=True), [
-             # ("fda", "resnet101_0.0001_1_nci-fda-BENIGN,MALIGNANT/epoch-3/"),
              ("mixup", "train_state/resnet101_0.0001_1_nci_final-mixup-BENIGN,MALIGNANT/epoch-19/"),
-             # ("jit", "resnet101_0.0001_1_nci-jit-BENIGN,MALIGNANT/epoch-3/"),
-             # ("jit-fda-mixup", "resnet101_0.0001_1_nci-jit-fda-mixup-BENIGN,MALIGNANT/epoch-3/"),
+         ]),
+        (f"resnet101_{Config.learning_rate}_{Config.decay_rate}_test_nci_eval",
+         torchvision.models.resnet101(pretrained=True, progress=True), [
+             ("fda",
+              "train_state/runs_0.0001_1_nic_test_benign_mal/resnet101_0.0001_1_nci-fda-BENIGN,MALIGNANT/epoch-3/"),
+             ("mixup",
+              "train_state/runs_0.0001_1_nic_test_benign_mal/resnet101_0.0001_1_nci-mixup-BENIGN,MALIGNANT/epoch-3/"),
+             ("jit",
+              "train_state/runs_0.0001_1_nic_test_benign_mal/resnet101_0.0001_1_nci-jit-BENIGN,MALIGNANT/epoch-3/"),
+             ("jit-fda-mixup",
+              "train_state/runs_0.0001_1_nic_test_benign_mal/resnet101_0.0001_1_nci-jit-fda-mixup-BENIGN,MALIGNANT/epoch-3/"),
          ]),
 
     ]:
