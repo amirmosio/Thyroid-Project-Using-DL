@@ -313,12 +313,15 @@ def evaluate_nci_dataset_per_slide(config_base_name, augmentation, base_model, d
         y_preds.append(slides_preds[key])
         y_targets.append(int(slide_labels[key]))
 
-    cf_matrix = confusion_matrix([int(round(x, 1) * 100) for x in y_targets], [int(round(x, 1) * 100) for x in y_preds],
+    y_targets_rounded = [int(round(x, 1) * 100) for x in y_targets]
+    y_preds_rounded = [int(round(x, 1) * 100) for x in y_preds]
+    print(y_targets_rounded, y_preds_rounded)
+    cf_matrix = confusion_matrix(y_targets_rounded, y_preds_rounded,
                                  normalize="true")
 
     print(cf_matrix)
-    class_set = []
-    class_accuracies = [cf_matrix[c][c] for c in class_set]
+    class_set = [i for i in range(10)]
+    class_accuracies = [cf_matrix[c][c] for c in range(len(class_set))]
     acc = sum(class_accuracies)
     acc /= len(class_set)
     # TN|FN
