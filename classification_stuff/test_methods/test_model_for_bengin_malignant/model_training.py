@@ -295,18 +295,15 @@ def evaluate_nci_dataset_per_slide(config_base_name, augmentation, base_model, d
     y_positive_scores = []
     slides_preds = {}
     slide_labels = {}
-    for images, labels in tqdm(data_loader):
+    for images, (labels, slides) in tqdm(data_loader):
         images = images.to(Config.available_device)
 
         x = model(images, validate=True)
         _, preds = torch.max(x, 1)
-        print('labels')
-        print(labels)
         for row_index in range(len(labels)):
-            slide_id = labels[row_index][1]
-            print("slide id:")
-            print(slide_id, labels[row_index][0])
-            slide_labels[slide_id] = labels[row_index][0]
+            slide_id = slides[row_index]
+            slide_label = labels[row_index]
+            slide_labels[slide_id] = slide_label
             slides_preds[slide_id] = slides_preds.get(slide_id, []) + [preds[row_index].item()]
         y_positive_scores += x[:, 1].cpu()
 
@@ -317,7 +314,8 @@ def evaluate_nci_dataset_per_slide(config_base_name, augmentation, base_model, d
         y_preds.append(slides_preds[key])
         y_targets.append(int(slide_labels[key]))
 
-    cf_matrix = confusion_matrix(y_targets, y_preds, normalize="true")
+    cf_matrix = confusion_matrix([int(round(x, 1) * 100) for x in y_targets], [int(round(x, 1) * 100) for x in y_preds],
+                                 normalize="true")
 
     class_accuracies = [cf_matrix[c][c] for c in class_set]
     acc = sum(class_accuracies)
@@ -326,6 +324,7 @@ def evaluate_nci_dataset_per_slide(config_base_name, augmentation, base_model, d
     # FP|TP
     fpr, tpr, _ = roc_curve(y_targets, y_positive_scores)
     auc = roc_auc_score(y_targets, y_positive_scores)
+    logger.info(f"Results| acc:{acc * 100} cf:{cf_matrix},  fpr_tpr_aux:{(fpr, tpr, auc)}")
     return acc * 100, cf_matrix, (fpr, tpr, auc)
 
 
