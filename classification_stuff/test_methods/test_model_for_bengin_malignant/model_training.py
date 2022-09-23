@@ -298,7 +298,7 @@ def evaluate_nci_dataset_per_slide(config_base_name, augmentation, base_model, d
         images = images.to(Config.available_device)
 
         x = model(images, validate=True).cpu()
-        preds = np.hypot(x[:, 0], x[:, 1])
+        preds = x[:, 1]
         logger.info("zero and 1000 percent")
         logger.info(x[:, 0])
         logger.info(x[:, 1])
