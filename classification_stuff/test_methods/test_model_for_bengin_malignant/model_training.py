@@ -311,7 +311,6 @@ def evaluate_nci_dataset_per_slide(config_base_name, augmentation, base_model, d
 
     y_targets = []
     y_preds = []
-    print(slides_preds)
     for key, value in slides_preds.items():
         slides_preds[key] = (sum(slides_preds[key]) / len(slides_preds[key])) * 100
         y_preds.append(slides_preds[key])
@@ -319,8 +318,7 @@ def evaluate_nci_dataset_per_slide(config_base_name, augmentation, base_model, d
 
     y_targets_rounded = [int(round(x / 100, 1) * 100) for x in y_targets]
     y_preds_rounded = [int(round(x / 100, 1) * 100) for x in y_preds]
-    cf_matrix = confusion_matrix(y_targets_rounded, y_preds_rounded,
-                                 normalize="true")
+    cf_matrix = confusion_matrix(y_targets_rounded, y_preds_rounded, labels=Config.class_names, normalize="true")
 
     class_accuracies = [cf_matrix[c][c] for c in range(len(cf_matrix))]
     class_weights = [sum(cf_matrix[c]) for c in range(len(cf_matrix))]
@@ -375,7 +373,7 @@ if __name__ == '__main__':
     _, (train_ds, _, _), (_, _, test_data_loader) = load_datasets(
         ["national_cancer_institute",
          ],
-        sample_percent=0.03, test_percent=100, val_percent=0, is_nci_per_slide=True)
+        sample_percent=1, test_percent=100, val_percent=0, is_nci_per_slide=True)
 
     for c_base_name, model, aug_best_epoch_list in [
         (f"resnet101_{Config.learning_rate}_{Config.decay_rate}_nci_eval",
