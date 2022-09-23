@@ -1,8 +1,9 @@
+
 import os
 import random
 import time
 from typing import cast
-
+import numpy as np
 import matplotlib.pyplot as plt
 import timm
 import torch
@@ -298,7 +299,8 @@ def evaluate_nci_dataset_per_slide(config_base_name, augmentation, base_model, d
         images = images.to(Config.available_device)
 
         x = model(images, validate=True)
-        _, preds = torch.max(x, 1)
+        _, preds = np.average(x, 1)
+        print(preds)
         for row_index in range(len(labels)):
             slide_id = slides[row_index]
             slide_label = labels[row_index]
