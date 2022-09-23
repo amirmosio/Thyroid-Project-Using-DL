@@ -299,8 +299,9 @@ def evaluate_nci_dataset_per_slide(config_base_name, augmentation, base_model, d
 
         x = model(images, validate=True).cpu()
         preds = np.hypot(x[:, 0], x[:, 1])
-        print(x[:, 0])
-        print(x[:, 1])
+        logger.info("zero and hundred percent")
+        logger.info(x[:, 0])
+        logger.info(x[:, 1])
         for row_index in range(len(labels)):
             slide_id = slides[row_index]
             slide_label = labels[row_index]
