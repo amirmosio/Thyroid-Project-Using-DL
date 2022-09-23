@@ -1,4 +1,3 @@
-
 import os
 import random
 import time
@@ -299,7 +298,9 @@ def evaluate_nci_dataset_per_slide(config_base_name, augmentation, base_model, d
         images = images.to(Config.available_device)
 
         x = model(images, validate=True)
-        _, preds = np.average(x, 1)
+        preds = np.hypot(x[:, 0], x[:, 1])
+        print(x[:, 0])
+        print(x[:, 1])
         print(preds)
         for row_index in range(len(labels)):
             slide_id = slides[row_index]
