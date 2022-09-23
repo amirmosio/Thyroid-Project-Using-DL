@@ -380,17 +380,17 @@ if __name__ == '__main__':
          torchvision.models.resnet101(pretrained=True, progress=True), [
              ("mixup", "train_state/resnet101_0.0001_1_nci_final-mixup-BENIGN,MALIGNANT/epoch-19/"),
          ]),
-        (f"resnet101_{Config.learning_rate}_{Config.decay_rate}_test_nci_eval",
-         torchvision.models.resnet101(pretrained=True, progress=True), [
-             ("fda",
-              "train_state/runs_0.0001_1_nic_test_benign_mal/resnet101_0.0001_1_nci-fda-BENIGN,MALIGNANT/epoch-3/"),
-             ("mixup",
-              "train_state/runs_0.0001_1_nic_test_benign_mal/resnet101_0.0001_1_nci-mixup-BENIGN,MALIGNANT/epoch-3/"),
-             ("jit",
-              "train_state/runs_0.0001_1_nic_test_benign_mal/resnet101_0.0001_1_nci-jit-BENIGN,MALIGNANT/epoch-3/"),
-             ("jit-fda-mixup",
-              "train_state/runs_0.0001_1_nic_test_benign_mal/resnet101_0.0001_1_nci-jit-fda-mixup-BENIGN,MALIGNANT/epoch-3/"),
-         ]),
+        # (f"resnet101_{Config.learning_rate}_{Config.decay_rate}_test_nci_eval",
+        #  torchvision.models.resnet101(pretrained=True, progress=True), [
+        #      ("fda",
+        #       "train_state/runs_0.0001_1_nic_test_benign_mal/resnet101_0.0001_1_nci-fda-BENIGN,MALIGNANT/epoch-3/"),
+        #      ("mixup",
+        #       "train_state/runs_0.0001_1_nic_test_benign_mal/resnet101_0.0001_1_nci-mixup-BENIGN,MALIGNANT/epoch-3/"),
+        #      ("jit",
+        #       "train_state/runs_0.0001_1_nic_test_benign_mal/resnet101_0.0001_1_nci-jit-BENIGN,MALIGNANT/epoch-3/"),
+        #      ("jit-fda-mixup",
+        #       "train_state/runs_0.0001_1_nic_test_benign_mal/resnet101_0.0001_1_nci-jit-fda-mixup-BENIGN,MALIGNANT/epoch-3/"),
+        #  ]),
 
     ]:
         for aug, best_epoch in aug_best_epoch_list:
