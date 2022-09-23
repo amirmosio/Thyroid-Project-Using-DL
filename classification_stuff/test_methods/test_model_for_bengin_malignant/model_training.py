@@ -297,7 +297,7 @@ def evaluate_nci_dataset_per_slide(config_base_name, augmentation, base_model, d
     for images, (labels, slides) in tqdm(data_loader):
         images = images.to(Config.available_device)
 
-        x = model(images, validate=True)
+        x = model(images, validate=True).cpu()
         preds = np.hypot(x[:, 0], x[:, 1])
         print(x[:, 0])
         print(x[:, 1])
