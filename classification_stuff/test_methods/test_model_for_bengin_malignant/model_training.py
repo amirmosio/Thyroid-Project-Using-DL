@@ -379,6 +379,9 @@ if __name__ == '__main__':
         (f"resnet101_{Config.learning_rate}_{Config.decay_rate}_nci_eval",
          torchvision.models.resnet101(pretrained=True, progress=True), [
              ("mixup", "train_state/resnet101_0.0001_1_nci_final-mixup-BENIGN,MALIGNANT/epoch-19/"),
+             # ("mixup", "train_state/resnet101_0.0001_1_nci_final-mixup-BENIGN,MALIGNANT/epoch-15/"),
+             # ("mixup", "train_state/resnet101_0.0001_1_nci_final-mixup-BENIGN,MALIGNANT/epoch-5/"),
+             ("mixup", "train_state/resnet101_0.0001_1_nci_final-mixup-BENIGN,MALIGNANT/epoch-1/"),
          ]),
         # (f"resnet101_{Config.learning_rate}_{Config.decay_rate}_test_nci_eval",
         #  torchvision.models.resnet101(pretrained=True, progress=True), [

@@ -105,11 +105,11 @@ class CustomFragmentLoader:
                 stormal_percent = int(item[2].strip(r"(|)|\'").split("\', \'")[2])
                 if stormal_percent == 0:
                     if tumor_percent == 100:
-                        class_name = "MALIGNANT"
+                        class_name = 100
                     elif normal_percent == 100:
                         class_name = 0
                     else:
-                        class_name = "tumor_percent"
+                        class_name = tumor_percent
                 class_name = class_name if class_name is not None else item[2]
                 if class_name in Config.class_names:
                     class_slides_dict[class_name] = class_slides_dict.get(class_name, []) + [
