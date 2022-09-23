@@ -107,6 +107,7 @@ class CustomFragmentLoader:
                     if tumor_percent == 100:
                         class_name = "MALIGNANT"
                     elif normal_percent == 100:
+                        print("Normal")
                         class_name = 0
                     else:
                         class_name = "tumor_percent"
