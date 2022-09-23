@@ -374,7 +374,7 @@ if __name__ == '__main__':
     _, (train_ds, _, _), (_, _, test_data_loader) = load_datasets(
         ["national_cancer_institute",
          ],
-        sample_percent=0.01, test_percent=100, val_percent=0, is_nci_per_slide=True)
+        sample_percent=0.03, test_percent=100, val_percent=0, is_nci_per_slide=True)
 
     for c_base_name, model, aug_best_epoch_list in [
         (f"resnet101_{Config.learning_rate}_{Config.decay_rate}_nci_eval",
