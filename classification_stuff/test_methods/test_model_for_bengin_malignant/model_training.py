@@ -301,7 +301,6 @@ def evaluate_nci_dataset_per_slide(config_base_name, augmentation, base_model, d
         preds = np.hypot(x[:, 0], x[:, 1])
         print(x[:, 0])
         print(x[:, 1])
-        print(preds)
         for row_index in range(len(labels)):
             slide_id = slides[row_index]
             slide_label = labels[row_index]
