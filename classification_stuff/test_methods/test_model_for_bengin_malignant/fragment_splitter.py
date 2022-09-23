@@ -111,6 +111,7 @@ class CustomFragmentLoader:
                     else:
                         class_name = "tumor_percent"
                 class_name = class_name if class_name else item[2]
+                print(Config.class_names)
                 if class_name in Config.class_names:
                     print(class_name)
                     class_slides_dict[class_name] = class_slides_dict.get(class_name, []) + [
