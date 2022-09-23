@@ -322,8 +322,9 @@ def evaluate_nci_dataset_per_slide(config_base_name, augmentation, base_model, d
                                  normalize="true")
 
     class_accuracies = [cf_matrix[c][c] for c in range(len(cf_matrix))]
-    acc = sum(class_accuracies)
-    acc /= len(cf_matrix)
+    class_weights = [sum(cf_matrix[c]) for c in range(len(cf_matrix))]
+    acc = sum([class_accuracies[i] * class_weights[i] for i in range(len(class_accuracies))])
+    acc /= sum(class_weights)
     # TN|FN
     # FP|TP
     # fpr, tpr, _ = roc_curve(y_targets, y_positive_scores)
