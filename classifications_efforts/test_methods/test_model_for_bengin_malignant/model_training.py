@@ -335,10 +335,10 @@ def evaluate_nci_dataset_per_slide(config_base_name, augmentation, base_model, d
 
 
 ##########
-## Runs###
+## Runs ##
 ##########
-
-if __name__ == '__main__' and False:
+# train_phase block
+if __name__ == '__main__' and Config.train_phase:
     _, (train_ds, _, _), (train_data_loader, val_data_loader, test_data_loader) = load_datasets(
         ["national_cancer_institute"],
         sample_percent=1)
@@ -365,8 +365,8 @@ if __name__ == '__main__' and False:
             Config.reset_random_seeds()
             train_model(model, c_base_name, (train_data_loader, val_data_loader, test_data_loader),
                         augmentation=aug, adaptation_sample_dataset=train_ds)
-
-if __name__ == '__main__':
+# evaluate_phase block
+if __name__ == '__main__' and Config.evaluate_phase:
     # Main data
     Config.class_names = [i for i in range(101)]
     Config.class_idx_dict = {i: i for i in range(101)}

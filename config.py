@@ -38,5 +38,8 @@ class Config:
     train_val_acc_max_distance_for_best_epoch = 6  # Percent
     n_epoch_for_image_patcher = 60
 
+    train_phase = False
+    evaluate_phase = False
+
 
 Config.reset_random_seeds()
